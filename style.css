@@ -1,0 +1,356 @@
+:root {
+  --background: #ffffff;
+  --text: #1f2421;
+  --muted: #737873;
+  --line: #d9ddd8;
+  --soft: #f4f5f2;
+  --placeholder: #eceeeb;
+  --season-1: #6f98bd;
+  --season-2: #d8c867;
+  --season-3: #7fae89;
+  --space-xs: 0.45rem;
+  --space-s: 0.8rem;
+  --space-m: 1.4rem;
+  --space-l: 2.4rem;
+  --space-xl: 4.8rem;
+  --space-xxl: 8rem;
+  --font-body: 10pt;
+  --font-small: 8.5pt;
+  --font-statement: clamp(1.25rem, 2.2vw, 2rem);
+  --page-margin: clamp(1.25rem, 5vw, 4.8rem);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  font-size: var(--font-body);
+  line-height: 1.9;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a {
+  color: inherit;
+  font: inherit;
+}
+
+a {
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  text-underline-offset: 0.2em;
+}
+
+a:hover,
+button:hover {
+  color: var(--muted);
+}
+
+.site-header,
+main {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding-right: var(--page-margin);
+  padding-left: var(--page-margin);
+}
+
+.site-header {
+  padding-top: clamp(3rem, 8vh, 6rem);
+}
+
+.statement {
+  min-height: 32vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.statement h1 {
+  margin: 0;
+  font-size: var(--font-statement);
+  font-weight: 400;
+  line-height: 1.75;
+}
+
+.statement p,
+.title-en,
+.book-meta,
+.slide-label,
+.section-heading p,
+.slide-controls,
+.minimal-links,
+.book-details dt {
+  color: var(--muted);
+  font-size: var(--font-small);
+  line-height: 1.65;
+}
+
+.statement p {
+  margin: var(--space-m) 0 0;
+}
+
+.title-area {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-l);
+  margin-top: var(--space-xl);
+  padding-bottom: var(--space-l);
+  border-bottom: 1px solid var(--line);
+}
+
+.title-jp,
+.title-en,
+.book-meta {
+  margin: 0;
+}
+
+.title-jp {
+  font-size: var(--font-body);
+  line-height: 1.7;
+}
+
+.book-meta {
+  text-align: right;
+}
+
+.slideshow {
+  min-height: 72vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  padding: var(--space-xl) 0 var(--space-xxl);
+}
+
+.slide-shell {
+  width: min(72vw, 760px);
+}
+
+/* The same frame works for both real photographs and missing-image placeholders. */
+.slide-image {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--placeholder), var(--soft));
+  border: 1px solid var(--line);
+}
+
+.slide-image img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--background);
+}
+
+.slide-image img.is-missing {
+  display: none;
+}
+
+.image-placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #a4aaa4;
+  font-size: var(--font-small);
+}
+
+.slide-info {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  gap: var(--space-s);
+  align-items: baseline;
+  margin-top: var(--space-s);
+}
+
+.slide-info p {
+  margin: 0;
+}
+
+.slide-count {
+  color: var(--text);
+}
+
+.slide-caption {
+  text-align: center;
+}
+
+.slide-label {
+  text-align: right;
+}
+
+.slide-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-l);
+  margin-top: var(--space-m);
+}
+
+.slide-controls button {
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+}
+
+.minimal-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-s) var(--space-l);
+  margin-top: var(--space-l);
+}
+
+.information {
+  padding: var(--space-xl) 0 var(--space-xxl);
+  border-top: 1px solid var(--line);
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-l);
+  margin-bottom: var(--space-xl);
+}
+
+.section-heading h2,
+.section-heading p {
+  margin: 0;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(15rem, 0.85fr);
+  gap: var(--space-xl);
+}
+
+.info-text {
+  max-width: 42rem;
+}
+
+.info-text p {
+  margin: 0 0 var(--space-m);
+}
+
+.periods {
+  display: grid;
+  gap: var(--space-xs);
+  align-content: start;
+}
+
+.period {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  margin: 0;
+}
+
+/* Small seasonal accents keep the exhibition phases visible without dominating the page. */
+.period span {
+  width: 0.55rem;
+  height: 0.55rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.period-1 span {
+  background: var(--season-1);
+}
+
+.period-2 span {
+  background: var(--season-2);
+}
+
+.period-3 span {
+  background: var(--season-3);
+}
+
+.book-details {
+  grid-column: 2;
+  display: grid;
+  gap: var(--space-l);
+  margin: 0;
+}
+
+.book-details div,
+.book-details dt,
+.book-details dd {
+  margin: 0;
+}
+
+.book-details dt {
+  margin-bottom: var(--space-xs);
+}
+
+@media (max-width: 760px) {
+  :root {
+    --font-statement: 1.18rem;
+    --page-margin: 1.25rem;
+    --space-xl: 3.4rem;
+    --space-xxl: 5.2rem;
+  }
+
+  .statement {
+    min-height: 26vh;
+  }
+
+  .title-area,
+  .section-heading,
+  .info-grid {
+    display: block;
+  }
+
+  .book-meta {
+    margin-top: var(--space-m);
+    text-align: left;
+  }
+
+  .slide-shell {
+    width: 100%;
+  }
+
+  .slideshow {
+    min-height: auto;
+    padding-top: var(--space-xl);
+  }
+
+  .slide-info {
+    grid-template-columns: 3.5rem 1fr;
+  }
+
+  .slide-caption {
+    text-align: left;
+  }
+
+  .slide-label {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .section-heading p,
+  .periods,
+  .book-details {
+    margin-top: var(--space-m);
+  }
+}
