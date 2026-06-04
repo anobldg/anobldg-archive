@@ -1,106 +1,118 @@
 const slides = [
   {
+    title: "展示風景",
+    label: "Exhibition",
     src: "images/slide-01.jpg",
-    alt: "展示風景",
-    caption: "展示風景",
-    label: "Exhibition"
+    description: "展覧会「アノビルのこと」の記録より。"
   },
   {
+    title: "1/20模型",
+    label: "Model",
     src: "images/slide-02.jpg",
-    alt: "1/20模型",
-    caption: "1/20模型",
-    label: "Model"
+    description: "建築のかたちを検討するための模型。"
   },
   {
+    title: "1/100模型",
+    label: "Study Model",
     src: "images/slide-03.jpg",
-    alt: "1/100模型",
-    caption: "1/100模型",
-    label: "Study Model"
+    description: "街と建築の関係を読むためのスタディ。"
   },
   {
+    title: "断片から全体へ",
+    label: "Fragment",
     src: "images/slide-04.jpg",
-    alt: "断片から全体へ",
-    caption: "断片から全体へ",
-    label: "Fragment"
+    description: "ファサードや窓、細部から全体を考える。"
   },
   {
+    title: "抽象化への探求",
+    label: "Abstraction",
     src: "images/slide-05.jpg",
-    alt: "抽象化への探求",
-    caption: "抽象化への探求",
-    label: "Abstraction"
+    description: "第一期の展示テーマ。"
   },
   {
+    title: "横山町とアノビル",
+    label: "Yokoyamacho",
     src: "images/slide-06.jpg",
-    alt: "横山町とアノビル",
-    caption: "横山町とアノビル",
-    label: "Yokoyamacho"
+    description: "東京・日本橋横山町を舞台にしたリサーチ。"
   },
   {
+    title: "読む建築展",
+    label: "Reading Architecture",
     src: "images/slide-07.jpg",
-    alt: "読む建築展",
-    caption: "読む建築展",
-    label: "Reading Architecture"
+    description: "建築を読むための対象として捉え直す展示。"
   },
   {
+    title: "アーカイブブック",
+    label: "Archive Book",
     src: "images/slide-08.jpg",
-    alt: "アーカイブブック",
-    caption: "アーカイブブック",
-    label: "Archive Book"
+    description: "展示、模型、ドローイング、テキストの記録。"
   }
 ];
 
-const image = document.querySelector("[data-slide-image]");
-const count = document.querySelector("[data-slide-count]");
-const caption = document.querySelector("[data-slide-caption]");
-const label = document.querySelector("[data-slide-label]");
-const imageButton = document.querySelector(".slide-image");
-const prevButton = document.querySelector("[data-prev]");
-const nextButton = document.querySelector("[data-next]");
-
 let currentIndex = 0;
 
-// Keep all visible slide text in sync with the current image.
-function showSlide(index) {
-  currentIndex = (index + slides.length) % slides.length;
+const slideImage = document.querySelector("[data-slide-image]");
+const slideButton = document.querySelector("[data-slide-button]");
+const slideCount = document.querySelector("[data-slide-count]");
+const slideTitle = document.querySelector("[data-slide-title]");
+const slideLabel = document.querySelector("[data-slide-label]");
+const slideDescription = document.querySelector("[data-slide-description]");
+const prevButton = document.querySelector("[data-prev]");
+const nextButton = document.querySelector("[data-next]");
+const infoLink = document.querySelector("[data-info-link]");
+const informationLink = document.querySelector("[data-information-link]");
+
+function renderSlide() {
   const slide = slides[currentIndex];
 
-  image.classList.remove("is-missing");
-  image.src = slide.src;
-  image.alt = slide.alt;
-  count.textContent = `${currentIndex + 1}/${slides.length}`;
-  caption.textContent = slide.caption;
-  label.textContent = slide.label;
+  slideImage.classList.remove("is-missing");
+  slideImage.src = slide.src;
+  slideImage.alt = slide.title;
+  slideCount.textContent = `${currentIndex + 1}/${slides.length}`;
+  slideTitle.textContent = slide.title;
+  slideLabel.textContent = slide.label;
+  slideDescription.textContent = slide.description;
 }
 
-function moveSlide(direction) {
-  showSlide(currentIndex + direction);
+function nextSlide() {
+  currentIndex = (currentIndex + 1) % slides.length;
+  renderSlide();
 }
 
-// Missing images should leave the quiet placeholder frame intact.
-image.addEventListener("error", () => {
-  image.classList.add("is-missing");
+function prevSlide() {
+  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+  renderSlide();
+}
+
+function scrollToTarget(event, selector) {
+  event.preventDefault();
+  document.querySelector(selector).scrollIntoView({ behavior: "smooth" });
+}
+
+slideImage.addEventListener("error", () => {
+  slideImage.classList.add("is-missing");
 });
 
-imageButton.addEventListener("click", () => {
-  moveSlide(1);
+slideButton.addEventListener("click", nextSlide);
+nextButton.addEventListener("click", nextSlide);
+prevButton.addEventListener("click", prevSlide);
+
+infoLink.addEventListener("click", (event) => {
+  scrollToTarget(event, "#info");
 });
 
-prevButton.addEventListener("click", () => {
-  moveSlide(-1);
-});
-
-nextButton.addEventListener("click", () => {
-  moveSlide(1);
+informationLink.addEventListener("click", (event) => {
+  scrollToTarget(event, "#information");
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
-    moveSlide(-1);
+  if (event.key === "ArrowRight") {
+    nextSlide();
   }
 
-  if (event.key === "ArrowRight") {
-    moveSlide(1);
+  if (event.key === "ArrowLeft") {
+    prevSlide();
   }
 });
 
-showSlide(currentIndex);
+renderSlide();

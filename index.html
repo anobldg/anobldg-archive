@@ -7,9 +7,9 @@
     <title>アノビルのこと / Ano Building</title>
     <link rel="stylesheet" href="style.css">
   </head>
-  <body>
-    <header class="site-header" aria-labelledby="site-title">
-      <section class="statement" aria-label="Statement">
+  <body data-page="home">
+    <main class="home-page">
+      <section class="home-statement" aria-label="Statement">
         <h1>
           街の断片を読み、<br>
           建築のかたちを考える。
@@ -20,90 +20,63 @@
         </p>
       </section>
 
-      <section class="title-area">
+      <header class="home-title" aria-labelledby="site-title">
+        <p id="site-title">アノビルのこと</p>
+        <p lang="en">Ano Building</p>
+      </header>
+
+      <section class="home-slide-meta" id="info" aria-live="polite">
+        <p class="slide-count" data-slide-count>1/8</p>
         <div>
-          <p class="title-jp" id="site-title">アノビルのこと</p>
-          <p class="title-en" lang="en">Ano Building</p>
+          <p class="slide-title" data-slide-title>展示風景</p>
+          <p class="slide-label" lang="en" data-slide-label>Exhibition</p>
         </div>
-        <p class="book-meta">
-          <span lang="en">Archive Book</span><br>
-          2025
-        </p>
       </section>
-    </header>
 
-    <main>
-      <section class="slideshow" id="preview" aria-label="Archive book preview">
-        <div class="slide-shell">
-          <button class="slide-image" type="button" aria-label="次の画像を表示">
-            <img src="images/slide-01.jpg" alt="展示風景" data-slide-image>
-            <span class="image-placeholder" aria-hidden="true">image</span>
-          </button>
+      <nav class="home-links" aria-label="Site links">
+        <a href="book.html">Buy Now</a>
+        <a href="#info" data-info-link>Info</a>
+        <a href="#information" data-information-link>Information</a>
+      </nav>
 
-          <div class="slide-info" aria-live="polite">
-            <p class="slide-count" data-slide-count>1/8</p>
-            <p class="slide-caption" data-slide-caption>展示風景</p>
-            <p class="slide-label" lang="en" data-slide-label>Exhibition</p>
-          </div>
-        </div>
-
-        <nav class="slide-controls" aria-label="Slideshow controls">
+      <section class="home-slideshow" aria-label="Slideshow">
+        <button class="slide-frame" type="button" aria-label="次の画像を表示" data-slide-button>
+          <img src="images/slide-01.jpg" alt="展示風景" data-slide-image>
+          <span aria-hidden="true">image</span>
+        </button>
+        <p class="slide-description" data-slide-description>
+          展覧会「アノビルのこと」の記録より。
+        </p>
+        <nav class="slide-nav" aria-label="Slideshow controls">
           <button type="button" data-prev>Prev</button>
           <button type="button" data-next>Next</button>
         </nav>
-
-        <nav class="minimal-links" aria-label="Site links">
-          <a href="#information">Info</a>
-          <a href="#preview">Preview</a>
-          <a href="#">Buy</a>
-          <a href="#">Instagram</a>
-        </nav>
       </section>
 
-      <section class="information" id="information" aria-labelledby="information-title">
-        <div class="section-heading">
-          <h2 id="information-title">Information</h2>
-          <p lang="en">Archive Book / Exhibition Record</p>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-text">
-            <p>
-              「アノビルのこと」は、東京・日本橋横山町を舞台に、街に建つ小さなビルの断片を読み取り、建築として再構成する試みです。
-            </p>
-            <p>
-              本サイトは、展覧会「アノビルのこと」の記録と、アーカイブブックの紹介を目的としています。
-            </p>
-          </div>
-
-          <div class="periods" aria-label="展示会期">
-            <p class="period period-1">
-              <span></span>
-              第一期：抽象化への探求
-            </p>
-            <p class="period period-2">
-              <span></span>
-              第二期：断片から全体を知覚する
-            </p>
-            <p class="period period-3">
-              <span></span>
-              第三期：読む建築展
-            </p>
-          </div>
-
-          <dl class="book-details">
-            <div>
-              <dt lang="en">Archive Book</dt>
-              <dd>価格：5,000円</dd>
-              <dd>仕様：仮</dd>
-              <dd>購入方法：仮</dd>
-            </div>
-            <div>
-              <dt lang="en">Authors</dt>
-              <dd>大塚史奈 + 喜井雅治</dd>
-            </div>
-          </dl>
-        </div>
+      <section class="information-text" id="information" aria-labelledby="information-title">
+        <h2 id="information-title">Information</h2>
+        <p>
+          「アノビルのこと」は、東京・日本橋横山町を舞台に、街に建つ小さなビルの断片を読み取り、建築として再構成する試みです。
+        </p>
+        <p>
+          本サイトは、展覧会「アノビルのこと」の記録と、アーカイブブックの紹介を目的としています。
+        </p>
+        <p>展示は三つの会期を通して構成されました。</p>
+        <p>
+          第一期：抽象化への探求<br>
+          第二期：断片から全体を知覚する<br>
+          第三期：読む建築展
+        </p>
+        <p>
+          <span lang="en">Archive Book</span><br>
+          価格：5,000円<br>
+          仕様：仮<br>
+          購入方法：仮
+        </p>
+        <p>
+          <span lang="en">Authors</span><br>
+          大塚史奈 + 喜井雅治
+        </p>
       </section>
     </main>
 
