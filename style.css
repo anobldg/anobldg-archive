@@ -508,35 +508,3 @@ body.top-page a * {
     display: none;
   }
 }
-
-@media (max-width: 700px) {
-  body.top-page,
-  body.top-page * {
-    cursor: auto !important;
-  }
-
-  body.top-page a,
-  body.top-page a * {
-    cursor: pointer !important;
-  }
-
-  .custom-cursor {
-    display: none;
-  }
-}
-
-@media (max-width: 700px) {
-  body.top-page,
-  body.top-page * {
-    cursor: auto !important;
-  }
-
-  body.top-page a,
-  body.top-page a * {
-    cursor: pointer !important;
-  }
-
-  .custom-cursor {
-    display: none;
-  }
-}
