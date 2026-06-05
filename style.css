@@ -3,14 +3,15 @@
 }
 
 :root {
-  --bg: #000000;
-  --text: #f4f4f4;
-  --muted: #a8a8a8;
+--bg: #ffffff;
+  --text: #000000;
+  --muted: #666666;
   --gray: #4a4a4a;
   --green: #57d184;
   --red: #ff1d25;
   --blue: #2f52ff;
   --font: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
+  --font-mincho: "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
 }
 
 html {
@@ -63,8 +64,20 @@ button {
 
 .buy-link {
   color: var(--red);
+  font-family: var(--font-mincho);
   font-size: 16px;
   font-weight: 700;
+  animation: blink-buy 1.15s steps(1, end) infinite;
+}
+
+@keyframes blink-buy {
+  0%, 48% {
+    opacity: 1;
+  }
+
+  49%, 100% {
+    opacity: 0;
+  }
 }
 
 .top-image-section {
@@ -113,13 +126,14 @@ button {
 .back-nav {
   position: fixed;
   top: 28px;
-  left: 3vw;
+  left: calc(3vw + 0.5vw);
   z-index: 10;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .back-nav a {
-  border-bottom: 1px solid currentColor;
+  border-bottom: none;
+  text-decoration: none;
 }
 
 /* About */
@@ -206,6 +220,7 @@ button {
 
 .cart-link {
   color: var(--blue);
+  font-family: var(--font-mincho);
 }
 
 .book-title {
