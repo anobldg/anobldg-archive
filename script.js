@@ -68,10 +68,20 @@ function setupTopImage() {
 
   topImage.innerHTML = "";
 
+  function syncSlidePosition(panel) {
+    const rect = topImage.getBoundingClientRect();
+
+    panel.style.setProperty("--slide-left", `${rect.left + rect.width / 2}px`);
+    panel.style.setProperty("--slide-top", `${rect.top + rect.height / 2}px`);
+    panel.style.setProperty("--slide-width", `${rect.width}px`);
+    panel.style.setProperty("--slide-height", `${rect.height}px`);
+  }
+
   let activePanel = document.createElement("div");
   activePanel.className = "slide-panel is-current";
   activePanel.textContent = "top image";
-  topImage.appendChild(activePanel);
+  document.body.appendChild(activePanel);
+  syncSlidePosition(activePanel);
 
   function renderCounter() {
     current.textContent = pad2(index);
@@ -88,6 +98,10 @@ function setupTopImage() {
     newPanel.className = "slide-panel";
     newPanel.textContent = "top image";
 
+    document.body.appendChild(newPanel);
+    syncSlidePosition(oldPanel);
+    syncSlidePosition(newPanel);
+
     if (direction === "next") {
       index = index >= max ? 1 : index + 1;
 
@@ -102,15 +116,15 @@ function setupTopImage() {
       oldPanel.classList.add("exit-to-left");
     }
 
-    topImage.appendChild(newPanel);
     activePanel = newPanel;
     renderCounter();
 
     window.setTimeout(() => {
       oldPanel.remove();
       newPanel.className = "slide-panel is-current";
+      syncSlidePosition(newPanel);
       isAnimating = false;
-    }, 650);
+    }, 820);
   }
 
   function nextImage() {
@@ -157,49 +171,11 @@ function setupTopImage() {
     { passive: false }
   );
 
+  window.addEventListener("resize", () => {
+    syncSlidePosition(activePanel);
+  });
+
   addSwipeControl(topPage, nextImage, prevImage);
 
   renderCounter();
 }
-
-function setupBookImage() {
-  const button = document.getElementById("book-image-button");
-  const current = document.getElementById("book-current");
-
-  if (!button || !current) return;
-
-  const max = 6;
-  let index = 1;
-
-  function render() {
-    current.textContent = String(index);
-  }
-
-  function nextImage() {
-    index = index >= max ? 1 : index + 1;
-    render();
-  }
-
-  function prevImage() {
-    index = index <= 1 ? max : index - 1;
-    render();
-  }
-
-  button.addEventListener("click", (event) => {
-    const rect = button.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-
-    if (event.clientX >= centerX) {
-      nextImage();
-    } else {
-      prevImage();
-    }
-  });
-
-  addSwipeControl(button, nextImage, prevImage);
-
-  render();
-}
-
-setupTopImage();
-setupBookImage();
