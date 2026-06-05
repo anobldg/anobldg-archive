@@ -370,4 +370,16 @@ button {
     display: grid;
     gap: 4px;
   }
+
+  /* Top page: match title and counter to body text */
+.top-page .top-header h1,
+.top-page .top-header h1 a,
+.top-page .image-counter {
+  font-family: var(--font);
+  font-size: inherit;
+  font-weight: 300;
+  color: var(--text);
+  line-height: inherit;
+  letter-spacing: 0.02em;
 }
+
