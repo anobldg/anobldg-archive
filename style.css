@@ -211,6 +211,12 @@ button {
 .book-text {
   max-width: 810px;
   padding-left: 0.6vw;
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-right: 24px;
 }
 
 .book-text p {
@@ -246,12 +252,15 @@ button {
   display: grid;
   justify-items: center;
   align-content: start;
+  gap: 72px;
+  padding-bottom: 96px;
 }
 
 .book-image {
   width: min(35vw, 560px);
   height: min(48vw, 690px);
   min-height: 520px;
+  cursor: default;
 }
 
 .book-counter {
@@ -308,6 +317,13 @@ button {
     grid-template-columns: 42px 1fr;
   }
 
+　.book-text {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+  
   .book-image-section {
     margin-top: 54px;
   }
