@@ -1,3 +1,18 @@
+const topImages = [
+  "assets/images/top/top-01.webp",
+  "assets/images/top/top-02.webp",
+  "assets/images/top/top-03.webp",
+  "assets/images/top/top-04.webp",
+  "assets/images/top/top-05.webp",
+  "assets/images/top/top-06.webp",
+  "assets/images/top/top-07.webp",
+  "assets/images/top/top-08.webp",
+  "assets/images/top/top-09.webp",
+  "assets/images/top/top-10.webp",
+  "assets/images/top/top-11.webp",
+  "assets/images/top/top-12.webp"
+];
+
 function pad2(number) {
   return String(number).padStart(2, "0");
 }
@@ -58,7 +73,7 @@ function setupTopImage() {
 
   if (!topPage || !topImage || !current) return;
 
-  const max = 12;
+  const max = topImages.length;
   let index = getSlideFromUrl(max);
   let isAnimating = false;
   let wheelLock = false;
@@ -74,16 +89,22 @@ function setupTopImage() {
     panel.style.setProperty("--slide-height", `${rect.height}px`);
   }
 
-  function createPanel() {
-    const panel = document.createElement("div");
-    panel.className = "slide-panel";
-    panel.textContent = "top image";
-    syncPanel(panel);
-    document.body.appendChild(panel);
-    return panel;
-  }
+  function createPanel(imageIndex) {
+  const panel = document.createElement("div");
+  panel.className = "slide-panel";
 
-  let activePanel = createPanel();
+  const imagePath = topImages[imageIndex - 1];
+  panel.style.backgroundImage = `url("${imagePath}")`;
+  panel.style.backgroundSize = "cover";
+  panel.style.backgroundPosition = "center";
+  panel.style.backgroundRepeat = "no-repeat";
+
+  syncPanel(panel);
+  document.body.appendChild(panel);
+  return panel;
+}
+
+  let activePanel = createPanel(index);
   activePanel.classList.add("is-current");
 
   function renderCounter() {
@@ -91,40 +112,43 @@ function setupTopImage() {
   }
 
   function changeImage(direction) {
-    if (isAnimating) return;
+  if (isAnimating) return;
 
-    isAnimating = true;
+  isAnimating = true;
 
-    const oldPanel = activePanel;
-    const newPanel = createPanel();
+  const oldPanel = activePanel;
 
-    syncPanel(oldPanel);
-    syncPanel(newPanel);
-
-    if (direction === "next") {
-      index = index >= max ? 1 : index + 1;
-
-      newPanel.classList.add("enter-from-left");
-      oldPanel.classList.remove("is-current");
-      oldPanel.classList.add("exit-to-right");
-    } else {
-      index = index <= 1 ? max : index - 1;
-
-      newPanel.classList.add("enter-from-right");
-      oldPanel.classList.remove("is-current");
-      oldPanel.classList.add("exit-to-left");
-    }
-
-    activePanel = newPanel;
-    renderCounter();
-
-    window.setTimeout(() => {
-      oldPanel.remove();
-      newPanel.className = "slide-panel is-current";
-      syncPanel(newPanel);
-      isAnimating = false;
-    }, 880);
+  if (direction === "next") {
+    index = index >= max ? 1 : index + 1;
+  } else {
+    index = index <= 1 ? max : index - 1;
   }
+
+  const newPanel = createPanel(index);
+
+  syncPanel(oldPanel);
+  syncPanel(newPanel);
+
+  if (direction === "next") {
+    newPanel.classList.add("enter-from-left");
+    oldPanel.classList.remove("is-current");
+    oldPanel.classList.add("exit-to-right");
+  } else {
+    newPanel.classList.add("enter-from-right");
+    oldPanel.classList.remove("is-current");
+    oldPanel.classList.add("exit-to-left");
+  }
+
+  activePanel = newPanel;
+  renderCounter();
+
+  window.setTimeout(() => {
+    oldPanel.remove();
+    newPanel.className = "slide-panel is-current";
+    syncPanel(newPanel);
+    isAnimating = false;
+  }, 880);
+}
 
   function nextImage() {
     changeImage("next");
