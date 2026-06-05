@@ -135,3 +135,34 @@ function setupBookImage() {
 
 setupTopImage();
 setupBookImage();
+
+function setupCustomCursor() {
+  const topPage = document.querySelector(".top-page");
+  const cursor = document.querySelector(".custom-cursor");
+
+  if (!topPage || !cursor) return;
+
+  function moveCursor(event) {
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+
+    cursor.classList.add("is-visible");
+
+    if (event.clientX < window.innerWidth / 2) {
+      cursor.classList.add("is-left");
+      cursor.classList.remove("is-right");
+    } else {
+      cursor.classList.add("is-right");
+      cursor.classList.remove("is-left");
+    }
+  }
+
+  function hideCursor() {
+    cursor.classList.remove("is-visible");
+  }
+
+  topPage.addEventListener("mousemove", moveCursor);
+  topPage.addEventListener("mouseleave", hideCursor);
+}
+
+setupCustomCursor();
