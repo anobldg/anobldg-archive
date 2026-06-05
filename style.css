@@ -122,8 +122,8 @@ button {
 }
 
 .top-image {
-  width: min(45vw, calc((100dvh - 180px) * 0.703), 610px);
-  height: min(64vw, calc(100dvh - 180px), 780px);
+  width: min(45vw, calc((100dvh - 200px) * 0.703), 610px);
+  height: min(64vw, calc(100dvh - 200px), 780px);
   min-height: 0;
 }
 
