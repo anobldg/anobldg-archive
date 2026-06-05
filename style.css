@@ -418,7 +418,7 @@ body.top-page a * {
   position: fixed;
   top: 0;
   left: 0;
-  width: 32px;
+  width: 34px;
   height: 18px;
   pointer-events: none;
   z-index: 99999;
@@ -434,19 +434,39 @@ body.top-page a * {
   opacity: 0;
 }
 
-.custom-cursor svg {
-  display: block;
-  width: 32px;
-  height: 18px;
-  overflow: visible;
+.custom-cursor::before,
+.custom-cursor::after {
+  content: "";
+  position: absolute;
+  background: #2b2b2b;
 }
 
-.custom-cursor path {
-  fill: none;
-  stroke: #2b2b2b;
-  stroke-width: 2.2;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
+/* arrow main line */
+.custom-cursor::before {
+  top: 8px;
+  left: 0;
+  width: 34px;
+  height: 1.5px;
+}
+
+/* arrow head */
+.custom-cursor::after {
+  top: 4px;
+  width: 9px;
+  height: 9px;
+  background: transparent;
+  border-top: 1.5px solid #2b2b2b;
+  border-left: 1.5px solid #2b2b2b;
+}
+
+.custom-cursor.is-left::after {
+  left: 0;
+  transform: rotate(-45deg);
+}
+
+.custom-cursor.is-right::after {
+  right: 0;
+  transform: rotate(135deg);
 }
 
 @media (max-width: 700px) {
