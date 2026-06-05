@@ -161,12 +161,34 @@ function addElasticDrag(target) {
 }
 
 function setupTopImage() {
+  
+  function setupDirectionalCursor(topPage) {
+  if (!topPage) return;
+
+  function updateCursor(event) {
+    const centerX = window.innerWidth / 2;
+
+    if (event.clientX >= centerX) {
+      topPage.classList.add("cursor-right");
+      topPage.classList.remove("cursor-left");
+    } else {
+      topPage.classList.add("cursor-left");
+      topPage.classList.remove("cursor-right");
+    }
+  }
+
+  document.addEventListener("mousemove", updateCursor);
+
+  topPage.classList.add("cursor-right");
+}
   const current = document.getElementById("top-current");
   const topPage = document.querySelector(".top-page");
   const topImage = document.getElementById("top-image-button");
 
   if (!topPage || !current) return;
 
+　setupDirectionalCursor(topPage);
+  
   const max = 12;
   let index = getSlideFromUrl(max);
 
