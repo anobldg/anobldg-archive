@@ -525,68 +525,208 @@ body.top-page a * {
   }
 }
 
-/* Top image slide animation */
-.top-image {
-  position: relative;
-  overflow: hidden;
+function pad2(number) {
+  return String(number).padStart(2, "0");
 }
 
-.slide-panel {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  background: var(--gray);
-  color: var(--green);
-  will-change: transform;
+function getSlideFromUrl(max) {
+  const params = new URLSearchParams(window.location.search);
+  const slide = Number(params.get("slide"));
+  if (!Number.isFinite(slide) || slide < 1 || slide > max) return 1;
+  return slide;
 }
 
-.slide-panel.is-current {
-  transform: translateX(0);
+function addSwipeControl(target, onNext, onPrev) {
+  if (!target) return;
+
+  let startX = 0;
+  let startY = 0;
+
+  target.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!event.touches || event.touches.length === 0) return;
+
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  target.addEventListener(
+    "touchend",
+    (event) => {
+      if (!event.changedTouches || event.changedTouches.length === 0) return;
+
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+
+      const minSwipeDistance = 45;
+      const isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+
+      if (!isHorizontalSwipe) return;
+      if (Math.abs(diffX) < minSwipeDistance) return;
+
+      if (diffX < 0) {
+        onNext();
+      } else {
+        onPrev();
+      }
+    },
+    { passive: true }
+  );
 }
 
-.slide-panel.enter-from-left {
-  transform: translateX(-100%);
-  animation: enter-from-left 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+function setupTopImage() {
+  const current = document.getElementById("top-current");
+  const topPage = document.querySelector(".top-page");
+  const topImage =
+    document.getElementById("top-image-button") ||
+    document.querySelector(".top-image");
 
-.slide-panel.enter-from-right {
-  transform: translateX(100%);
-  animation: enter-from-right 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+  if (!topPage || !topImage || !current) return;
 
-.slide-panel.exit-to-right {
-  transform: translateX(0);
-  animation: exit-to-right 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+  const max = 12;
+  let index = getSlideFromUrl(max);
+  let isAnimating = false;
 
-.slide-panel.exit-to-left {
-  transform: translateX(0);
-  animation: exit-to-left 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+  topImage.innerHTML = "";
 
-@keyframes enter-from-left {
-  to {
-    transform: translateX(0);
+  let activePanel = document.createElement("div");
+  activePanel.className = "slide-panel is-current";
+  activePanel.textContent = "top image";
+  topImage.appendChild(activePanel);
+
+  function renderCounter() {
+    current.textContent = pad2(index);
   }
+
+  function changeImage(direction) {
+    if (isAnimating) return;
+
+    isAnimating = true;
+
+    const oldPanel = activePanel;
+    const newPanel = document.createElement("div");
+
+    newPanel.className = "slide-panel";
+    newPanel.textContent = "top image";
+
+    if (direction === "next") {
+      index = index >= max ? 1 : index + 1;
+
+      newPanel.classList.add("enter-from-left");
+      oldPanel.classList.remove("is-current");
+      oldPanel.classList.add("exit-to-right");
+    } else {
+      index = index <= 1 ? max : index - 1;
+
+      newPanel.classList.add("enter-from-right");
+      oldPanel.classList.remove("is-current");
+      oldPanel.classList.add("exit-to-left");
+    }
+
+    topImage.appendChild(newPanel);
+    activePanel = newPanel;
+    renderCounter();
+
+    window.setTimeout(() => {
+      oldPanel.remove();
+      newPanel.className = "slide-panel is-current";
+      isAnimating = false;
+    }, 650);
+  }
+
+  function nextImage() {
+    changeImage("next");
+  }
+
+  function prevImage() {
+    changeImage("prev");
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!topPage.contains(event.target)) return;
+    if (event.target.closest("a")) return;
+
+    const centerX = window.innerWidth / 2;
+
+    if (event.clientX >= centerX) {
+      nextImage();
+    } else {
+      prevImage();
+    }
+  });
+
+  topPage.addEventListener(
+    "wheel",
+    (event) => {
+      if (isAnimating) return;
+      if (event.target.closest("a")) return;
+
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+      const mainDelta = absX > absY ? event.deltaX : event.deltaY;
+
+      if (Math.abs(mainDelta) < 18) return;
+
+      event.preventDefault();
+
+      if (mainDelta > 0) {
+        nextImage();
+      } else {
+        prevImage();
+      }
+    },
+    { passive: false }
+  );
+
+  addSwipeControl(topPage, nextImage, prevImage);
+
+  renderCounter();
 }
 
-@keyframes enter-from-right {
-  to {
-    transform: translateX(0);
+function setupBookImage() {
+  const button = document.getElementById("book-image-button");
+  const current = document.getElementById("book-current");
+
+  if (!button || !current) return;
+
+  const max = 6;
+  let index = 1;
+
+  function render() {
+    current.textContent = String(index);
   }
+
+  function nextImage() {
+    index = index >= max ? 1 : index + 1;
+    render();
+  }
+
+  function prevImage() {
+    index = index <= 1 ? max : index - 1;
+    render();
+  }
+
+  button.addEventListener("click", (event) => {
+    const rect = button.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+
+    if (event.clientX >= centerX) {
+      nextImage();
+    } else {
+      prevImage();
+    }
+  });
+
+  addSwipeControl(button, nextImage, prevImage);
+
+  render();
 }
 
-@keyframes exit-to-right {
-  to {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes exit-to-left {
-  to {
-    transform: translateX(-100%);
-  }
-}
+setupTopImage();
+setupBookImage();
