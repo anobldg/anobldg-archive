@@ -9,6 +9,52 @@ function getSlideFromUrl(max) {
   return slide;
 }
 
+function addSwipeControl(target, onNext, onPrev) {
+  if (!target) return;
+
+  let startX = 0;
+  let startY = 0;
+  let endX = 0;
+  let endY = 0;
+
+  target.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!event.touches || event.touches.length === 0) return;
+
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  target.addEventListener(
+    "touchend",
+    (event) => {
+      if (!event.changedTouches || event.changedTouches.length === 0) return;
+
+      endX = event.changedTouches[0].clientX;
+      endY = event.changedTouches[0].clientY;
+
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+
+      const minSwipeDistance = 45;
+      const isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+
+      if (!isHorizontalSwipe) return;
+      if (Math.abs(diffX) < minSwipeDistance) return;
+
+      if (diffX < 0) {
+        onNext();
+      } else {
+        onPrev();
+      }
+    },
+    { passive: true }
+  );
+}
+
 function setupTopImage() {
   const current = document.getElementById("top-current");
   const topPage = document.querySelector(".top-page");
@@ -43,6 +89,8 @@ function setupTopImage() {
       prevImage();
     }
   });
+
+  addSwipeControl(topPage, nextImage, prevImage);
 
   render();
 }
@@ -80,6 +128,8 @@ function setupBookImage() {
       prevImage();
     }
   });
+
+  addSwipeControl(button, nextImage, prevImage);
 
   render();
 }
