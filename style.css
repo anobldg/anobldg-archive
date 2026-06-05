@@ -1,11 +1,11 @@
 *{box-sizing:border-box}
 
 :root{
-  --bg:#fff;
-  --text:#222;
-  --muted:#777;
-  --soft:#f3f3f1;
-  --intro-bg:#000;
+  --bg:#000000;
+  --text:#f2f2f2;
+  --muted:#9a9a9a;
+  --soft:#111111;
+  --intro-bg:#000000;
   --intro-text:#f2f2f2;
   --font-sans:"Helvetica Neue",Arial,"Hiragino Sans","Yu Gothic",YuGothic,sans-serif;
   --font-serif:"Yu Mincho",YuMincho,"Hiragino Mincho ProN",serif;
