@@ -524,3 +524,69 @@ body.top-page a * {
     display: none;
   }
 }
+
+/* Top image slide animation */
+.top-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: var(--gray);
+  color: var(--green);
+  will-change: transform;
+}
+
+.slide-panel.is-current {
+  transform: translateX(0);
+}
+
+.slide-panel.enter-from-left {
+  transform: translateX(-100%);
+  animation: enter-from-left 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-panel.enter-from-right {
+  transform: translateX(100%);
+  animation: enter-from-right 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-panel.exit-to-right {
+  transform: translateX(0);
+  animation: exit-to-right 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.slide-panel.exit-to-left {
+  transform: translateX(0);
+  animation: exit-to-left 620ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes enter-from-left {
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes enter-from-right {
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes exit-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes exit-to-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
