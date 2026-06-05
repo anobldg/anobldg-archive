@@ -9,12 +9,6 @@ function getSlideFromUrl(max) {
   return slide;
 }
 
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
-let suppressNextClick = false;
-
 function addSwipeControl(target, onNext, onPrev) {
   if (!target) return;
 
@@ -59,83 +53,6 @@ function addSwipeControl(target, onNext, onPrev) {
   );
 }
 
-function addElasticDrag(target) {
-  if (!target) return;
-
-  let isPointerDown = false;
-  let startX = 0;
-  let startY = 0;
-  let moved = false;
-
-  function setTranslate(x, y) {
-    target.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-  }
-
-  function resetPosition() {
-    target.classList.remove("is-dragging");
-    target.style.transform = "translate3d(0, 0, 0)";
-  }
-
-  target.addEventListener("pointerdown", (event) => {
-    isPointerDown = true;
-    moved = false;
-    startX = event.clientX;
-    startY = event.clientY;
-
-    target.classList.add("is-dragging");
-
-    if (target.setPointerCapture) {
-      target.setPointerCapture(event.pointerId);
-    }
-  });
-
-  target.addEventListener("pointermove", (event) => {
-    if (!isPointerDown) return;
-
-    const rawX = event.clientX - startX;
-    const rawY = event.clientY - startY;
-
-    if (Math.abs(rawX) > 4 || Math.abs(rawY) > 4) {
-      moved = true;
-      suppressNextClick = true;
-    }
-
-    const x = clamp(rawX * 0.28, -30, 30);
-    const y = clamp(rawY * 0.2, -20, 20);
-
-    setTranslate(x, y);
-  });
-
-  target.addEventListener("pointerup", (event) => {
-    isPointerDown = false;
-
-    if (target.releasePointerCapture) {
-      try {
-        target.releasePointerCapture(event.pointerId);
-      } catch (error) {
-        // ignore
-      }
-    }
-
-    resetPosition();
-
-    if (moved) {
-      window.setTimeout(() => {
-        suppressNextClick = false;
-      }, 140);
-    }
-  });
-
-  target.addEventListener("pointercancel", () => {
-    isPointerDown = false;
-    resetPosition();
-
-    window.setTimeout(() => {
-      suppressNextClick = false;
-    }, 140);
-  });
-}
-
 function setupTopImage() {
   const current = document.getElementById("top-current");
   const topPage = document.querySelector(".top-page");
@@ -143,35 +60,70 @@ function setupTopImage() {
     document.getElementById("top-image-button") ||
     document.querySelector(".top-image");
 
-  if (!topPage || !current) return;
+  if (!topPage || !topImage || !current) return;
 
   const max = 12;
   let index = getSlideFromUrl(max);
+  let isAnimating = false;
 
-  function render() {
+  topImage.innerHTML = "";
+
+  let activePanel = document.createElement("div");
+  activePanel.className = "slide-panel is-current";
+  activePanel.textContent = "top image";
+  topImage.appendChild(activePanel);
+
+  function renderCounter() {
     current.textContent = pad2(index);
   }
 
+  function changeImage(direction) {
+    if (isAnimating) return;
+
+    isAnimating = true;
+
+    const oldPanel = activePanel;
+    const newPanel = document.createElement("div");
+
+    newPanel.className = "slide-panel";
+    newPanel.textContent = "top image";
+
+    if (direction === "next") {
+      index = index >= max ? 1 : index + 1;
+
+      newPanel.classList.add("enter-from-left");
+      oldPanel.classList.remove("is-current");
+      oldPanel.classList.add("exit-to-right");
+    } else {
+      index = index <= 1 ? max : index - 1;
+
+      newPanel.classList.add("enter-from-right");
+      oldPanel.classList.remove("is-current");
+      oldPanel.classList.add("exit-to-left");
+    }
+
+    topImage.appendChild(newPanel);
+    activePanel = newPanel;
+    renderCounter();
+
+    window.setTimeout(() => {
+      oldPanel.remove();
+      newPanel.className = "slide-panel is-current";
+      isAnimating = false;
+    }, 650);
+  }
+
   function nextImage() {
-    index = index >= max ? 1 : index + 1;
-    render();
+    changeImage("next");
   }
 
   function prevImage() {
-    index = index <= 1 ? max : index - 1;
-    render();
+    changeImage("prev");
   }
 
   document.addEventListener("click", (event) => {
     if (!topPage.contains(event.target)) return;
     if (event.target.closest("a")) return;
-
-    if (suppressNextClick) {
-      event.preventDefault();
-      event.stopPropagation();
-      suppressNextClick = false;
-      return;
-    }
 
     const centerX = window.innerWidth / 2;
 
@@ -182,10 +134,32 @@ function setupTopImage() {
     }
   });
 
-  addSwipeControl(topPage, nextImage, prevImage);
-  addElasticDrag(topImage);
+  topPage.addEventListener(
+    "wheel",
+    (event) => {
+      if (isAnimating) return;
+      if (event.target.closest("a")) return;
 
-  render();
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+      const mainDelta = absX > absY ? event.deltaX : event.deltaY;
+
+      if (Math.abs(mainDelta) < 18) return;
+
+      event.preventDefault();
+
+      if (mainDelta > 0) {
+        nextImage();
+      } else {
+        prevImage();
+      }
+    },
+    { passive: false }
+  );
+
+  addSwipeControl(topPage, nextImage, prevImage);
+
+  renderCounter();
 }
 
 function setupBookImage() {
@@ -227,51 +201,5 @@ function setupBookImage() {
   render();
 }
 
-function setupCustomCursor() {
-  const topPage = document.querySelector("body.top-page");
-  if (!topPage) return;
-
-  let cursor = document.querySelector(".custom-cursor");
-
-  if (!cursor) {
-    cursor = document.createElement("div");
-    cursor.className = "custom-cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    document.body.appendChild(cursor);
-  }
-
-  function moveCursor(event) {
-    const isLink = event.target.closest("a");
-
-    cursor.style.left = `${event.clientX}px`;
-    cursor.style.top = `${event.clientY}px`;
-
-    if (isLink) {
-      cursor.classList.remove("is-visible", "is-left", "is-right");
-      cursor.classList.add("is-hidden-on-link");
-      return;
-    }
-
-    cursor.classList.add("is-visible");
-    cursor.classList.remove("is-hidden-on-link");
-
-    if (event.clientX < window.innerWidth / 2) {
-      cursor.classList.add("is-left");
-      cursor.classList.remove("is-right");
-    } else {
-      cursor.classList.add("is-right");
-      cursor.classList.remove("is-left");
-    }
-  }
-
-  function hideCursor() {
-    cursor.classList.remove("is-visible");
-  }
-
-  document.addEventListener("mousemove", moveCursor);
-  document.addEventListener("mouseleave", hideCursor);
-}
-
 setupTopImage();
 setupBookImage();
-setupCustomCursor();
