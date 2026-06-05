@@ -10,9 +10,10 @@ function getSlideFromUrl(max) {
 }
 
 function setupTopImage() {
-  const button = document.getElementById("top-image-button");
   const current = document.getElementById("top-current");
-  if (!button || !current) return;
+  const topPage = document.querySelector(".top-page");
+
+  if (!topPage || !current) return;
 
   const max = 12;
   let index = getSlideFromUrl(max);
@@ -34,7 +35,9 @@ function setupTopImage() {
   document.addEventListener("click", (event) => {
     if (event.target.closest("a")) return;
 
-    if (event.clientX >= window.innerWidth / 2) {
+    const centerX = window.innerWidth / 2;
+
+    if (event.clientX >= centerX) {
       nextImage();
     } else {
       prevImage();
@@ -47,6 +50,7 @@ function setupTopImage() {
 function setupBookImage() {
   const button = document.getElementById("book-image-button");
   const current = document.getElementById("book-current");
+
   if (!button || !current) return;
 
   const max = 6;
