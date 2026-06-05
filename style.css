@@ -730,3 +730,132 @@ function setupBookImage() {
 
 setupTopImage();
 setupBookImage();
+
+        /* ===== FINAL OVERRIDE: top full-screen slide + cursor ===== */
+
+.top-image {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.slide-panel {
+  position: fixed !important;
+  left: var(--slide-left, 50vw) !important;
+  top: var(--slide-top, 50vh) !important;
+  width: var(--slide-width, 300px) !important;
+  height: var(--slide-height, 420px) !important;
+  display: grid !important;
+  place-items: center !important;
+  background: var(--gray) !important;
+  color: var(--green) !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  will-change: transform !important;
+}
+
+.slide-panel.is-current {
+  transform: translate(-50%, -50%) !important;
+}
+
+.slide-panel.enter-from-left {
+  transform: translate(calc(-50% - 100vw), -50%) !important;
+  animation: enter-from-left-screen-final 840ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.slide-panel.enter-from-right {
+  transform: translate(calc(-50% + 100vw), -50%) !important;
+  animation: enter-from-right-screen-final 840ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.slide-panel.exit-to-right {
+  transform: translate(-50%, -50%) !important;
+  animation: exit-to-right-screen-final 840ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.slide-panel.exit-to-left {
+  transform: translate(-50%, -50%) !important;
+  animation: exit-to-left-screen-final 840ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes enter-from-left-screen-final {
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes enter-from-right-screen-final {
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes exit-to-right-screen-final {
+  to {
+    transform: translate(calc(-50% + 100vw), -50%);
+  }
+}
+
+@keyframes exit-to-left-screen-final {
+  to {
+    transform: translate(calc(-50% - 100vw), -50%);
+  }
+}
+
+/* cursor */
+body.top-page,
+body.top-page * {
+  cursor: none !important;
+}
+
+body.top-page a,
+body.top-page a * {
+  cursor: pointer !important;
+}
+
+.custom-cursor {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 32px !important;
+  height: 18px !important;
+  pointer-events: none !important;
+  z-index: 999999 !important;
+  opacity: 0 !important;
+  display: block !important;
+  transform: translate(-50%, -50%) !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 32px 18px !important;
+}
+
+.custom-cursor.is-visible {
+  opacity: 1 !important;
+}
+
+.custom-cursor.is-hidden-on-link {
+  opacity: 0 !important;
+}
+
+.custom-cursor.is-left {
+  background-image: url("assets/arrow-left.svg") !important;
+}
+
+.custom-cursor.is-right {
+  background-image: url("assets/arrow-right.svg") !important;
+}
+
+@media (max-width: 700px) {
+  body.top-page,
+  body.top-page * {
+    cursor: auto !important;
+  }
+
+  body.top-page a,
+  body.top-page a * {
+    cursor: pointer !important;
+  }
+
+  .custom-cursor {
+    display: none !important;
+  }
+}
