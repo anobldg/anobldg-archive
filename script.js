@@ -240,21 +240,11 @@ function setupCustomCursor() {
     document.body.appendChild(cursor);
   }
 
-  const initialDpr = window.devicePixelRatio || 1;
-
-  function updateCursorScale() {
-    const currentDpr = window.devicePixelRatio || 1;
-    const scale = initialDpr / currentDpr;
-    cursor.style.setProperty("--cursor-scale", String(scale));
-  }
-
   function moveCursor(event) {
     const isLink = event.target.closest("a");
 
     cursor.style.left = `${event.clientX}px`;
     cursor.style.top = `${event.clientY}px`;
-
-    updateCursorScale();
 
     if (isLink) {
       cursor.classList.remove("is-visible", "is-left", "is-right");
@@ -280,9 +270,6 @@ function setupCustomCursor() {
 
   document.addEventListener("mousemove", moveCursor);
   document.addEventListener("mouseleave", hideCursor);
-  window.addEventListener("resize", updateCursorScale);
-
-  updateCursorScale();
 }
 
 setupTopImage();
