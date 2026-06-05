@@ -108,6 +108,10 @@ button {
   user-select: none;
 }
 
+.image-placeholder:focus {
+  outline: none;
+}
+
 .top-image {
   width: min(45vw, 610px);
   height: min(64vw, 780px);
