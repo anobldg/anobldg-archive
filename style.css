@@ -136,11 +136,18 @@ button {
 }
 
 .top-image {
-  grid-row: 2;
   width: min(45vw, calc((100dvh - 200px) * 0.703), 610px);
   height: min(64vw, calc(100dvh - 200px), 780px);
   min-height: 0;
-  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-image.is-dragging {
+  cursor: grabbing;
+  transition: none;
 }
 
 .image-counter {
@@ -303,11 +310,15 @@ button {
   }
 
    .top-image {
-    width: min(86vw, calc((100dvh - 155px) * 0.703));
-    height: min(112vw, calc(100dvh - 155px));
-    min-height: 0;
-  }
-
+  width: min(86vw, calc((100dvh - 155px) * 0.703));
+  height: min(112vw, calc(100dvh - 155px));
+  min-height: 0;
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+  
   .sub-layout {
     padding: 82px 24px 64px;
   }
