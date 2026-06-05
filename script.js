@@ -137,53 +137,23 @@ function setupCustomCursor() {
   const topPage = document.querySelector("body.top-page");
   if (!topPage) return;
 
-  let cursor = document.querySelector(".custom-cursor");
-
-  if (!cursor) {
-    cursor = document.createElement("div");
-    cursor.className = "custom-cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    document.body.appendChild(cursor);
-  }
-
-  cursor.innerHTML = `
-    <span class="cursor-line"></span>
-    <span class="cursor-head-a"></span>
-    <span class="cursor-head-b"></span>
-  `;
-
-  function moveCursor(event) {
-    const isLink = event.target.closest("a");
-
-    cursor.style.left = `${event.clientX}px`;
-    cursor.style.top = `${event.clientY}px`;
-
-    if (isLink) {
-      cursor.classList.remove("is-visible");
-      cursor.classList.add("is-hidden-on-link");
+  function updateCursor(event) {
+    if (event.target.closest("a")) {
+      topPage.classList.remove("cursor-left", "cursor-right");
       return;
     }
 
-    cursor.classList.add("is-visible");
-    cursor.classList.remove("is-hidden-on-link");
-
     if (event.clientX < window.innerWidth / 2) {
-      cursor.classList.add("is-left");
-      cursor.classList.remove("is-right");
+      topPage.classList.add("cursor-left");
+      topPage.classList.remove("cursor-right");
     } else {
-      cursor.classList.add("is-right");
-      cursor.classList.remove("is-left");
+      topPage.classList.add("cursor-right");
+      topPage.classList.remove("cursor-left");
     }
   }
 
-  function hideCursor() {
-    cursor.classList.remove("is-visible");
-  }
-
-  document.addEventListener("mousemove", moveCursor);
-  document.addEventListener("mouseleave", hideCursor);
+  document.addEventListener("mousemove", updateCursor);
+  topPage.classList.add("cursor-right");
 }
 
-setupTopImage();
-setupBookImage();
 setupCustomCursor();
