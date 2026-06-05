@@ -317,6 +317,22 @@ function setupCustomCursor() {
     document.body.appendChild(cursor);
   }
 
+  function setArrow(direction) {
+    if (direction === "left") {
+      cursor.innerHTML = `
+        <svg viewBox="0 0 96 54" aria-hidden="true">
+          <path d="M94 27H4M4 27L27 10M4 27L27 44"></path>
+        </svg>
+      `;
+    } else {
+      cursor.innerHTML = `
+        <svg viewBox="0 0 96 54" aria-hidden="true">
+          <path d="M2 27H92M92 27L69 10M92 27L69 44"></path>
+        </svg>
+      `;
+    }
+  }
+
   function moveCursor(event) {
     const isLink = event.target.closest("a");
 
@@ -333,11 +349,9 @@ function setupCustomCursor() {
     cursor.classList.add("is-visible");
 
     if (event.clientX < window.innerWidth / 2) {
-      cursor.classList.add("is-left");
-      cursor.classList.remove("is-right");
+      setArrow("left");
     } else {
-      cursor.classList.add("is-right");
-      cursor.classList.remove("is-left");
+      setArrow("right");
     }
   }
 
@@ -348,6 +362,8 @@ function setupCustomCursor() {
 
   document.addEventListener("mousemove", moveCursor);
   document.addEventListener("mouseleave", hideCursor);
+
+  setArrow("right");
 }
 
 setupCustomCursor();
