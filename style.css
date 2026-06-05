@@ -376,10 +376,10 @@ button {
 .top-page .top-header h1,
 .top-page .top-header h1 a,
 .top-page .image-counter {
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--text);
-  line-height: 1.78;
-  letter-spacing: 0.02em;
+  font-family: var(--font) !important;
+  font-size: 13px !important;
+  font-weight: 300 !important;
+  color: var(--text) !important;
+  line-height: 1.78 !important;
+  letter-spacing: 0.02em !important;
 }
