@@ -21,9 +21,24 @@ function setupTopImage() {
     current.textContent = pad2(index);
   }
 
-  button.addEventListener("click", () => {
+  function nextImage() {
     index = index >= max ? 1 : index + 1;
     render();
+  }
+
+  function prevImage() {
+    index = index <= 1 ? max : index - 1;
+    render();
+  }
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("a")) return;
+
+    if (event.clientX >= window.innerWidth / 2) {
+      nextImage();
+    } else {
+      prevImage();
+    }
   });
 
   render();
@@ -41,9 +56,25 @@ function setupBookImage() {
     current.textContent = String(index);
   }
 
-  button.addEventListener("click", () => {
+  function nextImage() {
     index = index >= max ? 1 : index + 1;
     render();
+  }
+
+  function prevImage() {
+    index = index <= 1 ? max : index - 1;
+    render();
+  }
+
+  button.addEventListener("click", (event) => {
+    const rect = button.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+
+    if (event.clientX >= centerX) {
+      nextImage();
+    } else {
+      prevImage();
+    }
   });
 
   render();
