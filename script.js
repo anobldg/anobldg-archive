@@ -318,9 +318,18 @@ function setupCustomCursor() {
   }
 
   function moveCursor(event) {
+    const isLink = event.target.closest("a");
+
     cursor.style.left = `${event.clientX}px`;
     cursor.style.top = `${event.clientY}px`;
 
+    if (isLink) {
+      cursor.classList.add("is-hidden-on-link");
+      cursor.classList.remove("is-visible");
+      return;
+    }
+
+    cursor.classList.remove("is-hidden-on-link");
     cursor.classList.add("is-visible");
 
     if (event.clientX < window.innerWidth / 2) {
@@ -334,6 +343,7 @@ function setupCustomCursor() {
 
   function hideCursor() {
     cursor.classList.remove("is-visible");
+    cursor.classList.add("is-hidden-on-link");
   }
 
   document.addEventListener("mousemove", moveCursor);
