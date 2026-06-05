@@ -502,3 +502,18 @@ body.top-page a * {
     display: none;
   }
 }
+
+/* Custom cursor final override */
+body.top-page .custom-cursor {
+  width: 31px !important;
+  height: 18px !important;
+  background-size: 31px 18px !important;
+}
+
+body.top-page .custom-cursor.is-left {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='54' viewBox='0 0 96 54'%3E%3Cpath d='M94 27H4M4 27L28 8M4 27L28 46' fill='none' stroke='%232b2b2b' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E") !important;
+}
+
+body.top-page .custom-cursor.is-right {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='54' viewBox='0 0 96 54'%3E%3Cpath d='M2 27H92M92 27L68 8M92 27L68 46' fill='none' stroke='%232b2b2b' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E") !important;
+}
