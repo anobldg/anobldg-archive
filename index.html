@@ -1,70 +1,80 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>アノビルのこと | Ano Building</title>
+  <title>Structure Study</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="intro-active">
-  <section id="intro-screen" class="intro-screen" aria-label="Intro">
-    <h1>街の断片を読み、<br>建築のかたちを考える。</h1>
-  </section>
-
-  <main id="main-content" class="main-content">
-    <section class="top">
-      <h1 class="statement">街の断片を読み、<br>建築のかたちを考える。</h1>
-      <p class="statement-en">Reading fragments of the city,<br>thinking through architecture.</p>
+<body class="home">
+  <main class="page">
+    <section class="intro">
+      <h1 class="statement">
+        Embracing conditions and contradictions,<br>
+        this temporary page tests how attitude becomes form
+      </h1>
 
       <div class="meta">
-        <p class="site-title"><a href="index.html">アノビルのこと<br><span>Ano Building</span></a></p>
-
-        <div class="slide-info" aria-live="polite">
-          <p id="slide-count">1/8</p>
-          <p id="slide-title-ja">展示風景</p>
-          <p id="slide-title-en" class="en">Exhibition</p>
+        <div class="studio-name">
+          <a href="index.html">STUDIO</a>
         </div>
 
-        <nav class="links" aria-label="Links">
-          <a href="book.html">Buy Now</a>
-          <a href="#slide-note">Info</a>
-          <a href="#information">Information</a>
-        </nav>
+        <div class="slide-data">
+          <p id="slide-count">1/8</p>
+          <p id="slide-title">A Temporary Order</p>
+          <p>
+            <a href="product.html">Buy Now</a>
+            <a href="#info" id="info-link">Info</a>
+            <a href="#information" id="information-link">Information</a>
+          </p>
+        </div>
       </div>
     </section>
 
-    <section class="slide">
-      <div id="slide-frame" class="slide-frame" role="button" tabindex="0" aria-label="Next slide">
-        <img id="slide-image" src="images/slide-01.jpg" alt="展示風景">
-        <div id="slide-placeholder" class="placeholder" hidden>image</div>
+    <section class="slideshow" id="info">
+      <div class="slide-image" id="slide-hitarea" role="button" tabindex="0" aria-label="Next slide">
+        <img id="slide-img" src="images/slide-01.jpg" alt="">
+        <div id="placeholder" class="placeholder" hidden>image</div>
       </div>
+    </section>
 
-      <p id="slide-note" class="slide-note">展覧会「アノビルのこと」の記録より。</p>
-
-      <p class="controls">
-        <a href="#" id="prev-slide">Prev</a>
-        <a href="#" id="next-slide">Next</a>
+    <section class="slide-note">
+      <p id="slide-note">A structural study of a minimal slideshow page.</p>
+      <p>
+        <a href="#" id="prev">Previous</a>
+        <a href="#" id="next">Next</a>
       </p>
     </section>
 
-    <section id="information" class="information">
+    <section class="information" id="information">
       <h2>Information</h2>
-      <p>「アノビルのこと」は、東京・日本橋横山町を舞台に、街に建つ小さなビルの断片を読み取り、建築として再構成する試みです。</p>
-      <p>本サイトは、展覧会「アノビルのこと」の記録と、アーカイブブックの紹介を目的としています。</p>
-      <p>展示は三つの会期を通して構成されました。</p>
-      <p>第一期：抽象化への探求<br>第二期：断片から全体を知覚する<br>第三期：読む建築展</p>
-      <p>Archive Book<br>価格：5,000円<br>仕様：仮<br>購入方法：仮</p>
-      <p>Authors<br>大塚史奈 + 喜井雅治</p>
+
+      <p>
+        This page is a non-infringing structural study. It recreates a simple page logic:
+        statement, name, slide number, title, links, image sequence, and information text.
+      </p>
+
+      <p>
+        The purpose is to test composition and interaction before replacing the content
+        with an original project.
+      </p>
+
+      <p>
+        The layout intentionally avoids buttons, cards, decorative UI, modal windows, and
+        complex navigation. Text and images are treated as the main structure.
+      </p>
+
+      <p>
+        Contact<br>
+        General enquiries
+      </p>
+
+      <p>
+        Follow<br>
+        Instagram
+      </p>
     </section>
   </main>
-
-  <noscript>
-    <style>
-      .intro-screen{display:none}
-      .main-content{opacity:1;visibility:visible;transform:none}
-      body{overflow:auto}
-    </style>
-  </noscript>
 
   <script src="script.js"></script>
 </body>
