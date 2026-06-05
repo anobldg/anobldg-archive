@@ -146,13 +146,13 @@ function setupCustomCursor() {
     document.body.appendChild(cursor);
   }
 
-  const baseDevicePixelRatio = window.devicePixelRatio || 1;
+  const initialDpr = window.devicePixelRatio || 1;
 
   function updateCursorScale() {
-    const currentDevicePixelRatio = window.devicePixelRatio || 1;
-    const scale = baseDevicePixelRatio / currentDevicePixelRatio;
+    const currentDpr = window.devicePixelRatio || 1;
+    const scale = initialDpr / currentDpr;
 
-    cursor.style.setProperty("--cursor-scale", scale);
+    cursor.style.setProperty("--cursor-scale", String(scale));
   }
 
   function moveCursor(event) {
@@ -164,7 +164,7 @@ function setupCustomCursor() {
     updateCursorScale();
 
     if (isLink) {
-      cursor.classList.remove("is-visible");
+      cursor.classList.remove("is-visible", "is-left", "is-right");
       cursor.classList.add("is-hidden-on-link");
       return;
     }
