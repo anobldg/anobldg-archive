@@ -466,15 +466,31 @@ body.top-page a * {
   top: 0;
   left: 0;
   width: 32px;
-  aspect-ratio: 96 / 54;
+  height: 18px;
   pointer-events: none;
   z-index: 999999;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
-  transform-origin: center center;
+  display: block !important;
+  transform: translate(-50%, -50%);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: 32px 18px;
+}
+
+.custom-cursor.is-visible {
+  opacity: 1;
+}
+
+.custom-cursor.is-hidden-on-link {
+  opacity: 0;
+}
+
+.custom-cursor.is-left {
+  background-image: url("assets/arrow-left.svg");
+}
+
+.custom-cursor.is-right {
+  background-image: url("assets/arrow-right.svg");
 }
 
 .custom-cursor.is-visible {
