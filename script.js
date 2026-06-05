@@ -137,23 +137,59 @@ function setupCustomCursor() {
   const topPage = document.querySelector("body.top-page");
   if (!topPage) return;
 
-  function updateCursor(event) {
-    if (event.target.closest("a")) {
-      topPage.classList.remove("cursor-left", "cursor-right");
+  let cursor = document.querySelector(".custom-cursor");
+
+  if (!cursor) {
+    cursor = document.createElement("div");
+    cursor.className = "custom-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    document.body.appendChild(cursor);
+  }
+
+  const baseDevicePixelRatio = window.devicePixelRatio || 1;
+
+  function updateCursorScale() {
+    const currentDevicePixelRatio = window.devicePixelRatio || 1;
+    const scale = baseDevicePixelRatio / currentDevicePixelRatio;
+
+    cursor.style.setProperty("--cursor-scale", scale);
+  }
+
+  function moveCursor(event) {
+    const isLink = event.target.closest("a");
+
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+
+    updateCursorScale();
+
+    if (isLink) {
+      cursor.classList.remove("is-visible");
+      cursor.classList.add("is-hidden-on-link");
       return;
     }
 
+    cursor.classList.add("is-visible");
+    cursor.classList.remove("is-hidden-on-link");
+
     if (event.clientX < window.innerWidth / 2) {
-      topPage.classList.add("cursor-left");
-      topPage.classList.remove("cursor-right");
+      cursor.classList.add("is-left");
+      cursor.classList.remove("is-right");
     } else {
-      topPage.classList.add("cursor-right");
-      topPage.classList.remove("cursor-left");
+      cursor.classList.add("is-right");
+      cursor.classList.remove("is-left");
     }
   }
 
-  document.addEventListener("mousemove", updateCursor);
-  topPage.classList.add("cursor-right");
+  function hideCursor() {
+    cursor.classList.remove("is-visible");
+  }
+
+  document.addEventListener("mousemove", moveCursor);
+  document.addEventListener("mouseleave", hideCursor);
+  window.addEventListener("resize", updateCursorScale);
+
+  updateCursorScale();
 }
 
 setupCustomCursor();
