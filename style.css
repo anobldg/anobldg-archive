@@ -421,9 +421,10 @@ body.top-page a * {
   width: 34px;
   height: 18px;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 999999;
   opacity: 0;
   transform: translate(-50%, -50%);
+  background: transparent;
 }
 
 .custom-cursor.is-visible {
@@ -434,39 +435,49 @@ body.top-page a * {
   opacity: 0;
 }
 
-.custom-cursor::before,
-.custom-cursor::after {
-  content: "";
+.custom-cursor .cursor-line,
+.custom-cursor .cursor-head-a,
+.custom-cursor .cursor-head-b {
   position: absolute;
+  display: block;
+  height: 1.5px;
   background: #2b2b2b;
+  transform-origin: center;
 }
 
-/* arrow main line */
-.custom-cursor::before {
+.custom-cursor .cursor-line {
   top: 8px;
   left: 0;
   width: 34px;
-  height: 1.5px;
 }
 
-/* arrow head */
-.custom-cursor::after {
+.custom-cursor .cursor-head-a,
+.custom-cursor .cursor-head-b {
+  width: 10px;
+}
+
+.custom-cursor.is-right .cursor-head-a {
   top: 4px;
-  width: 9px;
-  height: 9px;
-  background: transparent;
-  border-top: 1.5px solid #2b2b2b;
-  border-left: 1.5px solid #2b2b2b;
-}
-
-.custom-cursor.is-left::after {
-  left: 0;
-  transform: rotate(-45deg);
-}
-
-.custom-cursor.is-right::after {
   right: 0;
-  transform: rotate(135deg);
+  transform: rotate(35deg);
+}
+
+.custom-cursor.is-right .cursor-head-b {
+  top: 12px;
+  right: 0;
+  transform: rotate(-35deg);
+}
+
+.custom-cursor.is-left .cursor-head-a {
+  top: 4px;
+  left: 0;
+  transform: rotate(-35deg);
+}
+
+.custom-cursor.is-left .cursor-head-b {
+  top: 12px;
+  left: 0;
+  transform: rotate(35deg);
 }
 
 @media (max-width: 700px) {
