@@ -15,17 +15,18 @@ function clamp(value, min, max) {
 
 let suppressNextClick = false;
 
-function addSwipeControl(target, onNext, onPrev) {
+function addSwipeControl(target, onNext, onPrev, options = {}) {
   if (!target) return;
+
+  const ignoreSelector = options.ignoreSelector || null;
 
   let startX = 0;
   let startY = 0;
-  let endX = 0;
-  let endY = 0;
 
   target.addEventListener(
     "touchstart",
     (event) => {
+      if (ignoreSelector && event.target.closest(ignoreSelector)) return;
       if (!event.touches || event.touches.length === 0) return;
 
       startX = event.touches[0].clientX;
@@ -37,10 +38,11 @@ function addSwipeControl(target, onNext, onPrev) {
   target.addEventListener(
     "touchend",
     (event) => {
+      if (ignoreSelector && event.target.closest(ignoreSelector)) return;
       if (!event.changedTouches || event.changedTouches.length === 0) return;
 
-      endX = event.changedTouches[0].clientX;
-      endY = event.changedTouches[0].clientY;
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
 
       const diffX = endX - startX;
       const diffY = endY - startY;
@@ -103,8 +105,8 @@ function addElasticDrag(target) {
       suppressNextClick = true;
     }
 
-    const x = clamp(rawX * 0.32, -34, 34);
-    const y = clamp(rawY * 0.24, -24, 24);
+    const x = clamp(rawX * 0.28, -30, 30);
+    const y = clamp(rawY * 0.2, -20, 20);
 
     setTranslate(x, y);
   });
@@ -116,7 +118,7 @@ function addElasticDrag(target) {
       try {
         target.releasePointerCapture(event.pointerId);
       } catch (error) {
-        // pointer capture may already be released
+        // ignore
       }
     }
 
@@ -125,7 +127,7 @@ function addElasticDrag(target) {
     if (moved) {
       window.setTimeout(() => {
         suppressNextClick = false;
-      }, 120);
+      }, 140);
     }
   });
 
@@ -135,14 +137,14 @@ function addElasticDrag(target) {
 
     window.setTimeout(() => {
       suppressNextClick = false;
-    }, 120);
+    }, 140);
   });
 
   target.addEventListener(
     "wheel",
     (event) => {
-      const deltaX = clamp(-event.deltaX * 0.12, -28, 28);
-      const deltaY = clamp(-event.deltaY * 0.08, -18, 18);
+      const deltaX = clamp(-event.deltaX * 0.1, -24, 24);
+      const deltaY = clamp(-event.deltaY * 0.07, -16, 16);
 
       if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
 
@@ -154,15 +156,13 @@ function addElasticDrag(target) {
       wheelTimer = window.setTimeout(() => {
         resetPosition();
         suppressNextClick = false;
-      }, 90);
+      }, 110);
     },
     { passive: true }
   );
 }
 
-function setupTopImage() {
-  
-  function setupDirectionalCursor(topPage) {
+function setupDirectionalCursor(topPage) {
   if (!topPage) return;
 
   function updateCursor(event) {
@@ -178,17 +178,20 @@ function setupTopImage() {
   }
 
   document.addEventListener("mousemove", updateCursor);
-
   topPage.classList.add("cursor-right");
 }
+
+function setupTopImage() {
   const current = document.getElementById("top-current");
   const topPage = document.querySelector(".top-page");
-  const topImage = document.getElementById("top-image-button");
+  const topImage =
+    document.getElementById("top-image-button") ||
+    document.querySelector(".top-image");
 
   if (!topPage || !current) return;
 
-　setupDirectionalCursor(topPage);
-  
+  setupDirectionalCursor(topPage);
+
   const max = 12;
   let index = getSlideFromUrl(max);
 
@@ -207,6 +210,7 @@ function setupTopImage() {
   }
 
   document.addEventListener("click", (event) => {
+    if (!topPage.contains(event.target)) return;
     if (event.target.closest("a")) return;
 
     if (suppressNextClick) {
@@ -225,7 +229,10 @@ function setupTopImage() {
     }
   });
 
-  addSwipeControl(topPage, nextImage, prevImage);
+  addSwipeControl(topPage, nextImage, prevImage, {
+    ignoreSelector: ".top-image"
+  });
+
   addElasticDrag(topImage);
 
   render();
