@@ -10,10 +10,13 @@
   --green: #57d184;
   --red: #ff1d25;
   --blue: #2f52ff;
-  --font: Arial, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
-  --font-mincho: "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
-}
 
+  --font: "Franklin Gothic ATF Light", Arial, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
+  --font-bold: "Franklin Gothic ATF Regular", Arial, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
+
+  --font-mincho: "Ibarra Real Nova Regular", "Ibarra Real Nova", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+  --font-mincho-bold: "Ibarra Real Nova SemiBold", "Ibarra Real Nova", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+}
 html {
   scroll-behavior: smooth;
 }
@@ -23,7 +26,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   line-height: 1.78;
   letter-spacing: 0.02em;
@@ -32,7 +35,9 @@ body {
 strong,
 .top-header h1,
 .image-counter,
-.book-title {
+.book-title,
+.price-row {
+  font-family: var(--font-bold);
   font-weight: 600;
 }
 
@@ -74,16 +79,16 @@ button {
 
 .top-header h1 {
   margin: 0 0 3px;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.3;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .buy-link {
   color: var(--red);
-  font-family: var(--font-mincho);
-  font-size: 15px;
-  font-weight: 700;
+  font-family: var(--font-mincho-bold);
+  font-size: 14px;
+  font-weight: 600;
   animation: blink-buy 1.15s steps(1, end) infinite;
 }
 
@@ -130,8 +135,8 @@ button {
 .image-counter {
   margin: 18px 0 0;
   color: var(--text);
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 
@@ -243,7 +248,8 @@ button {
 
 .cart-link {
   color: var(--blue);
-  font-family: var(--font-mincho);
+  font-family: var(--font-mincho-bold);
+  font-weight: 600;
 }
 
 .book-title {
@@ -274,9 +280,10 @@ button {
 
 @media (max-width: 700px) {
   body {
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.72;
   }
+
 
   .top-layout {
     padding: 28px 24px 36px;
@@ -338,16 +345,16 @@ button {
 
 @media (max-width: 520px) {
   body {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .top-header h1,
   .buy-link {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .image-counter {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .sub-layout {
