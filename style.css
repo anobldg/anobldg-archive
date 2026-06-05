@@ -436,9 +436,14 @@ body.top-page a * {
 }
 
 /* Custom arrow cursor for top page */
-body.top-page,
-body.top-page * {
-  cursor: none !important;
+body.top-page.cursor-left,
+body.top-page.cursor-left * {
+  cursor: url("assets/arrow-left.svg") 2 9, w-resize !important;
+}
+
+body.top-page.cursor-right,
+body.top-page.cursor-right * {
+  cursor: url("assets/arrow-right.svg") 30 9, e-resize !important;
 }
 
 /* Links keep default pointer cursor */
@@ -447,35 +452,21 @@ body.top-page a * {
   cursor: pointer !important;
 }
 
+/* Hide the old HTML cursor element */
 .custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: clamp(20px, 2.2vw, 30px);
-  aspect-ratio: 96 / 54;
-  pointer-events: none;
-  z-index: 999999;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  display: none !important;
 }
 
-.custom-cursor.is-visible {
-  opacity: 1;
-}
+@media (max-width: 700px) {
+  body.top-page,
+  body.top-page * {
+    cursor: auto !important;
+  }
 
-.custom-cursor.is-hidden-on-link {
-  opacity: 0;
-}
-
-.custom-cursor.is-left {
-  background-image: url("assets/arrow-left.svg");
-}
-
-.custom-cursor.is-right {
-  background-image: url("assets/arrow-right.svg");
+  body.top-page a,
+  body.top-page a * {
+    cursor: pointer !important;
+  }
 }
 
 @media (max-width: 700px) {
