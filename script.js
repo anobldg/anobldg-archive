@@ -1,448 +1,290 @@
-* {
-  box-sizing: border-box;
+function pad2(number) {
+  return String(number).padStart(2, "0");
 }
 
-:root {
-  --bg: #ffffff;
-  --text: #2b2b2b;
-  --muted: #666666;
-  --gray: #4a4a4a;
-  --green: #57d184;
-  --red: #ff1d25;
-  --blue: #2f52ff;
-
-  --font: "Franklin Gothic ATF Light", Arial, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
-  --font-bold: "Franklin Gothic ATF Regular", Arial, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", YuGothic, sans-serif;
-
-  --font-mincho: "Ibarra Real Nova Regular", "Ibarra Real Nova", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
-  --font-mincho-bold: "Ibarra Real Nova SemiBold", "Ibarra Real Nova", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", serif;
+function getSlideFromUrl(max) {
+  const params = new URLSearchParams(window.location.search);
+  const slide = Number(params.get("slide"));
+  if (!Number.isFinite(slide) || slide < 1 || slide > max) return 1;
+  return slide;
 }
 
-html {
-  scroll-behavior: smooth;
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
 }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.78;
-  letter-spacing: 0.02em;
+let suppressNextClick = false;
+
+function addSwipeControl(target, onNext, onPrev) {
+  if (!target) return;
+
+  let startX = 0;
+  let startY = 0;
+
+  target.addEventListener(
+    "touchstart",
+    (event) => {
+      if (!event.touches || event.touches.length === 0) return;
+
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  target.addEventListener(
+    "touchend",
+    (event) => {
+      if (!event.changedTouches || event.changedTouches.length === 0) return;
+
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+
+      const diffX = endX - startX;
+      const diffY = endY - startY;
+
+      const minSwipeDistance = 45;
+      const isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+
+      if (!isHorizontalSwipe) return;
+      if (Math.abs(diffX) < minSwipeDistance) return;
+
+      if (diffX < 0) {
+        onNext();
+      } else {
+        onPrev();
+      }
+    },
+    { passive: true }
+  );
 }
 
-strong,
-.top-header h1,
-.image-counter,
-.book-title,
-.price-row {
-  font-family: var(--font-bold);
-  font-weight: 600;
-}
+function addElasticDrag(target) {
+  if (!target) return;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  let isPointerDown = false;
+  let startX = 0;
+  let startY = 0;
+  let moved = false;
 
-a:hover {
-  opacity: 1;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
-}
-
-button {
-  font: inherit;
-}
-
-/* Top */
-
-.top-page {
-  height: 100dvh;
-  overflow: hidden;
-}
-
-.top-layout {
-  height: 100dvh;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-  padding: 32px 4vw 30px;
-}
-
-.top-header {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  margin-bottom: 0;
-}
-
-.top-header h1 {
-  margin: 0 0 1px;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.78;
-  letter-spacing: 0.02em;
-  color: var(--text);
-}
-
-.top-header p {
-  margin: 0;
-}
-
-.buy-link {
-  color: var(--red);
-  font-family: var(--font-mincho-bold);
-  font-size: 14px;
-  font-weight: 600;
-  animation: blink-buy 1.15s steps(1, end) infinite;
-}
-
-@keyframes blink-buy {
-  0%, 48% {
-    opacity: 1;
+  function setTranslate(x, y) {
+    target.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
 
-  49%, 100% {
-    opacity: 0;
-  }
-}
-
-.top-image-section {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  justify-items: center;
-  align-items: center;
-  align-content: stretch;
-  min-height: 0;
-}
-
-.image-placeholder {
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 0;
-  background: var(--gray);
-  color: var(--green);
-  user-select: none;
-}
-
-.image-placeholder:focus {
-  outline: none;
-}
-
-.top-image {
-  width: min(45vw, calc((100dvh - 200px) * 0.703), 610px);
-  height: min(64vw, calc(100dvh - 200px), 780px);
-  min-height: 0;
-  will-change: transform;
-  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.top-image.is-dragging {
-  transition: none;
-}
-
-.image-counter {
-  margin: 18px 0 0;
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.78;
-  letter-spacing: 0.02em;
-}
-
-.divider {
-  display: inline-block;
-  padding: 0 13px;
-}
-
-/* Sub common */
-
-.sub-layout {
-  min-height: 100vh;
-  padding: 28px 3vw 72px;
-}
-
-.back-nav {
-  position: absolute;
-  top: 28px;
-  left: calc(3vw + 0.5vw);
-  z-index: 10;
-  font-weight: 300;
-}
-
-.back-nav a {
-  border-bottom: none;
-  text-decoration: none;
-}
-
-/* About */
-
-.about-layout {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  column-gap: 8vw;
-  align-items: start;
-  padding-top: 100px;
-}
-
-.about-text {
-  max-width: 780px;
-  padding-left: 0.5vw;
-}
-
-.about-text p {
-  margin: 0 0 22px;
-}
-
-.credit-block {
-  margin-top: 56px;
-}
-
-.caption-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 7vw;
-  row-gap: 40px;
-  padding-top: 0;
-}
-
-.caption-item {
-  display: grid;
-  grid-template-columns: 34px 1fr;
-  column-gap: 0;
-  color: var(--text);
-  line-height: 1.58;
-}
-
-.caption-item .num {
-  grid-row: 1 / span 4;
-}
-
-.caption-item span:not(.num) {
-  display: block;
-}
-
-.caption-title {
-  margin-bottom: 2px;
-}
-
-/* Book */
-
-.book-layout {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  column-gap: 8vw;
-  align-items: start;
-  padding-top: 100px;
-}
-
-.book-text {
-  max-width: 810px;
-  padding-left: 0.6vw;
-}
-
-.book-text p {
-  margin: 0 0 24px;
-}
-
-.book-credit {
-  margin-top: 48px;
-}
-
-.price-row {
-  display: flex;
-  gap: 34px;
-  align-items: baseline;
-  margin: 82px 0 28px;
-  font-weight: 700;
-}
-
-.cart-link {
-  color: var(--blue);
-  font-family: var(--font-mincho-bold);
-  font-weight: 600;
-}
-
-.book-title {
-  font-weight: 700;
-}
-
-.book-title span {
-  font-weight: 400;
-}
-
-.book-image-section {
-  display: grid;
-  justify-items: center;
-  align-content: start;
-}
-
-.book-image {
-  width: min(35vw, 560px);
-  height: min(48vw, 690px);
-  min-height: 520px;
-}
-
-.book-counter {
-  margin-top: 22px;
-}
-
-/* Custom arrow cursor */
-
-body.top-page,
-body.top-page * {
-  cursor: none !important;
-}
-
-body.top-page a,
-body.top-page a * {
-  cursor: pointer !important;
-}
-
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 32px;
-  aspect-ratio: 96 / 54;
-  pointer-events: none;
-  z-index: 999999;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
-  transform-origin: center center;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-
-.custom-cursor.is-visible {
-  opacity: 1;
-}
-
-.custom-cursor.is-hidden-on-link {
-  opacity: 0;
-}
-
-.custom-cursor.is-left {
-  background-image: url("assets/arrow-left.svg");
-}
-
-.custom-cursor.is-right {
-  background-image: url("assets/arrow-right.svg");
-}
-
-/* Responsive */
-
-@media (max-width: 700px) {
-  body {
-    font-size: 12px;
-    line-height: 1.72;
+  function resetPosition() {
+    target.classList.remove("is-dragging");
+    target.style.transform = "translate3d(0, 0, 0)";
   }
 
-  .top-layout {
-    padding: 28px 24px 36px;
-  }
+  target.addEventListener("pointerdown", (event) => {
+    isPointerDown = true;
+    moved = false;
+    startX = event.clientX;
+    startY = event.clientY;
 
-  .top-image {
-    width: min(86vw, calc((100dvh - 155px) * 0.703));
-    height: min(112vw, calc(100dvh - 155px));
-    min-height: 0;
-  }
+    target.classList.add("is-dragging");
 
-  .sub-layout {
-    padding: 82px 24px 64px;
-  }
+    if (target.setPointerCapture) {
+      target.setPointerCapture(event.pointerId);
+    }
+  });
 
-  .back-nav {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-  }
+  target.addEventListener("pointermove", (event) => {
+    if (!isPointerDown) return;
 
-  .about-layout,
-  .book-layout {
-    display: block;
-    padding-top: 82px;
-  }
+    const rawX = event.clientX - startX;
+    const rawY = event.clientY - startY;
 
-  .about-text,
-  .book-text {
-    max-width: none;
-    padding-left: 0;
-  }
+    if (Math.abs(rawX) > 4 || Math.abs(rawY) > 4) {
+      moved = true;
+      suppressNextClick = true;
+    }
 
-  .caption-grid {
-    grid-template-columns: 1fr;
-    row-gap: 26px;
-    margin-top: 56px;
-  }
+    const x = clamp(rawX * 0.28, -30, 30);
+    const y = clamp(rawY * 0.2, -20, 20);
 
-  .caption-item {
-    grid-template-columns: 42px 1fr;
-  }
+    setTranslate(x, y);
+  });
 
-  .book-image-section {
-    margin-top: 54px;
-  }
+  target.addEventListener("pointerup", (event) => {
+    isPointerDown = false;
 
-  .book-image {
-    width: 86vw;
-    height: 112vw;
-    min-height: 0;
-  }
+    if (target.releasePointerCapture) {
+      try {
+        target.releasePointerCapture(event.pointerId);
+      } catch (error) {
+        // ignore
+      }
+    }
 
-  .price-row {
-    margin-top: 56px;
-    gap: 28px;
-  }
+    resetPosition();
 
-  body.top-page,
-  body.top-page * {
-    cursor: auto !important;
-  }
+    if (moved) {
+      window.setTimeout(() => {
+        suppressNextClick = false;
+      }, 140);
+    }
+  });
 
-  body.top-page a,
-  body.top-page a * {
-    cursor: pointer !important;
-  }
+  target.addEventListener("pointercancel", () => {
+    isPointerDown = false;
+    resetPosition();
 
-  .custom-cursor {
-    display: none;
-  }
+    window.setTimeout(() => {
+      suppressNextClick = false;
+    }, 140);
+  });
 }
 
-@media (max-width: 520px) {
-  body {
-    font-size: 11px;
+function setupTopImage() {
+  const current = document.getElementById("top-current");
+  const topPage = document.querySelector(".top-page");
+  const topImage =
+    document.getElementById("top-image-button") ||
+    document.querySelector(".top-image");
+
+  if (!topPage || !current) return;
+
+  const max = 12;
+  let index = getSlideFromUrl(max);
+
+  function render() {
+    current.textContent = pad2(index);
   }
 
-  .top-header h1,
-  .buy-link {
-    font-size: 14px;
+  function nextImage() {
+    index = index >= max ? 1 : index + 1;
+    render();
   }
 
-  .image-counter {
-    font-size: 14px;
+  function prevImage() {
+    index = index <= 1 ? max : index - 1;
+    render();
   }
 
-  .sub-layout {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
+  document.addEventListener("click", (event) => {
+    if (!topPage.contains(event.target)) return;
+    if (event.target.closest("a")) return;
 
-  .back-nav {
-    left: 18px;
-  }
+    if (suppressNextClick) {
+      event.preventDefault();
+      event.stopPropagation();
+      suppressNextClick = false;
+      return;
+    }
 
-  .price-row {
-    display: grid;
-    gap: 4px;
-  }
+    const centerX = window.innerWidth / 2;
+
+    if (event.clientX >= centerX) {
+      nextImage();
+    } else {
+      prevImage();
+    }
+  });
+
+  addSwipeControl(topPage, nextImage, prevImage);
+  addElasticDrag(topImage);
+
+  render();
 }
+
+function setupBookImage() {
+  const button = document.getElementById("book-image-button");
+  const current = document.getElementById("book-current");
+
+  if (!button || !current) return;
+
+  const max = 6;
+  let index = 1;
+
+  function render() {
+    current.textContent = String(index);
+  }
+
+  function nextImage() {
+    index = index >= max ? 1 : index + 1;
+    render();
+  }
+
+  function prevImage() {
+    index = index <= 1 ? max : index - 1;
+    render();
+  }
+
+  button.addEventListener("click", (event) => {
+    const rect = button.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+
+    if (event.clientX >= centerX) {
+      nextImage();
+    } else {
+      prevImage();
+    }
+  });
+
+  addSwipeControl(button, nextImage, prevImage);
+
+  render();
+}
+
+function setupCustomCursor() {
+  const topPage = document.querySelector("body.top-page");
+  if (!topPage) return;
+
+  let cursor = document.querySelector(".custom-cursor");
+
+  if (!cursor) {
+    cursor = document.createElement("div");
+    cursor.className = "custom-cursor";
+    cursor.setAttribute("aria-hidden", "true");
+    document.body.appendChild(cursor);
+  }
+
+  const initialDpr = window.devicePixelRatio || 1;
+
+  function updateCursorScale() {
+    const currentDpr = window.devicePixelRatio || 1;
+    const scale = initialDpr / currentDpr;
+    cursor.style.setProperty("--cursor-scale", String(scale));
+  }
+
+  function moveCursor(event) {
+    const isLink = event.target.closest("a");
+
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+
+    updateCursorScale();
+
+    if (isLink) {
+      cursor.classList.remove("is-visible", "is-left", "is-right");
+      cursor.classList.add("is-hidden-on-link");
+      return;
+    }
+
+    cursor.classList.add("is-visible");
+    cursor.classList.remove("is-hidden-on-link");
+
+    if (event.clientX < window.innerWidth / 2) {
+      cursor.classList.add("is-left");
+      cursor.classList.remove("is-right");
+    } else {
+      cursor.classList.add("is-right");
+      cursor.classList.remove("is-left");
+    }
+  }
+
+  function hideCursor() {
+    cursor.classList.remove("is-visible");
+  }
+
+  document.addEventListener("mousemove", moveCursor);
+  document.addEventListener("mouseleave", hideCursor);
+  window.addEventListener("resize", updateCursorScale);
+
+  updateCursorScale();
+}
+
+setupTopImage();
+setupBookImage();
+setupCustomCursor();
