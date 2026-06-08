@@ -18,7 +18,7 @@ const state = {
 
 const COPY = {
   heading: {
-    ja: "アノビルのこと",
+    ja: "アノビル のこと",
     en: "Ano Building"
   },
   exhibitionInfo: {
@@ -99,10 +99,8 @@ function collectElements() {
 }
 
 function bindEvents() {
-  document.querySelectorAll('[data-action="show-exhibition"]').forEach((trigger) => {
-    trigger.addEventListener("click", () => {
-      setPage("exhibition");
-    });
+  document.querySelector('[data-action="show-exhibition"]').addEventListener("click", () => {
+    setPage("exhibition");
   });
 
   document.querySelector('[data-action="back"]').addEventListener("click", () => {
@@ -114,11 +112,6 @@ function bindEvents() {
   });
 
   Object.entries(els.stages).forEach(([gallery, stage]) => {
-    stage.querySelectorAll(".stage-image").forEach((image) => {
-      image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
-      image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
-    });
-
     stage.addEventListener("click", (event) => {
       const rect = stage.getBoundingClientRect();
       const direction = event.clientX - rect.left >= rect.width / 2 ? 1 : -1;
@@ -180,15 +173,19 @@ function animateStage(gallery, nextItem, direction) {
   const className = direction > 0 ? "is-next" : "is-prev";
 
   state.isAnimating = true;
-  setImage(incomingImage, nextItem.src);
+  incomingImage.classList.remove("is-error");
+  incomingImage.onerror = () => incomingImage.classList.add("is-error");
+  incomingImage.onload = () => incomingImage.classList.remove("is-error");
+  incomingImage.src = nextItem.src;
+  incomingImage.alt = getTitle(nextItem);
   incomingImage.style.transform = `translateX(${direction > 0 ? 100 : -100}%)`;
   incomingImage.getBoundingClientRect();
   stage.classList.add(className);
 
   window.setTimeout(() => {
-    setImage(currentImage, nextItem.src);
+    currentImage.src = nextItem.src;
+    currentImage.alt = getTitle(nextItem);
     incomingImage.removeAttribute("src");
-    incomingImage.classList.remove("is-broken", "is-error");
     incomingImage.style.transform = "";
     stage.classList.remove(className);
     state.isAnimating = false;
@@ -206,19 +203,11 @@ function renderAll(options = {}) {
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
   const image = els.stages[gallery].querySelector('[data-role="current-image"]');
-  setImage(image, item ? item.src : "");
-}
-
-function setImage(image, src) {
-  image.alt = "";
-  image.classList.remove("is-broken", "is-error");
-
-  if (src) {
-    image.src = src;
-  } else {
-    image.removeAttribute("src");
-    image.classList.add("is-broken", "is-error");
-  }
+  image.classList.remove("is-error");
+  image.onerror = () => image.classList.add("is-error");
+  image.onload = () => image.classList.remove("is-error");
+  image.src = item ? item.src : "";
+  image.alt = item ? getTitle(item) : "";
 }
 
 function renderAnoCaption() {
@@ -257,9 +246,13 @@ function renderArchive(item) {
   els.purchaseButton.href = PURCHASE_URL;
 
   if (shouldShow) {
+    els.archivePanel.hidden = false;
     requestAnimationFrame(() => els.archivePanel.classList.remove("is-hidden"));
   } else {
     els.archivePanel.classList.add("is-hidden");
+    window.setTimeout(() => {
+      if (!isArchiveItem(getCurrentItem("exhibition"))) els.archivePanel.hidden = true;
+    }, 190);
   }
 }
 
