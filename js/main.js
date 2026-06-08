@@ -257,13 +257,9 @@ function renderArchive(item) {
   els.purchaseButton.href = PURCHASE_URL;
 
   if (shouldShow) {
-    els.archivePanel.hidden = false;
     requestAnimationFrame(() => els.archivePanel.classList.remove("is-hidden"));
   } else {
     els.archivePanel.classList.add("is-hidden");
-    window.setTimeout(() => {
-      if (!isArchiveItem(getCurrentItem("exhibition"))) els.archivePanel.hidden = true;
-    }, 190);
   }
 }
 
