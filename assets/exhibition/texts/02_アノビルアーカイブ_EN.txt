@@ -1,0 +1,5 @@
+Ano Building Archive
+
+This archive page gathers research, drawings, models, installation views, and records from the exhibition process.
+
+Only while this archive image is selected, the archive book information and purchase button are displayed. Replace PURCHASE_URL near the top of js/main.js with the final payment URL.

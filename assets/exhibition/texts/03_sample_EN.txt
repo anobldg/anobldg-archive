@@ -1,0 +1,3 @@
+Sample
+
+Placeholder text for an additional exhibition item. Add image and text paths to data/images.json to extend the gallery.
