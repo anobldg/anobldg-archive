@@ -18,7 +18,7 @@ const state = {
 
 const COPY = {
   heading: {
-    ja: "アノビル のこと",
+    ja: "アノビルのこと",
     en: "Ano Building"
   },
   exhibitionInfo: {
