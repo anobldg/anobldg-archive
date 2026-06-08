@@ -42,13 +42,13 @@ const COPY = {
     ja: {
       title: "アノビルのこと　アーカイブブック",
       price: "¥5,000",
-      description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブックです。横山町でのリサーチ、図面、模型写真、展示テキストを収録しています。\n210×210mm、約104ページ。限定20部。税込・送料込み。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日\nA4判変形 210×210mm / 〇〇頁 /",
+      description: "建築展「アノビルのこと」を記録したアーカイブブック。日本橋横山町でのリサーチ、図面、模型写真、テキストを収録しています。\n210×210mm、〇〇ページ。限定20部。税込・送料込み。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日",
       button: "購入する"
     },
     en: {
       title: "Ano Building Archive Book",
       price: "¥5,000",
-      description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes research conducted in Yokoyamacho, drawings, model photographs, and exhibition texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.\n\nVenue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Riku Hirakawa\nText / Editorial Support: Fumina Otsuka\nPublication date: May 00, 2026\nPrice: ¥5,000 / tax and shipping included",
+      description: "It includes research conducted in Yokoyamacho, drawings, model photographs, and texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.\n\nVenue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Kota Hirakawa\nPhotography Support: Shino Otsuka\nPublication date: May 00, 2026",
       button: "purchase"
     }
   }
