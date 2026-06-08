@@ -1,3 +1,13 @@
 Sample
 
 Placeholder text for an additional exhibition item. Add image and text paths to data/images.json to extend the gallery.
+
+This is placeholder exhibition text. Replace this file with the final text, and it will appear in sync with the selected image.
+
+The project observes traces of the building in Yokoyamacho, including windows, stairs, floors, and wall thicknesses, then translates those observations into drawings and models.
+
+This is placeholder exhibition text. Replace this file with the final text, and it will appear in sync with the selected image.
+
+When additional images are added, a matching text file can be prepared in the same way so that image, title, count, and text remain synchronized.
+
+This is placeholder exhibition text. Replace this file with the final text, and it will appear in sync with the selected image.
