@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>アノビルのこと / Ano Building</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div id="app" class="app" data-page="anoBuilding" data-lang="ja">
+      <nav class="top-nav" aria-label="site navigation">
+        <button class="nav-link back-link" type="button" data-action="back">Back</button>
+        <div class="lang-switch" aria-label="language switcher">
+          <button class="lang-button is-active" type="button" data-lang="ja">JP</button>
+          <span aria-hidden="true">/</span>
+          <button class="lang-button" type="button" data-lang="en">EN</button>
+        </div>
+      </nav>
+
+      <main class="view view-ano is-active" data-view="anoBuilding" aria-label="ano building">
+        <h1 class="ano-heading" data-bind="anoHeading">アノビル のこと</h1>
+        <button class="image-stage ano-stage" type="button" data-gallery="anoBuilding" aria-label="change image">
+          <img class="stage-image current" data-role="current-image" alt="">
+          <img class="stage-image incoming" data-role="incoming-image" alt="">
+        </button>
+        <div class="ano-caption fade-target" data-role="ano-caption">
+          <p class="caption-title" data-bind="anoTitle"></p>
+          <p class="caption-subtitle" data-bind="anoSubtitle"></p>
+          <button class="nav-link exhibition-link" type="button" data-action="show-exhibition">exhibition</button>
+        </div>
+      </main>
+
+      <main class="view view-exhibition" data-view="exhibition" aria-label="exhibition">
+        <section class="exhibition-copy fade-target" data-role="exhibition-copy">
+          <div class="copy-scroll" data-bind="exhibitionText"></div>
+        </section>
+
+        <section class="archive-panel fade-target" data-role="archive-panel" hidden>
+          <h2 data-bind="archiveTitle"></h2>
+          <p class="archive-price" data-bind="archivePrice"></p>
+          <p data-bind="archiveDescription"></p>
+          <a class="purchase-button" href="#" data-bind="purchaseButton">購入する</a>
+        </section>
+
+        <section class="exhibition-info fade-target" data-bind="exhibitionInfo"></section>
+
+        <section class="exhibition-media">
+          <button class="image-stage exhibition-stage" type="button" data-gallery="exhibition" aria-label="change exhibition image">
+            <img class="stage-image current" data-role="current-image" alt="">
+            <img class="stage-image incoming" data-role="incoming-image" alt="">
+          </button>
+          <div class="exhibition-caption fade-target" data-role="exhibition-caption">
+            <p class="caption-title" data-bind="exhibitionTitle"></p>
+            <p class="caption-count" data-bind="exhibitionCount"></p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
