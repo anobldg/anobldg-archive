@@ -115,8 +115,8 @@ function bindEvents() {
 
   Object.entries(els.stages).forEach(([gallery, stage]) => {
     stage.querySelectorAll(".stage-image").forEach((image) => {
-      image.addEventListener("load", () => image.classList.remove("is-broken"));
-      image.addEventListener("error", () => image.classList.add("is-broken"));
+      image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
+      image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
     });
 
     stage.addEventListener("click", (event) => {
@@ -188,7 +188,7 @@ function animateStage(gallery, nextItem, direction) {
   window.setTimeout(() => {
     setImage(currentImage, nextItem.src);
     incomingImage.removeAttribute("src");
-    incomingImage.classList.remove("is-broken");
+    incomingImage.classList.remove("is-broken", "is-error");
     incomingImage.style.transform = "";
     stage.classList.remove(className);
     state.isAnimating = false;
@@ -211,13 +211,13 @@ function renderStage(gallery) {
 
 function setImage(image, src) {
   image.alt = "";
-  image.classList.remove("is-broken");
+  image.classList.remove("is-broken", "is-error");
 
   if (src) {
     image.src = src;
   } else {
     image.removeAttribute("src");
-    image.classList.add("is-broken");
+    image.classList.add("is-broken", "is-error");
   }
 }
 
