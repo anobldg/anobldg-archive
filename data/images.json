@@ -1,0 +1,41 @@
+{
+  "anoBuilding": [
+    {
+      "src": "assets/ano-building/images/01_抽象化への探求_first season ／ 2025.07.22 - 07.31.jpg",
+      "titleJa": "抽象化への探求",
+      "subtitleJa": "first season ／ 2025.07.22 - 07.31",
+      "titleEn": "Exploration of Abstraction",
+      "subtitleEn": "first season ／ 2025.07.22 - 07.31"
+    },
+    {
+      "src": "assets/ano-building/images/02_sample.jpg",
+      "titleJa": "サンプル",
+      "subtitleJa": "sample subtitle",
+      "titleEn": "Sample",
+      "subtitleEn": "sample subtitle"
+    }
+  ],
+  "exhibition": [
+    {
+      "src": "assets/exhibition/images/01_抽象化への探求.jpg",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textJa": "assets/exhibition/texts/01_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/01_抽象化への探求_EN.txt"
+    },
+    {
+      "src": "assets/exhibition/images/02_アノビルアーカイブ.jpg",
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "textJa": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt"
+    },
+    {
+      "src": "assets/exhibition/images/03_sample.jpg",
+      "titleJa": "サンプル",
+      "titleEn": "Sample",
+      "textJa": "assets/exhibition/texts/03_sample.txt",
+      "textEn": "assets/exhibition/texts/03_sample_EN.txt"
+    }
+  ]
+}
