@@ -18,16 +18,17 @@
       </nav>
 
       <main class="view view-ano is-active" data-view="anoBuilding" aria-label="ano building">
-        <h1 class="ano-heading" data-bind="anoHeading">アノビル のこと</h1>
+        <h1 class="ano-heading">
+          <button class="quiet-link" type="button" data-action="show-exhibition" data-bind="anoHeading">アノビル のこと</button>
+        </h1>
         <button class="image-stage ano-stage" type="button" data-gallery="anoBuilding" aria-label="change image">
           <img class="stage-image current" data-role="current-image" alt="">
           <img class="stage-image incoming" data-role="incoming-image" alt="">
         </button>
-        <div class="ano-caption fade-target" data-role="ano-caption">
-          <p class="caption-title" data-bind="anoTitle"></p>
-          <p class="caption-subtitle" data-bind="anoSubtitle"></p>
-          <button class="nav-link exhibition-link" type="button" data-action="show-exhibition">exhibition</button>
-        </div>
+        <button class="ano-caption quiet-link fade-target" type="button" data-action="show-exhibition" data-role="ano-caption">
+          <span class="caption-title" data-bind="anoTitle"></span>
+          <span class="caption-subtitle" data-bind="anoSubtitle"></span>
+        </button>
       </main>
 
       <main class="view view-exhibition" data-view="exhibition" aria-label="exhibition">
@@ -35,14 +36,16 @@
           <div class="copy-scroll" data-bind="exhibitionText"></div>
         </section>
 
-        <section class="archive-panel fade-target" data-role="archive-panel" hidden>
-          <h2 data-bind="archiveTitle"></h2>
-          <p class="archive-price" data-bind="archivePrice"></p>
-          <p data-bind="archiveDescription"></p>
-          <a class="purchase-button" href="#" data-bind="purchaseButton">購入する</a>
-        </section>
+        <section class="left-lower-area">
+          <section class="exhibition-info fade-target" data-bind="exhibitionInfo"></section>
 
-        <section class="exhibition-info fade-target" data-bind="exhibitionInfo"></section>
+          <section class="archive-panel fade-target" data-role="archive-panel" hidden>
+            <h2 data-bind="archiveTitle"></h2>
+            <p class="archive-price" data-bind="archivePrice"></p>
+            <p data-bind="archiveDescription"></p>
+            <a class="purchase-button" href="#" data-bind="purchaseButton">購入する</a>
+          </section>
+        </section>
 
         <section class="exhibition-media">
           <button class="image-stage exhibition-stage" type="button" data-gallery="exhibition" aria-label="change exhibition image">
