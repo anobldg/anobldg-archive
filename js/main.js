@@ -1,6 +1,23 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
 
+const ARCHIVE_CONTENT = {
+  ja: {
+    title: "アノビルのこと　アーカイブブック",
+    price: "¥5,000",
+    button: "購入する",
+    description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブックです。横山町でのリサーチ、図面、模型写真、展示テキストを収録しています。\n210×210mm、約104ページ。限定20部。税込・送料込み。",
+    credit: "編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日\nA4判変形 210×210mm / 〇〇頁 /"
+  },
+  en: {
+    title: "Ano Building Archive Book",
+    price: "¥5,000",
+    button: "purchase",
+    description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes research conducted in Yokoyamacho, drawings, model photographs, and exhibition texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.",
+    credit: "Venue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Riku Hirakawa\nText / Editorial Support: Fumina Otsuka\nPublication date: May 00, 2026\nPrice: ¥5,000 / tax and shipping included"
+  }
+};
+
 const state = {
   page: "anoBuilding",
   lang: "ja",
@@ -14,6 +31,9 @@ const state = {
   },
   textCache: new Map(),
   currentTextGroup: "",
+  currentTextLang: "",
+  currentArchiveGroup: null,
+  currentArchiveLang: "",
   isAnimating: false
 };
 
@@ -39,20 +59,6 @@ const COPY = {
       "Contact:<br><a href=\"mailto:mshr.tmkii@gmail.com\">mshr.tmkii@gmail.com</a>"
     ].map((text) => `<p>${text}</p>`).join("")
   },
-  archive: {
-    ja: {
-      title: "アノビルのこと　アーカイブブック",
-      price: "¥5,000",
-      description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブックです。横山町でのリサーチ、図面、模型写真、展示テキストを収録しています。\n210×210mm、約104ページ。限定20部。税込・送料込み。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日\nA4判変形 210×210mm / 〇〇頁 /",
-      button: "購入する"
-    },
-    en: {
-      title: "Ano Building Archive Book",
-      price: "¥5,000",
-      description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes research conducted in Yokoyamacho, drawings, model photographs, and exhibition texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.\n\nVenue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Riku Hirakawa\nText / Editorial Support: Fumina Otsuka\nPublication date: May 00, 2026\nPrice: ¥5,000 / tax and shipping included",
-      button: "purchase"
-    }
-  }
 };
 
 const els = {};
@@ -93,6 +99,7 @@ function collectElements() {
   els.archiveTitle = document.querySelector('[data-bind="archiveTitle"]');
   els.archivePrice = document.querySelector('[data-bind="archivePrice"]');
   els.archiveDescription = document.querySelector('[data-bind="archiveDescription"]');
+  els.archiveCredit = document.querySelector('[data-bind="archiveCredit"]');
   els.purchaseButton = document.querySelector('[data-bind="purchaseButton"]');
   els.stages = {
     anoBuilding: document.querySelector('[data-gallery="anoBuilding"]'),
@@ -116,11 +123,6 @@ function bindEvents() {
   });
 
   Object.entries(els.stages).forEach(([gallery, stage]) => {
-    stage.querySelectorAll(".stage-image").forEach((image) => {
-      image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
-      image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
-    });
-
     stage.addEventListener("click", (event) => {
       const rect = stage.getBoundingClientRect();
       const direction = event.clientX - rect.left >= rect.width / 2 ? 1 : -1;
@@ -161,42 +163,48 @@ function changeImage(gallery, direction) {
   const next = wrapIndex(current + direction, items.length);
   if (current === next) return;
 
+  const prevItem = items[current];
+  const nextItem = items[next];
   state.indexes[gallery] = next;
-  animateStage(gallery, items[next], direction);
+  animateStage(gallery, nextItem, direction);
 
   if (gallery === "anoBuilding") {
     fadeUpdate([document.querySelector('[data-role="ano-caption"]')], () => renderAnoCaption());
   } else {
-    const nextTextGroup = getTextGroup(items[next]);
-    const isSameTextGroup = nextTextGroup && nextTextGroup === state.currentTextGroup;
+    const nextTextGroup = getTextGroup(nextItem);
+    const isSameTextGroup = nextTextGroup && nextTextGroup === state.currentTextGroup && state.lang === state.currentTextLang;
+    const prevArchiveGroup = getArchiveGroup(prevItem);
+    const nextArchiveGroup = getArchiveGroup(nextItem);
+    const isSameArchiveGroup = prevArchiveGroup === nextArchiveGroup && state.lang === state.currentArchiveLang;
     const targets = [els.currentCount];
 
     if (!isSameTextGroup) {
-      targets.push(document.querySelector('[data-role="exhibition-copy"]'), els.archivePanel);
+      targets.push(document.querySelector('[data-role="exhibition-copy"]'));
     }
 
-    fadeUpdate(targets, () => renderExhibitionDetails({ keepText: isSameTextGroup }));
+    if (!isSameArchiveGroup) {
+      targets.push(els.archivePanel);
+    }
+
+    fadeUpdate(targets, () => renderExhibitionDetails({ keepText: isSameTextGroup, keepArchive: isSameArchiveGroup }));
   }
 }
 
 function animateStage(gallery, nextItem, direction) {
   const stage = els.stages[gallery];
-  const currentImage = stage.querySelector('[data-role="current-image"]');
-  const incomingImage = stage.querySelector('[data-role="incoming-image"]');
+  const incomingMedia = stage.querySelector('[data-role="incoming-image"]');
   const className = direction > 0 ? "is-next" : "is-prev";
 
   state.isAnimating = true;
-  warnUnsupportedMedia(nextItem);
-  setImage(incomingImage, nextItem.src);
+  setStageMedia(stage, "incoming-image", nextItem);
+  const incomingImage = stage.querySelector('[data-role="incoming-image"]');
   incomingImage.style.transform = `translateX(${direction > 0 ? 100 : -100}%)`;
   incomingImage.getBoundingClientRect();
   stage.classList.add(className);
 
   window.setTimeout(() => {
-    setImage(currentImage, nextItem.src);
-    incomingImage.removeAttribute("src");
-    incomingImage.classList.remove("is-broken", "is-error");
-    incomingImage.style.transform = "";
+    setStageMedia(stage, "current-image", nextItem);
+    clearStageMedia(stage, "incoming-image", incomingMedia);
     stage.classList.remove(className);
     state.isAnimating = false;
   }, 410);
@@ -212,21 +220,7 @@ function renderAll(options = {}) {
 
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
-  const image = els.stages[gallery].querySelector('[data-role="current-image"]');
-  warnUnsupportedMedia(item);
-  setImage(image, item ? item.src : "");
-}
-
-function setImage(image, src) {
-  image.alt = "";
-  image.classList.remove("is-broken", "is-error");
-
-  if (src) {
-    image.src = src;
-  } else {
-    image.removeAttribute("src");
-    image.classList.add("is-broken", "is-error");
-  }
+  setStageMedia(els.stages[gallery], "current-image", item);
 }
 
 function renderAnoCaption() {
@@ -245,30 +239,35 @@ async function renderExhibitionDetails(options = {}) {
   els.totalCount.textContent = total ? ` | ${pad2(total)}` : " | 00";
   els.exhibitionInfo.innerHTML = COPY.exhibitionInfo[state.lang];
 
-  renderArchive(item);
+  if (!options.keepArchive) renderArchive(item);
 
   if (!item) {
     els.exhibitionText.textContent = "";
     state.currentTextGroup = "";
+    state.currentTextLang = "";
     return;
   }
 
   const nextTextGroup = getTextGroup(item);
-  if (options.keepText && nextTextGroup === state.currentTextGroup) return;
+  if (options.keepText && nextTextGroup === state.currentTextGroup && state.lang === state.currentTextLang) return;
 
   state.currentTextGroup = nextTextGroup;
+  state.currentTextLang = state.lang;
   els.exhibitionText.textContent = await loadText(item);
 }
 
 function renderArchive(item) {
   const shouldShow = item && isArchiveItem(item);
-  const archive = COPY.archive[state.lang];
+  const archive = ARCHIVE_CONTENT[state.lang];
 
   els.archiveTitle.textContent = archive.title;
   els.archivePrice.textContent = archive.price;
   els.archiveDescription.textContent = archive.description;
+  els.archiveCredit.textContent = archive.credit;
   els.purchaseButton.textContent = archive.button;
   els.purchaseButton.href = PURCHASE_URL;
+  state.currentArchiveGroup = shouldShow ? getArchiveGroup(item) : null;
+  state.currentArchiveLang = state.lang;
 
   if (shouldShow) {
     requestAnimationFrame(() => els.archivePanel.classList.remove("is-hidden"));
@@ -278,18 +277,36 @@ function renderArchive(item) {
 }
 
 async function loadText(item) {
-  const path = state.lang === "ja" ? item.textJa : item.textEn;
+  const path = getTextPath(item, state.lang);
   if (!path) return "Text file not found.";
   if (state.textCache.has(path)) return state.textCache.get(path);
 
   try {
     const response = await fetch(path);
-    if (!response.ok) throw new Error(`Missing ${path}`);
+    if (!response.ok) {
+      console.warn("[text fetch failed]", {
+        id: item.id,
+        titleJa: item.titleJa,
+        textGroup: item.textGroup,
+        lang: state.lang,
+        path,
+        status: response.status
+      });
+      return "Text file not found.";
+    }
     const text = await response.text();
     state.textCache.set(path, text);
     return text;
   } catch (error) {
-    console.warn(error);
+    console.warn("[text fetch failed]", {
+      id: item.id,
+      titleJa: item.titleJa,
+      textGroup: item.textGroup,
+      lang: state.lang,
+      path,
+      status: null,
+      error
+    });
     return "Text file not found.";
   }
 }
@@ -309,7 +326,7 @@ function fadeUpdate(targets, update) {
 
 function preloadImages(items) {
   items.forEach((item) => {
-    if (item.type && item.type !== "image") return;
+    if (item.type && item.type !== "image" && item.type !== "svg") return;
     if (!item.src) return;
     const image = new Image();
     image.src = item.src;
@@ -350,14 +367,96 @@ function isArchiveItem(item) {
   return src.includes("アノビルアーカイブ") || src.includes("archive") || jaTitle.includes("アノビルアーカイブ") || enTitle.includes("archive");
 }
 
+function getArchiveGroup(item) {
+  if (!item || !isArchiveItem(item)) return null;
+  return item.archiveGroup || "ano-building-archive";
+}
+
 function getTextGroup(item) {
   if (!item) return "";
   return item.textGroup || item.textJa || item.textEn || "";
 }
 
-function warnUnsupportedMedia(item) {
-  if (!item || !item.type || item.type === "image") return;
-  console.warn(`Unsupported exhibition media type "${item.type}" for ${item.src}`);
+function getTextPath(item, lang) {
+  const group = item.textGroup ? state.data.texts?.[item.textGroup] : null;
+
+  if (group) {
+    return lang === "en"
+      ? group.en || item.textEn || ""
+      : group.ja || item.textJa || "";
+  }
+
+  return lang === "en"
+    ? item.textEn || ""
+    : item.textJa || "";
+}
+
+function setStageMedia(stage, role, item) {
+  const previous = stage.querySelector(`[data-role="${role}"]`);
+  const media = createMediaElement(item);
+  media.dataset.role = role;
+  media.classList.add(role === "current-image" ? "current" : "incoming");
+  pauseMedia(previous);
+  previous.replaceWith(media);
+}
+
+function clearStageMedia(stage, role, fallback) {
+  const current = stage.querySelector(`[data-role="${role}"]`);
+  pauseMedia(current);
+
+  const media = fallback || document.createElement("img");
+  media.className = `stage-image ${role === "current-image" ? "current" : "incoming"} is-broken is-error`;
+  media.dataset.role = role;
+  media.alt = "";
+  media.style.transform = "";
+  current.replaceWith(media);
+}
+
+function createMediaElement(item) {
+  if (!item || !item.src) {
+    const image = document.createElement("img");
+    image.alt = "";
+    image.className = "stage-image is-broken is-error";
+    return image;
+  }
+
+  if (item.type === "video") {
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.className = "stage-image";
+    video.addEventListener("canplay", () => playVideo(video, item.src));
+    requestAnimationFrame(() => playVideo(video, item.src));
+    return video;
+  }
+
+  if (item.type && item.type !== "image" && item.type !== "svg") {
+    console.warn(`Unsupported exhibition media type "${item.type}" for ${item.src}`);
+  }
+
+  const image = document.createElement("img");
+  image.src = item.src;
+  image.alt = item.titleJa || item.titleEn || "";
+  image.className = "stage-image";
+  image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
+  image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
+  return image;
+}
+
+function pauseMedia(media) {
+  if (media?.tagName === "VIDEO") {
+    media.pause();
+  }
+}
+
+function playVideo(video, src) {
+  video.play().catch((error) => {
+    console.warn("[video autoplay failed]", src, error);
+  });
 }
 
 function wrapIndex(index, length) {
