@@ -17,25 +17,609 @@
   ],
   "exhibition": [
     {
-      "src": "assets/exhibition/images/01_抽象化への探求.jpg",
-      "titleJa": "抽象化への探求",
-      "titleEn": "Exploration of Abstraction",
-      "textJa": "assets/exhibition/texts/01_抽象化への探求.txt",
-      "textEn": "assets/exhibition/texts/01_抽象化への探求_EN.txt"
-    },
-    {
-      "src": "assets/exhibition/images/02_アノビルアーカイブ.jpg",
+      "id": "01",
+      "src": "assets/exhibition/images/01_アノビルアーカイブ.webp",
+      "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textJa": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt"
+      "textGroup": "01_アノビルアーカイブ",
+      "textJa": "assets/exhibition/texts/01_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/01_アノビルアーカイブ_EN.txt",
+      "archive": true
     },
     {
-      "src": "assets/exhibition/images/03_sample.jpg",
-      "titleJa": "サンプル",
-      "titleEn": "Sample",
-      "textJa": "assets/exhibition/texts/03_sample.txt",
-      "textEn": "assets/exhibition/texts/03_sample_EN.txt"
+      "id": "02",
+      "src": "assets/exhibition/images/02_アノビルアーカイブ.webp",
+      "type": "image",
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "textGroup": "02_アノビルアーカイブ",
+      "textJa": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt",
+      "archive": true
+    },
+    {
+      "id": "03",
+      "src": "assets/exhibition/images/03_アノビルアーカイブ.webp",
+      "type": "image",
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "textGroup": "03_アノビルアーカイブ",
+      "textJa": "assets/exhibition/texts/03_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/03_アノビルアーカイブ_EN.txt",
+      "archive": true
+    },
+    {
+      "id": "04",
+      "src": "assets/exhibition/images/04_アノビルアーカイブ.webp",
+      "type": "image",
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "textGroup": "04_アノビルアーカイブ",
+      "textJa": "assets/exhibition/texts/04_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/04_アノビルアーカイブ_EN.txt",
+      "archive": true
+    },
+    {
+      "id": "05",
+      "src": "assets/exhibition/images/05_アノビルアーカイブ.webp",
+      "type": "image",
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "textGroup": "05_アノビルアーカイブ",
+      "textJa": "assets/exhibition/texts/05_アノビルアーカイブ.txt",
+      "textEn": "assets/exhibition/texts/05_アノビルアーカイブ_EN.txt",
+      "archive": true
+    },
+    {
+      "id": "06",
+      "src": "assets/exhibition/images/06_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "06_抽象化への探求",
+      "textJa": "assets/exhibition/texts/06_抽象化への探求.txt",
+      "textEn": "",
+      "archive": false
+    },
+    {
+      "id": "07",
+      "src": "assets/exhibition/images/07_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "07_抽象化への探求",
+      "textJa": "assets/exhibition/texts/07_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/07_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "08",
+      "src": "assets/exhibition/images/08_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "08,09_抽象化への探求",
+      "textJa": "assets/exhibition/texts/08,09_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/08,09_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "09",
+      "src": "assets/exhibition/images/09_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "08,09_抽象化への探求",
+      "textJa": "assets/exhibition/texts/08,09_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/08,09_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "10",
+      "src": "assets/exhibition/images/10_抽象化への探求.webm",
+      "type": "video",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "10_抽象化への探求",
+      "textJa": "assets/exhibition/texts/10_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/10_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "11",
+      "src": "assets/exhibition/images/11_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "11_抽象化への探求",
+      "textJa": "assets/exhibition/texts/11_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/11_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "12",
+      "src": "assets/exhibition/images/12_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "12_抽象化への探求",
+      "textJa": "assets/exhibition/texts/12_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/12_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "13",
+      "src": "assets/exhibition/images/13_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "13_抽象化への探求",
+      "textJa": "assets/exhibition/texts/13_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/13_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "14",
+      "src": "assets/exhibition/images/14_抽象化への探求.webp",
+      "type": "image",
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "textGroup": "14_抽象化への探求",
+      "textJa": "assets/exhibition/texts/14_抽象化への探求.txt",
+      "textEn": "assets/exhibition/texts/14_抽象化への探求_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "15",
+      "src": "assets/exhibition/images/15_断片から全体へ.webp",
+      "type": "image",
+      "titleJa": "断片から全体へ",
+      "titleEn": "From Fragments to the Whole",
+      "textGroup": "15_断片から全体へ",
+      "textJa": "assets/exhibition/texts/15_断片から全体へ.txt",
+      "textEn": "assets/exhibition/texts/15_断片から全体へ_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "16",
+      "src": "assets/exhibition/images/16_断片から全体へ.webp",
+      "type": "image",
+      "titleJa": "断片から全体へ",
+      "titleEn": "From Fragments to the Whole",
+      "textGroup": "16_断片から全体へ",
+      "textJa": "assets/exhibition/texts/16_断片から全体へ.txt",
+      "textEn": "assets/exhibition/texts/16_断片から全体へ_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "17",
+      "src": "assets/exhibition/images/17_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "17_読む建築展",
+      "textJa": "assets/exhibition/texts/17_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/17_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "18",
+      "src": "assets/exhibition/images/18_読む建築展.svg",
+      "type": "svg",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "18,19,20_読む建築展",
+      "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "19",
+      "src": "assets/exhibition/images/19_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "18,19,20_読む建築展",
+      "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "20",
+      "src": "assets/exhibition/images/20_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "18,19,20_読む建築展",
+      "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "21",
+      "src": "assets/exhibition/images/21_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "21,22_読む建築展",
+      "textJa": "assets/exhibition/texts/21,22_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/21,22_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "22",
+      "src": "assets/exhibition/images/22_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "21,22_読む建築展",
+      "textJa": "assets/exhibition/texts/21,22_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/21,22_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "23",
+      "src": "assets/exhibition/images/23_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "23,24_読む建築展",
+      "textJa": "assets/exhibition/texts/23,24_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/23,24_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "24",
+      "src": "assets/exhibition/images/24_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "23,24_読む建築展",
+      "textJa": "assets/exhibition/texts/23,24_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/23,24_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "25",
+      "src": "assets/exhibition/images/25_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "25.26_読む建築展",
+      "textJa": "assets/exhibition/texts/25.26_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/25.26_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "26",
+      "src": "assets/exhibition/images/26_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "25.26_読む建築展",
+      "textJa": "assets/exhibition/texts/25.26_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/25.26_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "27",
+      "src": "assets/exhibition/images/27_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "27,28_読む建築展",
+      "textJa": "assets/exhibition/texts/27,28_読む建築展.txt",
+      "textEn": "",
+      "archive": false
+    },
+    {
+      "id": "28",
+      "src": "assets/exhibition/images/28_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "27,28_読む建築展",
+      "textJa": "assets/exhibition/texts/27,28_読む建築展.txt",
+      "textEn": "",
+      "archive": false
+    },
+    {
+      "id": "29",
+      "src": "assets/exhibition/images/29_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "30",
+      "src": "assets/exhibition/images/30_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "31",
+      "src": "assets/exhibition/images/31_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "32",
+      "src": "assets/exhibition/images/32_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "33",
+      "src": "assets/exhibition/images/33_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
+    },
+    {
+      "id": "34",
+      "src": "assets/exhibition/images/34_読む建築展.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "textGroup": "29,30,31,32,33,34_読む建築展",
+      "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
+      "archive": false
     }
-  ]
+  ],
+  "texts": {
+    "01_アノビルアーカイブ": {
+      "numbers": [
+        "01"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/01_アノビルアーカイブ.txt",
+      "en": "assets/exhibition/texts/01_アノビルアーカイブ_EN.txt"
+    },
+    "02_アノビルアーカイブ": {
+      "numbers": [
+        "02"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
+      "en": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt"
+    },
+    "03_アノビルアーカイブ": {
+      "numbers": [
+        "03"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/03_アノビルアーカイブ.txt",
+      "en": "assets/exhibition/texts/03_アノビルアーカイブ_EN.txt"
+    },
+    "04_アノビルアーカイブ": {
+      "numbers": [
+        "04"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/04_アノビルアーカイブ.txt",
+      "en": "assets/exhibition/texts/04_アノビルアーカイブ_EN.txt"
+    },
+    "05_アノビルアーカイブ": {
+      "numbers": [
+        "05"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/05_アノビルアーカイブ.txt",
+      "en": "assets/exhibition/texts/05_アノビルアーカイブ_EN.txt"
+    },
+    "06_抽象化への探求": {
+      "numbers": [
+        "06"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/06_抽象化への探求.txt",
+      "en": ""
+    },
+    "06_抽象化への探求EN": {
+      "numbers": [
+        "06"
+      ],
+      "titleJa": "抽象化への探求EN",
+      "titleEn": "抽象化への探求EN",
+      "ja": "assets/exhibition/texts/06_抽象化への探求EN.txt",
+      "en": ""
+    },
+    "07_抽象化への探求": {
+      "numbers": [
+        "07"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/07_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/07_抽象化への探求_EN.txt"
+    },
+    "08,09_抽象化への探求": {
+      "numbers": [
+        "08",
+        "09"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/08,09_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/08,09_抽象化への探求_EN.txt"
+    },
+    "10_抽象化への探求": {
+      "numbers": [
+        "10"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/10_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/10_抽象化への探求_EN.txt"
+    },
+    "11_抽象化への探求": {
+      "numbers": [
+        "11"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/11_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/11_抽象化への探求_EN.txt"
+    },
+    "12_抽象化への探求": {
+      "numbers": [
+        "12"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/12_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/12_抽象化への探求_EN.txt"
+    },
+    "13_抽象化への探求": {
+      "numbers": [
+        "13"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/13_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/13_抽象化への探求_EN.txt"
+    },
+    "14_抽象化への探求": {
+      "numbers": [
+        "14"
+      ],
+      "titleJa": "抽象化への探求",
+      "titleEn": "Exploration of Abstraction",
+      "ja": "assets/exhibition/texts/14_抽象化への探求.txt",
+      "en": "assets/exhibition/texts/14_抽象化への探求_EN.txt"
+    },
+    "15_断片から全体へ": {
+      "numbers": [
+        "15"
+      ],
+      "titleJa": "断片から全体へ",
+      "titleEn": "From Fragments to the Whole",
+      "ja": "assets/exhibition/texts/15_断片から全体へ.txt",
+      "en": "assets/exhibition/texts/15_断片から全体へ_EN.txt"
+    },
+    "16_断片から全体へ": {
+      "numbers": [
+        "16"
+      ],
+      "titleJa": "断片から全体へ",
+      "titleEn": "From Fragments to the Whole",
+      "ja": "assets/exhibition/texts/16_断片から全体へ.txt",
+      "en": "assets/exhibition/texts/16_断片から全体へ_EN.txt"
+    },
+    "17_読む建築展": {
+      "numbers": [
+        "17"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/17_読む建築展.txt",
+      "en": "assets/exhibition/texts/17_読む建築展_EN.txt"
+    },
+    "18,19,20_読む建築展": {
+      "numbers": [
+        "18",
+        "19",
+        "20"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/18,19,20_読む建築展.txt",
+      "en": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt"
+    },
+    "21,22_読む建築展": {
+      "numbers": [
+        "21",
+        "22"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/21,22_読む建築展.txt",
+      "en": "assets/exhibition/texts/21,22_読む建築展_EN.txt"
+    },
+    "23,24_読む建築展": {
+      "numbers": [
+        "23",
+        "24"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/23,24_読む建築展.txt",
+      "en": "assets/exhibition/texts/23,24_読む建築展_EN.txt"
+    },
+    "25.26_読む建築展": {
+      "numbers": [
+        "25",
+        "26"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/25.26_読む建築展.txt",
+      "en": "assets/exhibition/texts/25.26_読む建築展_EN.txt"
+    },
+    "27,28_読む建築展": {
+      "numbers": [
+        "27",
+        "28"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/27,28_読む建築展.txt",
+      "en": ""
+    },
+    "27,28_読む建築展の": {
+      "numbers": [
+        "27",
+        "28"
+      ],
+      "titleJa": "読む建築展の",
+      "titleEn": "読む建築展の",
+      "ja": "",
+      "en": "assets/exhibition/texts/27,28_読む建築展の_EN.txt"
+    },
+    "29,30,31,32,33,34_読む建築展": {
+      "numbers": [
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34"
+      ],
+      "titleJa": "読む建築展",
+      "titleEn": "Reading Architecture Exhibition",
+      "ja": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
+      "en": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt"
+    }
+  }
 }
