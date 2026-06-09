@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260609-phase2-media-fit";
+const DATA_VERSION = "20260609-phase2-1-stage-cleanup";
 const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
@@ -37,6 +37,7 @@ const state = {
   currentTextLang: "",
   currentArchiveGroup: null,
   currentArchiveLang: "",
+  mediaWarmTokens: new Map(),
   isAnimating: false
 };
 
@@ -211,6 +212,7 @@ function animateStage(gallery, nextItem, direction) {
     setStageMedia(stage, "current-image", nextItem);
     clearStageMedia(stage, "incoming-image", incomingMedia);
     stage.classList.remove(className);
+    cleanupStageMedia(stage);
     state.isAnimating = false;
   }, 410);
 }
@@ -226,6 +228,7 @@ function renderAll(options = {}) {
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
   setStageMedia(els.stages[gallery], "current-image", item);
+  cleanupStageMedia(els.stages[gallery]);
   scheduleWarmAdjacent(gallery, state.indexes[gallery]);
 }
 
@@ -436,6 +439,14 @@ function setStageMedia(stage, role, item) {
   const media = createMediaElement(item);
   media.dataset.role = role;
   media.classList.add(role === "current-image" ? "current" : "incoming");
+  if (role === "current-image" || role === "incoming-image") {
+    media.classList.add("is-current");
+  }
+  if (role === "incoming-image") {
+    const current = stage.querySelector('[data-role="current-image"]');
+    current?.classList.remove("is-current");
+    current?.classList.add("is-leaving");
+  }
   pauseMedia(previous);
   previous.replaceWith(media);
 }
@@ -445,7 +456,7 @@ function clearStageMedia(stage, role, fallback) {
   pauseMedia(current);
 
   const media = fallback || document.createElement("img");
-  media.className = `stage-image stage-media ${role === "current-image" ? "current" : "incoming"} is-broken is-error`;
+  media.className = `stage-image ${role === "current-image" ? "current" : "incoming"} is-broken is-error`;
   media.dataset.role = role;
   media.alt = "";
   media.style.transform = "";
@@ -456,7 +467,7 @@ function createMediaElement(item) {
   if (!item || !item.src) {
     const image = document.createElement("img");
     image.alt = "";
-    image.className = "stage-image stage-media is-broken is-error";
+    image.className = "stage-image is-broken is-error";
     return image;
   }
 
@@ -491,8 +502,11 @@ function createMediaElement(item) {
 function scheduleWarmAdjacent(gallery, index) {
   const list = state.data[gallery];
   if (!Array.isArray(list) || !list.length) return;
+  const token = Symbol(gallery);
+  state.mediaWarmTokens.set(gallery, token);
 
   const run = () => {
+    if (state.mediaWarmTokens.get(gallery) !== token) return;
     warmMedia(list[index]);
     warmMedia(list[wrapIndex(index - 1, list.length)]);
     warmMedia(list[wrapIndex(index + 1, list.length)]);
@@ -501,7 +515,7 @@ function scheduleWarmAdjacent(gallery, index) {
   if ("requestIdleCallback" in window) {
     window.requestIdleCallback(run);
   } else {
-    window.setTimeout(run, 120);
+    window.setTimeout(run, 300);
   }
 }
 
@@ -521,10 +535,26 @@ function warmMedia(item) {
 
   const image = new Image();
   image.src = item.src;
-  if (image.decode) {
-    state.mediaWarmCache.set(item.src, image.decode().catch(() => null));
-  } else {
-    state.mediaWarmCache.set(item.src, image);
+  state.mediaWarmCache.set(item.src, image);
+}
+
+function cleanupStageMedia(stage) {
+  if (!stage) return;
+
+  const medias = Array.from(stage.querySelectorAll(".stage-media"));
+  medias.forEach((media) => {
+    if (!media.classList.contains("is-current")) {
+      pauseMedia(media);
+      media.remove();
+    }
+  });
+
+  const currents = Array.from(stage.querySelectorAll(".stage-media.is-current"));
+  if (currents.length > 1) {
+    currents.slice(0, -1).forEach((media) => {
+      pauseMedia(media);
+      media.remove();
+    });
   }
 }
 
