@@ -39,7 +39,8 @@
         <section class="left-lower-area">
           <section class="exhibition-info fade-target" data-bind="exhibitionInfo"></section>
 
-          <section class="archive-panel fade-target is-hidden" data-role="archive-panel"><h2 data-bind="archiveTitle"></h2>
+          <section class="archive-panel fade-target is-hidden" data-role="archive-panel">
+            <h2 data-bind="archiveTitle"></h2>
             <p class="archive-price" data-bind="archivePrice"></p>
             <a class="purchase-button" href="#" data-bind="purchaseButton">購入する</a>
             <p data-bind="archiveDescription"></p>
@@ -53,7 +54,9 @@
           </button>
           <div class="exhibition-caption fade-target" data-role="exhibition-caption">
             <p class="caption-title" data-bind="exhibitionTitle"></p>
-            <p class="caption-count" data-bind="exhibitionCount"></p>
+            <p class="caption-count">
+              <span data-bind="currentCount"></span><span data-bind="totalCount"></span>
+            </p>
           </div>
         </section>
       </main>
