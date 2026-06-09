@@ -13,6 +13,7 @@ const state = {
     exhibition: []
   },
   textCache: new Map(),
+  currentTextGroup: "",
   isAnimating: false
 };
 
@@ -31,7 +32,7 @@ const COPY = {
       "連絡先：<br><a href=\"mailto:mshr.tmkii@gmail.com\">mshr.tmkii@gmail.com</a>"
     ].map((text) => `<p>${text}</p>`).join(""),
     en: [
-      "Ano Building<br>An Exhibition of Drawings and Models",
+      "ANO Building<br>An Exhibition of Drawings and Models",
       "Special Thanks:<br>Hiroshi Tomikawa Architects & Associates<br>Hiroshi Tomikawa",
       "Model Production Support:<br>Yuki Sato, Haruki Fukushima, Akari Nozu, Shinnosuke Adachi, Kyota Yotsuji, Ryo Shibata, Kota Katori, Kiminori Nakashima, Yoshino Sasaki, Yusuke Sasaki, Nano Sato, Norihisa Nagata, Sora Hashimoto, Saki Matsumoto, Shoki Yasue, Takuto Yoshida",
       "Instagram:<br><a href=\"https://www.instagram.com/ano_bldg/\" target=\"_blank\" rel=\"noreferrer\">@ano_bldg</a><br><a href=\"https://www.instagram.com/_mimi._.23/\" target=\"_blank\" rel=\"noreferrer\">@_mimi._.23</a><br><a href=\"https://www.instagram.com/masaharukii/\" target=\"_blank\" rel=\"noreferrer\">@masaharukii</a>",
@@ -42,13 +43,13 @@ const COPY = {
     ja: {
       title: "アノビルのこと　アーカイブブック",
       price: "¥5,000",
-      description: "建築展「アノビルのこと」を記録したアーカイブブック。日本橋横山町でのリサーチ、図面、模型写真、テキストを収録しています。\n210×210mm、〇〇ページ。限定20部。税込・送料込み。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日",
+      description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブックです。横山町でのリサーチ、図面、模型写真、展示テキストを収録しています。\n210×210mm、約104ページ。限定20部。税込・送料込み。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日\nA4判変形 210×210mm / 〇〇頁 /",
       button: "購入する"
     },
     en: {
       title: "Ano Building Archive Book",
       price: "¥5,000",
-      description: "It includes research conducted in Yokoyamacho, drawings, model photographs, and texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.\n\nVenue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Kota Hirakawa\nPhotography Support: Shino Otsuka\nPublication date: May 00, 2026",
+      description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes research conducted in Yokoyamacho, drawings, model photographs, and exhibition texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.\n\nVenue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Riku Hirakawa\nText / Editorial Support: Fumina Otsuka\nPublication date: May 00, 2026\nPrice: ¥5,000 / tax and shipping included",
       button: "purchase"
     }
   }
@@ -85,7 +86,8 @@ function collectElements() {
   els.anoSubtitle = document.querySelector('[data-bind="anoSubtitle"]');
   els.exhibitionText = document.querySelector('[data-bind="exhibitionText"]');
   els.exhibitionTitle = document.querySelector('[data-bind="exhibitionTitle"]');
-  els.exhibitionCount = document.querySelector('[data-bind="exhibitionCount"]');
+  els.currentCount = document.querySelector('[data-bind="currentCount"]');
+  els.totalCount = document.querySelector('[data-bind="totalCount"]');
   els.exhibitionInfo = document.querySelector('[data-bind="exhibitionInfo"]');
   els.archivePanel = document.querySelector('[data-role="archive-panel"]');
   els.archiveTitle = document.querySelector('[data-bind="archiveTitle"]');
@@ -165,11 +167,15 @@ function changeImage(gallery, direction) {
   if (gallery === "anoBuilding") {
     fadeUpdate([document.querySelector('[data-role="ano-caption"]')], () => renderAnoCaption());
   } else {
-    fadeUpdate([
-      document.querySelector('[data-role="exhibition-copy"]'),
-      document.querySelector('[data-role="exhibition-caption"]'),
-      els.archivePanel
-    ], () => renderExhibitionDetails());
+    const nextTextGroup = getTextGroup(items[next]);
+    const isSameTextGroup = nextTextGroup && nextTextGroup === state.currentTextGroup;
+    const targets = [els.currentCount];
+
+    if (!isSameTextGroup) {
+      targets.push(document.querySelector('[data-role="exhibition-copy"]'), els.archivePanel);
+    }
+
+    fadeUpdate(targets, () => renderExhibitionDetails({ keepText: isSameTextGroup }));
   }
 }
 
@@ -180,6 +186,7 @@ function animateStage(gallery, nextItem, direction) {
   const className = direction > 0 ? "is-next" : "is-prev";
 
   state.isAnimating = true;
+  warnUnsupportedMedia(nextItem);
   setImage(incomingImage, nextItem.src);
   incomingImage.style.transform = `translateX(${direction > 0 ? 100 : -100}%)`;
   incomingImage.getBoundingClientRect();
@@ -206,6 +213,7 @@ function renderAll(options = {}) {
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
   const image = els.stages[gallery].querySelector('[data-role="current-image"]');
+  warnUnsupportedMedia(item);
   setImage(image, item ? item.src : "");
 }
 
@@ -227,22 +235,28 @@ function renderAnoCaption() {
   els.anoSubtitle.textContent = item ? getSubtitle(item) : "";
 }
 
-async function renderExhibitionDetails() {
+async function renderExhibitionDetails(options = {}) {
   const item = getCurrentItem("exhibition");
   const total = state.data.exhibition.length;
   const current = state.indexes.exhibition + 1;
 
   els.exhibitionTitle.textContent = item ? getTitle(item) : "";
-  els.exhibitionCount.textContent = total ? `${pad2(current)} | ${pad2(total)}` : "00 | 00";
+  els.currentCount.textContent = total ? pad2(current) : "00";
+  els.totalCount.textContent = total ? ` | ${pad2(total)}` : " | 00";
   els.exhibitionInfo.innerHTML = COPY.exhibitionInfo[state.lang];
 
   renderArchive(item);
 
   if (!item) {
     els.exhibitionText.textContent = "";
+    state.currentTextGroup = "";
     return;
   }
 
+  const nextTextGroup = getTextGroup(item);
+  if (options.keepText && nextTextGroup === state.currentTextGroup) return;
+
+  state.currentTextGroup = nextTextGroup;
   els.exhibitionText.textContent = await loadText(item);
 }
 
@@ -295,6 +309,7 @@ function fadeUpdate(targets, update) {
 
 function preloadImages(items) {
   items.forEach((item) => {
+    if (item.type && item.type !== "image") return;
     if (!item.src) return;
     const image = new Image();
     image.src = item.src;
@@ -328,10 +343,21 @@ function fallbackName(src = "") {
 
 function isArchiveItem(item) {
   if (!item) return false;
+  if (typeof item.archive === "boolean") return item.archive;
   const src = decodeURIComponent(item.src || "").toLowerCase();
   const jaTitle = (item.titleJa || "").toLowerCase();
   const enTitle = (item.titleEn || "").toLowerCase();
   return src.includes("アノビルアーカイブ") || src.includes("archive") || jaTitle.includes("アノビルアーカイブ") || enTitle.includes("archive");
+}
+
+function getTextGroup(item) {
+  if (!item) return "";
+  return item.textGroup || item.textJa || item.textEn || "";
+}
+
+function warnUnsupportedMedia(item) {
+  if (!item || !item.type || item.type === "image") return;
+  console.warn(`Unsupported exhibition media type "${item.type}" for ${item.src}`);
 }
 
 function wrapIndex(index, length) {
