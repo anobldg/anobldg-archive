@@ -130,7 +130,8 @@ a:hover,
   position: relative;
   display: block;
   overflow: hidden;
-  background: #eee;
+  background: transparent;
+  background-image: none;
   user-select: none;
   touch-action: manipulation;
 }
@@ -141,24 +142,17 @@ a:hover,
 
 .image-stage::before,
 .image-stage::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  top: 50%;
-  left: -7%;
-  width: 114%;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.12);
-  transform-origin: center;
+  content: none;
+  display: none;
   pointer-events: none;
 }
 
 .image-stage::before {
-  transform: rotate(32deg);
+  transform: none;
 }
 
 .image-stage::after {
-  transform: rotate(-32deg);
+  transform: none;
 }
 
 .stage-image {
@@ -175,6 +169,12 @@ a:hover,
 
 .stage-media {
   object-fit: contain;
+}
+
+.stage-media.is-current {
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
 }
 
 .stage-image.is-broken,
