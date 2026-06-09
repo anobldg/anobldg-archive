@@ -21,6 +21,11 @@ const TEXT_FILENAME_ALIASES = new Map([
   ["06_抽象化への探求EN.txt", "06_抽象化への探求_EN.txt"]
 ]);
 
+const ARCHIVE_ASCII_TITLE = "アノビルアーカイブ";
+const ARCHIVE_ASCII_GROUPS = new Map(
+  ["01", "02", "03", "04", "05"].map((id) => [id, `${id}_archive-book`])
+);
+
 const titleEnMap = new Map([
   ["アノビルアーカイブ", "Ano Building Archive"],
   ["抽象化への探求", "Exploration of Abstraction"],
@@ -66,6 +71,7 @@ async function main() {
   await fs.writeFile(dataPath, `${JSON.stringify(nextData, null, 2)}\n`, "utf8");
 
   printReport(exhibition.length, textGroups.size);
+  printArchiveAsciiTextCheck(nextData.texts);
 }
 
 async function readExistingData() {
@@ -99,7 +105,7 @@ async function readTextGroups() {
     }
 
     const numbers = match[1].split(/[,.]/).map((number) => number.padStart(2, "0"));
-    const titleJa = match[2].normalize("NFC");
+    const titleJa = getTextTitleJa(canonicalBaseName, match[2].normalize("NFC"));
     const textGroup = canonicalBaseName;
     const group = groups.get(textGroup) || {
       textGroup,
@@ -162,6 +168,12 @@ function parseMediaEntry(entry, textGroups) {
 }
 
 function findTextGroup(media, textGroups) {
+  const archiveAsciiGroup = getArchiveAsciiGroup(media.id, media.titleJa);
+  if (archiveAsciiGroup) {
+    const group = textGroups.get(archiveAsciiGroup);
+    if (group) return group;
+  }
+
   const candidates = [...textGroups.values()].filter((group) => group.numbers.includes(media.id));
 
   if (!candidates.length) {
@@ -203,6 +215,16 @@ function getCanonicalTextBaseName(baseName, filename) {
     .replace(/\.txt$/i, "");
 }
 
+function getTextTitleJa(textGroup, fallbackTitleJa) {
+  if ([...ARCHIVE_ASCII_GROUPS.values()].includes(textGroup)) return ARCHIVE_ASCII_TITLE;
+  return fallbackTitleJa;
+}
+
+function getArchiveAsciiGroup(id, titleJa) {
+  if (titleJa !== ARCHIVE_ASCII_TITLE) return "";
+  return ARCHIVE_ASCII_GROUPS.get(id) || "";
+}
+
 function getMediaType(extension) {
   const normalized = extension.toLowerCase();
   if (["webp", "jpg", "jpeg", "png"].includes(normalized)) return "image";
@@ -227,6 +249,18 @@ function printReport(mediaCount, textGroupCount) {
   printList("missing EN text:", report.missingEnText);
   printList("missing JA text:", report.missingJaText);
   printList("duplicate textGroup candidates:", report.duplicateTextGroupCandidates);
+}
+
+function printArchiveAsciiTextCheck(texts) {
+  console.log("archive ascii text check:");
+  ARCHIVE_ASCII_GROUPS.forEach((groupKey) => {
+    const group = texts[groupKey];
+    const status = group?.ja && group?.en ? "ja/en exists" : [
+      group?.ja ? "" : "missing ja",
+      group?.en ? "" : "missing en"
+    ].filter(Boolean).join(", ");
+    console.log(`${groupKey} ${status}`);
+  });
 }
 
 function printList(label, items) {
