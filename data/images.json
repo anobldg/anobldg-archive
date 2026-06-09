@@ -22,9 +22,9 @@
       "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textGroup": "01_アノビルアーカイブ",
-      "textJa": "assets/exhibition/texts/01_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/01_アノビルアーカイブ_EN.txt",
+      "textGroup": "01_archive-book",
+      "textJa": "assets/exhibition/texts/01_archive-book.txt",
+      "textEn": "assets/exhibition/texts/01_archive-book_EN.txt",
       "archive": true,
       "archiveGroup": "ano-building-archive"
     },
@@ -34,9 +34,9 @@
       "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textGroup": "02_アノビルアーカイブ",
-      "textJa": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt",
+      "textGroup": "02_archive-book",
+      "textJa": "assets/exhibition/texts/02_archive-book.txt",
+      "textEn": "assets/exhibition/texts/02_archive-book_EN.txt",
       "archive": true,
       "archiveGroup": "ano-building-archive"
     },
@@ -46,9 +46,9 @@
       "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textGroup": "03_アノビルアーカイブ",
-      "textJa": "assets/exhibition/texts/03_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/03_アノビルアーカイブ_EN.txt",
+      "textGroup": "03_archive-book",
+      "textJa": "assets/exhibition/texts/03_archive-book.txt",
+      "textEn": "assets/exhibition/texts/03_archive-book_EN.txt",
       "archive": true,
       "archiveGroup": "ano-building-archive"
     },
@@ -58,9 +58,9 @@
       "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textGroup": "04_アノビルアーカイブ",
-      "textJa": "assets/exhibition/texts/04_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/04_アノビルアーカイブ_EN.txt",
+      "textGroup": "04_archive-book",
+      "textJa": "assets/exhibition/texts/04_archive-book.txt",
+      "textEn": "assets/exhibition/texts/04_archive-book_EN.txt",
       "archive": true,
       "archiveGroup": "ano-building-archive"
     },
@@ -70,9 +70,9 @@
       "type": "image",
       "titleJa": "アノビルアーカイブ",
       "titleEn": "Ano Building Archive",
-      "textGroup": "05_アノビルアーカイブ",
-      "textJa": "assets/exhibition/texts/05_アノビルアーカイブ.txt",
-      "textEn": "assets/exhibition/texts/05_アノビルアーカイブ_EN.txt",
+      "textGroup": "05_archive-book",
+      "textJa": "assets/exhibition/texts/05_archive-book.txt",
+      "textEn": "assets/exhibition/texts/05_archive-book_EN.txt",
       "archive": true,
       "archiveGroup": "ano-building-archive"
     },
@@ -426,6 +426,15 @@
     }
   ],
   "texts": {
+    "01_archive-book": {
+      "numbers": [
+        "01"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/01_archive-book.txt",
+      "en": "assets/exhibition/texts/01_archive-book_EN.txt"
+    },
     "01_アノビルアーカイブ": {
       "numbers": [
         "01"
@@ -434,6 +443,15 @@
       "titleEn": "Ano Building Archive",
       "ja": "assets/exhibition/texts/01_アノビルアーカイブ.txt",
       "en": "assets/exhibition/texts/01_アノビルアーカイブ_EN.txt"
+    },
+    "02_archive-book": {
+      "numbers": [
+        "02"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/02_archive-book.txt",
+      "en": "assets/exhibition/texts/02_archive-book_EN.txt"
     },
     "02_アノビルアーカイブ": {
       "numbers": [
@@ -444,6 +462,15 @@
       "ja": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
       "en": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt"
     },
+    "03_archive-book": {
+      "numbers": [
+        "03"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/03_archive-book.txt",
+      "en": "assets/exhibition/texts/03_archive-book_EN.txt"
+    },
     "03_アノビルアーカイブ": {
       "numbers": [
         "03"
@@ -453,6 +480,15 @@
       "ja": "assets/exhibition/texts/03_アノビルアーカイブ.txt",
       "en": "assets/exhibition/texts/03_アノビルアーカイブ_EN.txt"
     },
+    "04_archive-book": {
+      "numbers": [
+        "04"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/04_archive-book.txt",
+      "en": "assets/exhibition/texts/04_archive-book_EN.txt"
+    },
     "04_アノビルアーカイブ": {
       "numbers": [
         "04"
@@ -461,6 +497,15 @@
       "titleEn": "Ano Building Archive",
       "ja": "assets/exhibition/texts/04_アノビルアーカイブ.txt",
       "en": "assets/exhibition/texts/04_アノビルアーカイブ_EN.txt"
+    },
+    "05_archive-book": {
+      "numbers": [
+        "05"
+      ],
+      "titleJa": "アノビルアーカイブ",
+      "titleEn": "Ano Building Archive",
+      "ja": "assets/exhibition/texts/05_archive-book.txt",
+      "en": "assets/exhibition/texts/05_archive-book_EN.txt"
     },
     "05_アノビルアーカイブ": {
       "numbers": [
