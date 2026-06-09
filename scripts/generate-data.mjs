@@ -14,7 +14,12 @@ const imageBasePath = "assets/exhibition/images";
 const textBasePath = "assets/exhibition/texts";
 
 const mediaPattern = /^(\d{2})_(.+)\.(webp|jpg|jpeg|png|webm|svg)$/i;
-const textPattern = /^(\d{2}(?:[,.]\d{2})*)_(.+?)(?:_EN)?\.txt$/i;
+const textPattern = /^(\d{2}(?:[,.]\d{2})*)_(.+)$/;
+
+const TEXT_FILENAME_ALIASES = new Map([
+  ["27,28_読む建築展の_EN.txt", "27,28_読む建築展_EN.txt"],
+  ["06_抽象化への探求EN.txt", "06_抽象化への探求_EN.txt"]
+]);
 
 const titleEnMap = new Map([
   ["アノビルアーカイブ", "Ano Building Archive"],
@@ -80,16 +85,22 @@ async function readTextGroups() {
 
   entries.forEach((entry) => {
     const filename = entry.name.normalize("NFC");
-    const match = filename.match(textPattern);
+    const isEnglish = /(?:_?EN)\.txt$/i.test(filename);
+    const baseName = filename
+      .replace(/(?:_?EN)\.txt$/i, "")
+      .replace(/\.txt$/i, "")
+      .normalize("NFC");
+    const canonicalBaseName = getCanonicalTextBaseName(baseName, filename);
+    const match = canonicalBaseName.match(textPattern);
+
     if (!match) {
       console.warn(`Skipping unmatched text filename: ${filename}`);
       return;
     }
 
-    const isEn = /_EN\.txt$/i.test(filename);
     const numbers = match[1].split(/[,.]/).map((number) => number.padStart(2, "0"));
     const titleJa = match[2].normalize("NFC");
-    const textGroup = filename.replace(/(?:_EN)?\.txt$/i, "").normalize("NFC");
+    const textGroup = canonicalBaseName;
     const group = groups.get(textGroup) || {
       textGroup,
       numbers,
@@ -100,7 +111,7 @@ async function readTextGroups() {
 
     group.numbers = numbers;
     group.titleJa = titleJa;
-    group[isEn ? "en" : "ja"] = `${textBasePath}/${filename}`;
+    group[isEnglish ? "en" : "ja"] = `${textBasePath}/${filename}`;
     groups.set(textGroup, group);
   });
 
@@ -145,7 +156,8 @@ function parseMediaEntry(entry, textGroups) {
     textGroup: group?.textGroup || "",
     textJa: group?.ja || "",
     textEn: group?.en || "",
-    archive: isArchive({ filename, titleJa, titleEn })
+    archive: isArchive({ filename, titleJa, titleEn }),
+    archiveGroup: isArchive({ filename, titleJa, titleEn }) ? "ano-building-archive" : ""
   };
 }
 
@@ -179,6 +191,16 @@ async function readTargetFiles(dir, extensions) {
     if (name === "__MACOSX" || name === ".DS_Store" || name.startsWith(".")) return false;
     return extensions.has(path.extname(name).toLowerCase());
   });
+}
+
+function getCanonicalTextBaseName(baseName, filename) {
+  const aliasTarget = TEXT_FILENAME_ALIASES.get(filename);
+  if (!aliasTarget) return baseName;
+
+  return aliasTarget
+    .normalize("NFC")
+    .replace(/(?:_?EN)\.txt$/i, "")
+    .replace(/\.txt$/i, "");
 }
 
 function getMediaType(extension) {
