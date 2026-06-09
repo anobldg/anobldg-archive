@@ -1,5 +1,7 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
+const DATA_VERSION = "20260609-1-5-fix";
+const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
   ja: {
@@ -70,7 +72,7 @@ async function init() {
   bindEvents();
 
   try {
-    const response = await fetch(DATA_URL);
+    const response = await fetch(withDataVersion(DATA_URL));
     if (!response.ok) throw new Error(`Could not load ${DATA_URL}`);
     state.data = await response.json();
   } catch (error) {
@@ -78,7 +80,6 @@ async function init() {
     state.data = { anoBuilding: [], exhibition: [] };
   }
 
-  preloadImages([...state.data.anoBuilding, ...state.data.exhibition]);
   renderAll({ immediate: true });
 }
 
@@ -278,35 +279,12 @@ function renderArchive(item) {
 
 async function loadText(item) {
   const path = getTextPath(item, state.lang);
+  logArchiveTextCheck(item, path);
   if (!path) return "Text file not found.";
-  if (state.textCache.has(path)) return state.textCache.get(path);
 
   try {
-    const response = await fetch(path);
-    if (!response.ok) {
-      console.warn("[text fetch failed]", {
-        id: item.id,
-        titleJa: item.titleJa,
-        textGroup: item.textGroup,
-        lang: state.lang,
-        path,
-        status: response.status
-      });
-      return "Text file not found.";
-    }
-    const text = await response.text();
-    state.textCache.set(path, text);
-    return text;
+    return normalizeText(await fetchText(path, item, state.lang));
   } catch (error) {
-    console.warn("[text fetch failed]", {
-      id: item.id,
-      titleJa: item.titleJa,
-      textGroup: item.textGroup,
-      lang: state.lang,
-      path,
-      status: null,
-      error
-    });
     return "Text file not found.";
   }
 }
@@ -322,15 +300,6 @@ function fadeUpdate(targets, update) {
       if (target && !target.hidden) target.classList.remove("is-fading");
     });
   }, 170);
-}
-
-function preloadImages(items) {
-  items.forEach((item) => {
-    if (item.type && item.type !== "image" && item.type !== "svg") return;
-    if (!item.src) return;
-    const image = new Image();
-    image.src = item.src;
-  });
 }
 
 function getCurrentItem(gallery) {
@@ -391,6 +360,71 @@ function getTextPath(item, lang) {
     : item.textJa || "";
 }
 
+async function fetchText(path, item, lang) {
+  const versionedPath = withDataVersion(path);
+  if (state.textCache.has(versionedPath)) return state.textCache.get(versionedPath);
+
+  try {
+    const response = await fetch(versionedPath);
+    if (!response.ok) {
+      console.warn("[text fetch failed]", {
+        id: item.id,
+        titleJa: item.titleJa,
+        archive: item.archive,
+        archiveGroup: item.archiveGroup,
+        textGroup: item.textGroup,
+        lang,
+        path,
+        status: response.status
+      });
+      throw new Error(`Text fetch failed: ${response.status} ${path}`);
+    }
+
+    const text = await response.text();
+    state.textCache.set(versionedPath, text);
+    return text;
+  } catch (error) {
+    if (!error.message.startsWith("Text fetch failed:")) {
+      console.warn("[text fetch failed]", {
+        id: item.id,
+        titleJa: item.titleJa,
+        archive: item.archive,
+        archiveGroup: item.archiveGroup,
+        textGroup: item.textGroup,
+        lang,
+        path,
+        status: null,
+        error
+      });
+    }
+    throw error;
+  }
+}
+
+function normalizeText(raw) {
+  return String(raw || "")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .trim();
+}
+
+function withDataVersion(path) {
+  if (!path) return path;
+  const separator = path.includes("?") ? "&" : "?";
+  return `${path}${separator}v=${DATA_VERSION}`;
+}
+
+function logArchiveTextCheck(item, resolvedPath) {
+  if (!DEBUG_TEXT || !item?.archive) return;
+  console.info("[archive item text check]", {
+    id: item.id,
+    textGroup: item.textGroup,
+    textJa: item.textJa,
+    textEn: item.textEn,
+    resolvedPath
+  });
+}
+
 function setStageMedia(stage, role, item) {
   const previous = stage.querySelector(`[data-role="${role}"]`);
   const media = createMediaElement(item);
@@ -427,6 +461,7 @@ function createMediaElement(item) {
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
+    video.preload = "metadata";
     video.setAttribute("playsinline", "");
     video.className = "stage-image";
     video.addEventListener("canplay", () => playVideo(video, item.src));
