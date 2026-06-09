@@ -36,6 +36,13 @@ const titleEnMap = new Map([
   ["読む建築展", "Reading Architecture Exhibition"]
 ]);
 
+const anoBuildingTitleEnMap = new Map([
+  ["アノビルアーカイブ", "Ano Building Archive"],
+  ["抽象化への探求", "In Search of Abstraction"],
+  ["断片から全体へ", "From Fragments to the Whole"],
+  ["読む建築展", "Exhibition as a Medium for Architecture"]
+]);
+
 const mediaExtensions = new Set([".webp", ".jpg", ".jpeg", ".png", ".webm", ".svg"]);
 const textExtensions = new Set([".txt"]);
 
@@ -74,6 +81,7 @@ async function main() {
   await fs.mkdir(path.dirname(dataPath), { recursive: true });
   await fs.writeFile(dataPath, `${JSON.stringify(nextData, null, 2)}\n`, "utf8");
 
+  printAnoBuildingReport(anoBuilding);
   printReport(exhibition.length, textGroups.size);
   printArchiveAsciiTextCheck(nextData.texts);
 }
@@ -90,7 +98,8 @@ async function readAnoBuildingItems(existingData) {
 
 function parseAnoBuildingEntry(entry) {
   const filename = entry.name.normalize("NFC");
-  const match = filename.match(anoBuildingPattern);
+  const parseName = filename.replace(/＿/g, "_");
+  const match = parseName.match(anoBuildingPattern);
   if (!match) {
     console.warn(`Skipping unmatched ano building filename: ${filename}`);
     return null;
@@ -106,7 +115,7 @@ function parseAnoBuildingEntry(entry) {
     type: getMediaType(rawExtension),
     titleJa,
     subtitleJa: subtitle,
-    titleEn: getTitleEn(titleJa),
+    titleEn: getAnoBuildingTitleEn(titleJa),
     subtitleEn: subtitle
   };
 }
@@ -274,6 +283,10 @@ function getTitleEn(titleJa) {
   return titleEnMap.get(titleJa) || titleJa;
 }
 
+function getAnoBuildingTitleEn(titleJa) {
+  return anoBuildingTitleEnMap.get(titleJa) || getTitleEn(titleJa);
+}
+
 function isArchive({ filename, titleJa, titleEn }) {
   const haystack = `${filename} ${titleJa} ${titleEn}`.toLowerCase();
   return haystack.includes("アノビルアーカイブ") || haystack.includes("archive");
@@ -286,6 +299,14 @@ function printReport(mediaCount, textGroupCount) {
   printList("missing EN text:", report.missingEnText);
   printList("missing JA text:", report.missingJaText);
   printList("duplicate textGroup candidates:", report.duplicateTextGroupCandidates);
+}
+
+function printAnoBuildingReport(items) {
+  console.log(`anoBuilding media count: ${items.length}`);
+  console.log("anoBuilding file check:");
+  ["01", "02", "03", "04"].forEach((id) => {
+    console.log(`${id} ${items.some((item) => item.id === id) ? "exists" : "missing"}`);
+  });
 }
 
 function printArchiveAsciiTextCheck(texts) {
