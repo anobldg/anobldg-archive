@@ -25,7 +25,8 @@
       "textGroup": "01_アノビルアーカイブ",
       "textJa": "assets/exhibition/texts/01_アノビルアーカイブ.txt",
       "textEn": "assets/exhibition/texts/01_アノビルアーカイブ_EN.txt",
-      "archive": true
+      "archive": true,
+      "archiveGroup": "ano-building-archive"
     },
     {
       "id": "02",
@@ -36,7 +37,8 @@
       "textGroup": "02_アノビルアーカイブ",
       "textJa": "assets/exhibition/texts/02_アノビルアーカイブ.txt",
       "textEn": "assets/exhibition/texts/02_アノビルアーカイブ_EN.txt",
-      "archive": true
+      "archive": true,
+      "archiveGroup": "ano-building-archive"
     },
     {
       "id": "03",
@@ -47,7 +49,8 @@
       "textGroup": "03_アノビルアーカイブ",
       "textJa": "assets/exhibition/texts/03_アノビルアーカイブ.txt",
       "textEn": "assets/exhibition/texts/03_アノビルアーカイブ_EN.txt",
-      "archive": true
+      "archive": true,
+      "archiveGroup": "ano-building-archive"
     },
     {
       "id": "04",
@@ -58,7 +61,8 @@
       "textGroup": "04_アノビルアーカイブ",
       "textJa": "assets/exhibition/texts/04_アノビルアーカイブ.txt",
       "textEn": "assets/exhibition/texts/04_アノビルアーカイブ_EN.txt",
-      "archive": true
+      "archive": true,
+      "archiveGroup": "ano-building-archive"
     },
     {
       "id": "05",
@@ -69,7 +73,8 @@
       "textGroup": "05_アノビルアーカイブ",
       "textJa": "assets/exhibition/texts/05_アノビルアーカイブ.txt",
       "textEn": "assets/exhibition/texts/05_アノビルアーカイブ_EN.txt",
-      "archive": true
+      "archive": true,
+      "archiveGroup": "ano-building-archive"
     },
     {
       "id": "06",
@@ -79,8 +84,9 @@
       "titleEn": "Exploration of Abstraction",
       "textGroup": "06_抽象化への探求",
       "textJa": "assets/exhibition/texts/06_抽象化への探求.txt",
-      "textEn": "",
-      "archive": false
+      "textEn": "assets/exhibition/texts/06_抽象化への探求_EN.txt",
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "07",
@@ -91,7 +97,8 @@
       "textGroup": "07_抽象化への探求",
       "textJa": "assets/exhibition/texts/07_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/07_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "08",
@@ -102,7 +109,8 @@
       "textGroup": "08,09_抽象化への探求",
       "textJa": "assets/exhibition/texts/08,09_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/08,09_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "09",
@@ -113,7 +121,8 @@
       "textGroup": "08,09_抽象化への探求",
       "textJa": "assets/exhibition/texts/08,09_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/08,09_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "10",
@@ -124,7 +133,8 @@
       "textGroup": "10_抽象化への探求",
       "textJa": "assets/exhibition/texts/10_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/10_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "11",
@@ -135,7 +145,8 @@
       "textGroup": "11_抽象化への探求",
       "textJa": "assets/exhibition/texts/11_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/11_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "12",
@@ -146,7 +157,8 @@
       "textGroup": "12_抽象化への探求",
       "textJa": "assets/exhibition/texts/12_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/12_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "13",
@@ -157,7 +169,8 @@
       "textGroup": "13_抽象化への探求",
       "textJa": "assets/exhibition/texts/13_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/13_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "14",
@@ -168,7 +181,8 @@
       "textGroup": "14_抽象化への探求",
       "textJa": "assets/exhibition/texts/14_抽象化への探求.txt",
       "textEn": "assets/exhibition/texts/14_抽象化への探求_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "15",
@@ -179,7 +193,8 @@
       "textGroup": "15_断片から全体へ",
       "textJa": "assets/exhibition/texts/15_断片から全体へ.txt",
       "textEn": "assets/exhibition/texts/15_断片から全体へ_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "16",
@@ -190,7 +205,8 @@
       "textGroup": "16_断片から全体へ",
       "textJa": "assets/exhibition/texts/16_断片から全体へ.txt",
       "textEn": "assets/exhibition/texts/16_断片から全体へ_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "17",
@@ -201,7 +217,8 @@
       "textGroup": "17_読む建築展",
       "textJa": "assets/exhibition/texts/17_読む建築展.txt",
       "textEn": "assets/exhibition/texts/17_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "18",
@@ -212,7 +229,8 @@
       "textGroup": "18,19,20_読む建築展",
       "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
       "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "19",
@@ -223,7 +241,8 @@
       "textGroup": "18,19,20_読む建築展",
       "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
       "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "20",
@@ -234,7 +253,8 @@
       "textGroup": "18,19,20_読む建築展",
       "textJa": "assets/exhibition/texts/18,19,20_読む建築展.txt",
       "textEn": "assets/exhibition/texts/18,19,20_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "21",
@@ -245,7 +265,8 @@
       "textGroup": "21,22_読む建築展",
       "textJa": "assets/exhibition/texts/21,22_読む建築展.txt",
       "textEn": "assets/exhibition/texts/21,22_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "22",
@@ -256,7 +277,8 @@
       "textGroup": "21,22_読む建築展",
       "textJa": "assets/exhibition/texts/21,22_読む建築展.txt",
       "textEn": "assets/exhibition/texts/21,22_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "23",
@@ -267,7 +289,8 @@
       "textGroup": "23,24_読む建築展",
       "textJa": "assets/exhibition/texts/23,24_読む建築展.txt",
       "textEn": "assets/exhibition/texts/23,24_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "24",
@@ -278,7 +301,8 @@
       "textGroup": "23,24_読む建築展",
       "textJa": "assets/exhibition/texts/23,24_読む建築展.txt",
       "textEn": "assets/exhibition/texts/23,24_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "25",
@@ -289,7 +313,8 @@
       "textGroup": "25.26_読む建築展",
       "textJa": "assets/exhibition/texts/25.26_読む建築展.txt",
       "textEn": "assets/exhibition/texts/25.26_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "26",
@@ -300,7 +325,8 @@
       "textGroup": "25.26_読む建築展",
       "textJa": "assets/exhibition/texts/25.26_読む建築展.txt",
       "textEn": "assets/exhibition/texts/25.26_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "27",
@@ -310,8 +336,9 @@
       "titleEn": "Reading Architecture Exhibition",
       "textGroup": "27,28_読む建築展",
       "textJa": "assets/exhibition/texts/27,28_読む建築展.txt",
-      "textEn": "",
-      "archive": false
+      "textEn": "assets/exhibition/texts/27,28_読む建築展_EN.txt",
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "28",
@@ -321,8 +348,9 @@
       "titleEn": "Reading Architecture Exhibition",
       "textGroup": "27,28_読む建築展",
       "textJa": "assets/exhibition/texts/27,28_読む建築展.txt",
-      "textEn": "",
-      "archive": false
+      "textEn": "assets/exhibition/texts/27,28_読む建築展_EN.txt",
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "29",
@@ -333,7 +361,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "30",
@@ -344,7 +373,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "31",
@@ -355,7 +385,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "32",
@@ -366,7 +397,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "33",
@@ -377,7 +409,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     },
     {
       "id": "34",
@@ -388,7 +421,8 @@
       "textGroup": "29,30,31,32,33,34_読む建築展",
       "textJa": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展.txt",
       "textEn": "assets/exhibition/texts/29,30,31,32,33,34_読む建築展_EN.txt",
-      "archive": false
+      "archive": false,
+      "archiveGroup": ""
     }
   ],
   "texts": {
@@ -444,16 +478,7 @@
       "titleJa": "抽象化への探求",
       "titleEn": "Exploration of Abstraction",
       "ja": "assets/exhibition/texts/06_抽象化への探求.txt",
-      "en": ""
-    },
-    "06_抽象化への探求EN": {
-      "numbers": [
-        "06"
-      ],
-      "titleJa": "抽象化への探求EN",
-      "titleEn": "抽象化への探求EN",
-      "ja": "assets/exhibition/texts/06_抽象化への探求EN.txt",
-      "en": ""
+      "en": "assets/exhibition/texts/06_抽象化への探求_EN.txt"
     },
     "07_抽象化への探求": {
       "numbers": [
@@ -595,17 +620,7 @@
       "titleJa": "読む建築展",
       "titleEn": "Reading Architecture Exhibition",
       "ja": "assets/exhibition/texts/27,28_読む建築展.txt",
-      "en": ""
-    },
-    "27,28_読む建築展の": {
-      "numbers": [
-        "27",
-        "28"
-      ],
-      "titleJa": "読む建築展の",
-      "titleEn": "読む建築展の",
-      "ja": "",
-      "en": "assets/exhibition/texts/27,28_読む建築展の_EN.txt"
+      "en": "assets/exhibition/texts/27,28_読む建築展_EN.txt"
     },
     "29,30,31,32,33,34_読む建築展": {
       "numbers": [
