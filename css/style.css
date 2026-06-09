@@ -380,7 +380,7 @@ a:hover,
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 14px;
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .exhibition-media {
@@ -474,6 +474,11 @@ a:hover,
   .exhibition-info p,
   .archive-panel p {
     margin: 0 0 0.6em;
+  }
+
+  .archive-description,
+  .archive-credit {
+    white-space: pre-line;
   }
 
   .archive-panel h2 {
@@ -687,7 +692,7 @@ a:hover,
     font-weight: 500;
     line-height: 1.6;
     text-align: left;
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .archive-panel.is-hidden {
@@ -708,6 +713,11 @@ a:hover,
 
   .archive-panel p {
     margin: 0 0 0.8em;
+  }
+
+  .archive-description,
+  .archive-credit {
+    white-space: pre-line;
   }
 
   .archive-price {
