@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260609-1-5-fix";
+const DATA_VERSION = "20260609-1-5-1-archive-text";
 const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
@@ -416,12 +416,13 @@ function withDataVersion(path) {
 
 function logArchiveTextCheck(item, resolvedPath) {
   if (!DEBUG_TEXT || !item?.archive) return;
-  console.info("[archive item text check]", {
+  console.info("[archive text debug]", {
     id: item.id,
     textGroup: item.textGroup,
     textJa: item.textJa,
     textEn: item.textEn,
-    resolvedPath
+    resolvedPath,
+    language: state.lang
   });
 }
 
