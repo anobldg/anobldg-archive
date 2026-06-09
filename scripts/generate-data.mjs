@@ -7,12 +7,15 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
 const dataPath = path.join(rootDir, "data", "images.json");
+const anoBuildingImageDir = path.join(rootDir, "assets", "ano-building", "images");
 const imageDir = path.join(rootDir, "assets", "exhibition", "images");
 const textDir = path.join(rootDir, "assets", "exhibition", "texts");
 
+const anoBuildingImageBasePath = "assets/ano-building/images";
 const imageBasePath = "assets/exhibition/images";
 const textBasePath = "assets/exhibition/texts";
 
+const anoBuildingPattern = /^(\d{2})_(.+?)(?:_(.+))?\.(webp|jpg|jpeg|png|webm|svg)$/i;
 const mediaPattern = /^(\d{2})_(.+)\.(webp|jpg|jpeg|png|webm|svg)$/i;
 const textPattern = /^(\d{2}(?:[,.]\d{2})*)_(.+)$/;
 
@@ -45,11 +48,12 @@ const report = {
 
 async function main() {
   const existingData = await readExistingData();
+  const anoBuilding = await readAnoBuildingItems(existingData);
   const textGroups = await readTextGroups();
   const exhibition = await readMediaItems(textGroups);
 
   const nextData = {
-    anoBuilding: Array.isArray(existingData.anoBuilding) ? existingData.anoBuilding : [],
+    anoBuilding,
     exhibition,
     texts: Object.fromEntries(
       [...textGroups.values()]
@@ -72,6 +76,39 @@ async function main() {
 
   printReport(exhibition.length, textGroups.size);
   printArchiveAsciiTextCheck(nextData.texts);
+}
+
+async function readAnoBuildingItems(existingData) {
+  const entries = await readTargetFiles(anoBuildingImageDir, mediaExtensions);
+  const items = entries
+    .map(parseAnoBuildingEntry)
+    .filter(Boolean)
+    .sort((a, b) => Number(a.id) - Number(b.id) || a.src.localeCompare(b.src));
+
+  return items.length ? items : Array.isArray(existingData.anoBuilding) ? existingData.anoBuilding : [];
+}
+
+function parseAnoBuildingEntry(entry) {
+  const filename = entry.name.normalize("NFC");
+  const match = filename.match(anoBuildingPattern);
+  if (!match) {
+    console.warn(`Skipping unmatched ano building filename: ${filename}`);
+    return null;
+  }
+
+  const [, id, rawTitleJa, rawSubtitle, rawExtension] = match;
+  const titleJa = rawTitleJa.normalize("NFC");
+  const subtitle = (rawSubtitle || "").normalize("NFC");
+
+  return {
+    id,
+    src: `${anoBuildingImageBasePath}/${filename}`,
+    type: getMediaType(rawExtension),
+    titleJa,
+    subtitleJa: subtitle,
+    titleEn: getTitleEn(titleJa),
+    subtitleEn: subtitle
+  };
 }
 
 async function readExistingData() {
