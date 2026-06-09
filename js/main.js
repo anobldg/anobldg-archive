@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260609-1-5-1-archive-text";
+const DATA_VERSION = "20260609-phase2-media-fit";
 const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
@@ -32,6 +32,7 @@ const state = {
     exhibition: []
   },
   textCache: new Map(),
+  mediaWarmCache: new Map(),
   currentTextGroup: "",
   currentTextLang: "",
   currentArchiveGroup: null,
@@ -81,6 +82,8 @@ async function init() {
   }
 
   renderAll({ immediate: true });
+  scheduleWarmAdjacent("anoBuilding", state.indexes.anoBuilding);
+  scheduleWarmAdjacent("exhibition", state.indexes.exhibition);
 }
 
 function collectElements() {
@@ -168,6 +171,7 @@ function changeImage(gallery, direction) {
   const nextItem = items[next];
   state.indexes[gallery] = next;
   animateStage(gallery, nextItem, direction);
+  scheduleWarmAdjacent(gallery, next);
 
   if (gallery === "anoBuilding") {
     fadeUpdate([document.querySelector('[data-role="ano-caption"]')], () => renderAnoCaption());
@@ -222,6 +226,7 @@ function renderAll(options = {}) {
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
   setStageMedia(els.stages[gallery], "current-image", item);
+  scheduleWarmAdjacent(gallery, state.indexes[gallery]);
 }
 
 function renderAnoCaption() {
@@ -440,7 +445,7 @@ function clearStageMedia(stage, role, fallback) {
   pauseMedia(current);
 
   const media = fallback || document.createElement("img");
-  media.className = `stage-image ${role === "current-image" ? "current" : "incoming"} is-broken is-error`;
+  media.className = `stage-image stage-media ${role === "current-image" ? "current" : "incoming"} is-broken is-error`;
   media.dataset.role = role;
   media.alt = "";
   media.style.transform = "";
@@ -451,7 +456,7 @@ function createMediaElement(item) {
   if (!item || !item.src) {
     const image = document.createElement("img");
     image.alt = "";
-    image.className = "stage-image is-broken is-error";
+    image.className = "stage-image stage-media is-broken is-error";
     return image;
   }
 
@@ -464,7 +469,7 @@ function createMediaElement(item) {
     video.playsInline = true;
     video.preload = "metadata";
     video.setAttribute("playsinline", "");
-    video.className = "stage-image";
+    video.className = "stage-image stage-media";
     video.addEventListener("canplay", () => playVideo(video, item.src));
     requestAnimationFrame(() => playVideo(video, item.src));
     return video;
@@ -477,10 +482,50 @@ function createMediaElement(item) {
   const image = document.createElement("img");
   image.src = item.src;
   image.alt = item.titleJa || item.titleEn || "";
-  image.className = "stage-image";
+  image.className = "stage-image stage-media";
   image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
   image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
   return image;
+}
+
+function scheduleWarmAdjacent(gallery, index) {
+  const list = state.data[gallery];
+  if (!Array.isArray(list) || !list.length) return;
+
+  const run = () => {
+    warmMedia(list[index]);
+    warmMedia(list[wrapIndex(index - 1, list.length)]);
+    warmMedia(list[wrapIndex(index + 1, list.length)]);
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(run);
+  } else {
+    window.setTimeout(run, 120);
+  }
+}
+
+function warmMedia(item) {
+  if (!item || !item.src || state.mediaWarmCache.has(item.src)) return;
+
+  if (item.type === "video") {
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    state.mediaWarmCache.set(item.src, video);
+    return;
+  }
+
+  const image = new Image();
+  image.src = item.src;
+  if (image.decode) {
+    state.mediaWarmCache.set(item.src, image.decode().catch(() => null));
+  } else {
+    state.mediaWarmCache.set(item.src, image);
+  }
 }
 
 function pauseMedia(media) {
