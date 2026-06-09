@@ -231,6 +231,10 @@ a:hover,
   scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
 }
 
+.copy-scroll.copy-body {
+  white-space: pre-line;
+}
+
 .copy-scroll::-webkit-scrollbar,
 .exhibition-info::-webkit-scrollbar {
   width: 1px;
@@ -457,7 +461,7 @@ a:hover,
     margin-top: 0;
     padding-top: 0;
     overflow: hidden;
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .archive-panel.is-hidden {
@@ -478,7 +482,7 @@ a:hover,
 
   .archive-description,
   .archive-credit {
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .archive-panel h2 {
@@ -717,7 +721,7 @@ a:hover,
 
   .archive-description,
   .archive-credit {
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .archive-price {
@@ -765,7 +769,7 @@ a:hover,
     height: auto;
     overflow: visible;
     padding: 0;
-    white-space: pre-line;
+    white-space: normal;
   }
 
   .exhibition-info {
