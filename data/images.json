@@ -1,18 +1,40 @@
 {
   "anoBuilding": [
     {
-      "src": "assets/ano-building/images/01_抽象化への探求_first season ／ 2025.07.22 - 07.31.jpg",
+      "id": "01",
+      "src": "assets/ano-building/images/01_抽象化への探求_first season ／ 2025.07.22 - 07.31.webp",
+      "type": "image",
       "titleJa": "抽象化への探求",
       "subtitleJa": "first season ／ 2025.07.22 - 07.31",
       "titleEn": "Exploration of Abstraction",
       "subtitleEn": "first season ／ 2025.07.22 - 07.31"
     },
     {
-      "src": "assets/ano-building/images/02_sample.jpg",
-      "titleJa": "サンプル",
-      "subtitleJa": "sample subtitle",
-      "titleEn": "Sample",
-      "subtitleEn": "sample subtitle"
+      "id": "02",
+      "src": "assets/ano-building/images/02_断片から全体へ_second season ／ 2025.08.02 - 08.07.webp",
+      "type": "image",
+      "titleJa": "断片から全体へ",
+      "subtitleJa": "second season ／ 2025.08.02 - 08.07",
+      "titleEn": "From Fragments to the Whole",
+      "subtitleEn": "second season ／ 2025.08.02 - 08.07"
+    },
+    {
+      "id": "03",
+      "src": "assets/ano-building/images/03_読む建築展_third season ／ 2025.09.27 - 10.04.webp",
+      "type": "image",
+      "titleJa": "読む建築展",
+      "subtitleJa": "third season ／ 2025.09.27 - 10.04",
+      "titleEn": "Reading Architecture Exhibition",
+      "subtitleEn": "third season ／ 2025.09.27 - 10.04"
+    },
+    {
+      "id": "04",
+      "src": "assets/ano-building/images/04_アノビルアーカイブ_archive book ／ available now.webp",
+      "type": "image",
+      "titleJa": "アノビルアーカイブ",
+      "subtitleJa": "archive book ／ available now",
+      "titleEn": "Ano Building Archive",
+      "subtitleEn": "archive book ／ available now"
     }
   ],
   "exhibition": [
