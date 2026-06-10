@@ -126,15 +126,20 @@ a:hover,
   color: var(--text-color);
 }
 
-.image-stage {
+.image-stage,
+.media-stage,
+.ano-media-stage,
+.exhibition-media-stage {
   position: relative;
   display: block;
   overflow: hidden;
-  border: none;
-  outline: none;
+  border: 0 !important;
+  outline: 0 !important;
   background: #fff;
-  background-image: none;
-  box-shadow: none;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none;
+  mix-blend-mode: normal;
   user-select: none;
   touch-action: manipulation;
 }
@@ -144,7 +149,13 @@ a:hover,
 }
 
 .image-stage::before,
-.image-stage::after {
+.image-stage::after,
+.media-stage::before,
+.media-stage::after,
+.ano-media-stage::before,
+.ano-media-stage::after,
+.exhibition-media-stage::before,
+.exhibition-media-stage::after {
   content: none;
   display: none;
   pointer-events: none;
@@ -158,31 +169,36 @@ a:hover,
   transform: none;
 }
 
-.stage-image {
+.stage-image,
+.stage-media {
   position: absolute;
   z-index: 1;
   inset: 0;
-  border: none;
-  outline: none;
+  border: 0 !important;
+  outline: 0 !important;
   width: 100%;
   height: 100%;
   background: transparent;
-  box-shadow: none;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none;
+  mix-blend-mode: normal;
   object-fit: contain;
   object-position: center center;
-  opacity: 1;
+  opacity: 0;
   transform: translateX(0);
 }
 
-.stage-media {
-  border: none;
-  outline: none;
-  box-shadow: none;
-  object-fit: contain;
+.stage-media.is-current.is-loaded,
+.stage-media.is-leaving.is-loaded,
+video.stage-media.is-current,
+video.stage-media.is-leaving {
+  opacity: 1;
 }
 
-.stage-media.is-current {
-  opacity: 1;
+.stage-media,
+.stage-media.is-current,
+.stage-media.is-loaded {
   filter: none;
   mix-blend-mode: normal;
 }
@@ -503,7 +519,7 @@ a:hover,
 
   .archive-description,
   .archive-credit {
-    white-space: normal;
+    white-space: pre-line;
   }
 
   .archive-panel h2 {
@@ -515,7 +531,7 @@ a:hover,
   }
 
   .archive-price {
-    margin: 10px 0;
+    margin: 10px 0 2px;
     color: rgba(0, 0, 0, 0.82);
     font-family: var(--font-en);
     font-size: 18px;
@@ -523,11 +539,17 @@ a:hover,
     line-height: 1.1;
   }
 
+  .archive-price-note {
+    margin: 0 0 10px;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
   .purchase-button {
     display: block;
     width: 100%;
     height: 28px;
-    margin: 10px 0 14px;
+    margin: 0 0 14px;
     border: none;
     border-radius: 2px;
     padding: 0;
@@ -742,11 +764,11 @@ a:hover,
 
   .archive-description,
   .archive-credit {
-    white-space: normal;
+    white-space: pre-line;
   }
 
   .archive-price {
-    margin: 12px 0;
+    margin: 12px 0 3px;
     color: rgba(0, 0, 0, 0.82);
     font-family: var(--font-en);
     font-size: 18px;
@@ -754,11 +776,17 @@ a:hover,
     line-height: 1.1;
   }
 
+  .archive-price-note {
+    margin: 0 0 12px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
   .purchase-button {
     display: block;
     width: 100%;
     height: 30px;
-    margin: 12px 0 18px;
+    margin: 0 0 18px;
     border: none;
     border-radius: 2px;
     background: #0073c8;
