@@ -1,7 +1,9 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase3-loading-preload";
+const DATA_VERSION = "20260610-phase3-1-loader-text-slide";
 const DEBUG_TEXT = false;
+const LOADER_MIN_DISPLAY = 3000;
+const LOADER_FADE_DURATION = 1000;
 const MEDIA_LOAD_TIMEOUT = 8000;
 const ANO_BUILDING_MAX_WAIT = 12000;
 
@@ -45,11 +47,18 @@ const state = {
   currentArchiveLang: "",
   mediaWarmTokens: new Map(),
   isAnimating: false,
+  mediaSliding: {
+    anoBuilding: false,
+    exhibition: false
+  },
+  loaderStartTime: 0,
   loaderSkipped: false,
   loaderEntered: false,
+  loaderExitStarted: false,
   loaderMinimumReady: Promise.resolve(),
   resolveLoaderMinimum: null,
   anoPreloadPromise: Promise.resolve(),
+  textPreloadPromise: Promise.resolve(),
   backgroundPreloadStarted: false
 };
 
@@ -83,6 +92,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   collectElements();
+  state.loaderStartTime = Date.now();
   state.loaderMinimumReady = new Promise((resolve) => {
     state.resolveLoaderMinimum = resolve;
   });
@@ -100,18 +110,24 @@ async function init() {
   renderAll({ immediate: true });
   const firstAnoReady = preloadMedia(getCurrentItem("anoBuilding"));
   state.anoPreloadPromise = preloadAnoBuildingMedia();
+  state.textPreloadPromise = preloadAllTexts();
   Promise.all([firstAnoReady])
     .catch(() => null)
     .then(() => state.resolveLoaderMinimum?.());
 
   const maxWait = delay(ANO_BUILDING_MAX_WAIT).then(() => {
-    console.warn("[ano building preload timeout]", ANO_BUILDING_MAX_WAIT);
+    console.warn("[initial preload max wait reached]", ANO_BUILDING_MAX_WAIT);
   });
+  const minimumDisplay = delayUntilMinimumLoaderTime();
+  const initialPreload = Promise.allSettled([
+    state.anoPreloadPromise,
+    state.textPreloadPromise
+  ]);
 
-  Promise.all([
-    state.loaderMinimumReady,
-    Promise.race([state.anoPreloadPromise, maxWait])
-  ]).then(() => enterSite());
+  Promise.race([
+    Promise.all([minimumDisplay, initialPreload]),
+    maxWait
+  ]).then(() => requestEnterSite("auto"));
 }
 
 function collectElements() {
@@ -158,7 +174,7 @@ function bindEvents() {
 
   const requestLoaderEntry = () => {
     state.loaderSkipped = true;
-    state.loaderMinimumReady.then(() => enterSite());
+    state.loaderMinimumReady.then(() => requestEnterSite("click"));
   };
   els.loadingScreen?.addEventListener("click", requestLoaderEntry);
 
@@ -200,7 +216,7 @@ function setLanguage(lang) {
 
 function changeImage(gallery, direction) {
   const items = state.data[gallery] || [];
-  if (!items.length || state.isAnimating) return;
+  if (!items.length || state.mediaSliding[gallery]) return;
 
   const current = state.indexes[gallery];
   const next = wrapIndex(current + direction, items.length);
@@ -242,23 +258,61 @@ function changeImage(gallery, direction) {
 
 function animateStage(gallery, nextItem, direction) {
   const stage = els.stages[gallery];
-  const incomingMedia = stage.querySelector('[data-role="incoming-image"]');
   const className = direction > 0 ? "is-next" : "is-prev";
+  const duration = getSlideDuration(gallery);
+  const current = stage.querySelector('[data-role="current-image"]');
+  const incomingSlot = stage.querySelector('[data-role="incoming-image"]');
+  const incomingMedia = createMediaElement(nextItem);
+  const enterFrom = direction > 0 ? "100vw" : "-100vw";
+  const leaveTo = direction > 0 ? "-100vw" : "100vw";
 
+  state.mediaSliding[gallery] = true;
   state.isAnimating = true;
-  setStageMedia(stage, "incoming-image", nextItem);
-  const incomingImage = stage.querySelector('[data-role="incoming-image"]');
-  incomingImage.style.transform = `translateX(${direction > 0 ? 100 : -100}%)`;
-  incomingImage.getBoundingClientRect();
+  incomingMedia.dataset.role = "incoming-image";
+  incomingMedia.classList.add("incoming", "is-current", "is-entering");
+  incomingMedia.style.transition = "none";
+  incomingMedia.style.transform = `translateX(${enterFrom})`;
+
+  current?.classList.remove("is-current");
+  current?.classList.add("is-leaving");
+  if (current) {
+    current.style.transition = "none";
+    current.style.transform = "translateX(0)";
+  }
+
+  pauseMedia(incomingSlot);
+  incomingSlot?.replaceWith(incomingMedia);
+  incomingMedia.getBoundingClientRect();
   stage.classList.add(className);
 
+  requestAnimationFrame(() => {
+    const transition = `transform ${duration}ms var(--ease)`;
+    if (current) {
+      current.style.transition = transition;
+      current.style.transform = `translateX(${leaveTo})`;
+    }
+    incomingMedia.style.transition = transition;
+    incomingMedia.style.transform = "translateX(0)";
+  });
+
   window.setTimeout(() => {
-    setStageMedia(stage, "current-image", nextItem);
-    clearStageMedia(stage, "incoming-image", incomingMedia);
+    pauseMedia(current);
+    current?.remove();
+    incomingMedia.dataset.role = "current-image";
+    incomingMedia.classList.remove("incoming", "is-entering", "is-leaving");
+    incomingMedia.classList.add("current", "is-current");
+    incomingMedia.style.transition = "";
+    incomingMedia.style.transform = "";
+    const placeholder = document.createElement("img");
+    placeholder.className = "stage-image incoming is-broken is-error";
+    placeholder.dataset.role = "incoming-image";
+    placeholder.alt = "";
+    stage.appendChild(placeholder);
     stage.classList.remove(className);
     cleanupStageMedia(stage);
+    state.mediaSliding[gallery] = false;
     state.isAnimating = false;
-  }, 410);
+  }, duration + 40);
 }
 
 function renderAll(options = {}) {
@@ -429,7 +483,7 @@ async function fetchText(path, item, lang) {
   const versionedPath = withDataVersion(path);
   if (state.textCache.has(versionedPath)) return state.textCache.get(versionedPath);
 
-  try {
+  const request = (async () => {
     const response = await fetch(versionedPath);
     if (!response.ok) {
       console.warn("[text fetch failed]", {
@@ -445,11 +499,18 @@ async function fetchText(path, item, lang) {
       throw new Error(`Text fetch failed: ${response.status} ${path}`);
     }
 
-    const text = await response.text();
+    return response.text();
+  })();
+
+  state.textCache.set(versionedPath, request);
+
+  try {
+    const text = await request;
     state.textCache.set(versionedPath, text);
     return text;
   } catch (error) {
-    if (!error.message.startsWith("Text fetch failed:")) {
+    state.textCache.delete(versionedPath);
+    if (!String(error?.message || "").startsWith("Text fetch failed:")) {
       console.warn("[text fetch failed]", {
         id: item.id,
         titleJa: item.titleJa,
@@ -570,10 +631,23 @@ function createMediaElement(item) {
   return image;
 }
 
+function requestEnterSite(reason) {
+  if (state.loaderExitStarted) return;
+  state.loaderExitStarted = true;
+  fadeOutLoader(LOADER_FADE_DURATION).then(() => enterSite(reason));
+}
+
+function fadeOutLoader(duration) {
+  if (!els.loadingScreen) return Promise.resolve();
+  els.loadingScreen.classList.add("is-hiding");
+  return delay(duration).then(() => {
+    els.loadingScreen.classList.add("is-hidden");
+  });
+}
+
 function enterSite() {
   if (state.loaderEntered) return;
   state.loaderEntered = true;
-  els.loadingScreen?.classList.add("is-hidden");
   renderStage("exhibition");
   scheduleWarmAdjacent("anoBuilding", state.indexes.anoBuilding);
   preloadExhibitionInBackground();
@@ -585,6 +659,37 @@ async function preloadAnoBuildingMedia() {
   const failed = results.filter((result) => !result.ok);
   failed.forEach((result) => console.warn("[ano building media preload failed]", result));
   return results;
+}
+
+async function preloadAllTexts() {
+  const paths = collectAllTextPaths();
+  const results = await Promise.allSettled(
+    paths.map((path) => fetchText(path, { id: "text-preload", textGroup: "preload" }, "preload"))
+  );
+
+  results.forEach((result, index) => {
+    if (result.status === "rejected") {
+      console.warn("[text preload failed]", paths[index], result.reason);
+    }
+  });
+
+  return results;
+}
+
+function collectAllTextPaths() {
+  const paths = new Set();
+
+  Object.values(state.data.texts || {}).forEach((group) => {
+    if (group.ja) paths.add(group.ja);
+    if (group.en) paths.add(group.en);
+  });
+
+  (state.data.exhibition || []).forEach((item) => {
+    if (item.textJa) paths.add(item.textJa);
+    if (item.textEn) paths.add(item.textEn);
+  });
+
+  return [...paths];
 }
 
 function preloadExhibitionInBackground() {
@@ -738,6 +843,15 @@ function wrapIndex(index, length) {
 
 function pad2(number) {
   return String(number).padStart(2, "0");
+}
+
+function getSlideDuration(gallery) {
+  return gallery === "anoBuilding" ? 2000 : 1000;
+}
+
+function delayUntilMinimumLoaderTime() {
+  const elapsed = Date.now() - state.loaderStartTime;
+  return delay(Math.max(0, LOADER_MIN_DISPLAY - elapsed));
 }
 
 function delay(ms) {
