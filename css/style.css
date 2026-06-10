@@ -13,6 +13,16 @@
   --font-en-medium: "franklin-gothic-atf", "Franklin Gothic ATF", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   --font-ja: var(--font-ja-body);
   --font-en: var(--font-en-regular);
+  --font-weight-ja-regular: 400;
+  --font-weight-ja-medium: 500;
+  --font-weight-ja-strong: 600;
+  --font-weight-en-regular: 400;
+  --font-weight-en-medium: 500;
+  --tracking-ja-title: 0.12em;
+  --tracking-ja-wide: 0.08em;
+  --tracking-en-title: 0.06em;
+  --tracking-en-body: 0.01em;
+  --tracking-ui: 0.02em;
   --text-size-desktop: 10px;
   --text-size-mobile: 12px;
   --text-leading-ja: 1.75;
@@ -1080,4 +1090,114 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   .exhibition-info a {
     color: var(--text-color);
   }
+}
+
+/* Phase 4.3 font assignment layer. Spacing/layout rules above stay authoritative. */
+.loading-title-ja {
+  font-family: var(--font-ja-title);
+  font-weight: var(--font-weight-ja-strong);
+  letter-spacing: var(--tracking-ja-title);
+}
+
+.loading-subtitle-en,
+.loading-date {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+  letter-spacing: var(--tracking-en-title);
+}
+
+.top-nav,
+.nav-link,
+.lang-switch,
+.lang-button {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+  letter-spacing: var(--tracking-ui);
+}
+
+.app[data-lang="ja"] .ano-heading {
+  font-family: var(--font-ja-title);
+  font-weight: var(--font-weight-ja-strong);
+}
+
+.app[data-lang="en"] .ano-heading {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+}
+
+.app[data-lang="ja"] .ano-caption .caption-title {
+  font-family: var(--font-ja-strong);
+  font-weight: var(--font-weight-ja-strong);
+}
+
+.app[data-lang="en"] .ano-caption .caption-title {
+  font-family: var(--font-en-medium);
+  font-weight: var(--font-weight-en-medium);
+  letter-spacing: var(--tracking-en-title);
+}
+
+.ano-caption .caption-subtitle {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+  letter-spacing: var(--tracking-en-body);
+}
+
+.app[data-lang="ja"] .exhibition-caption .caption-title {
+  font-family: var(--font-ja-strong);
+  font-weight: var(--font-weight-ja-strong);
+}
+
+.app[data-lang="en"] .exhibition-caption .caption-title {
+  font-family: var(--font-en-medium);
+  font-weight: var(--font-weight-en-medium);
+  letter-spacing: var(--tracking-en-title);
+}
+
+.exhibition-caption .caption-count {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+  letter-spacing: var(--tracking-ui);
+}
+
+html[data-lang="ja"] .copy-body,
+html[data-lang="ja"] .exhibition-info,
+html[data-lang="ja"] .archive-panel {
+  font-family: var(--font-ja-body);
+  font-weight: var(--font-weight-ja-regular);
+}
+
+html[data-lang="en"] .copy-body {
+  font-family: var(--font-en-medium);
+  font-weight: var(--font-weight-en-medium);
+  letter-spacing: var(--tracking-en-body);
+}
+
+html[data-lang="en"] .exhibition-info,
+html[data-lang="en"] .archive-panel {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+  letter-spacing: var(--tracking-en-body);
+}
+
+html[data-lang="ja"] .archive-panel h2,
+html[data-lang="ja"] .archive-price-note,
+html[data-lang="ja"] .purchase-button,
+html[data-lang="ja"] .archive-description,
+html[data-lang="ja"] .archive-credit {
+  font-family: var(--font-ja-body);
+}
+
+html[data-lang="en"] .archive-panel h2,
+html[data-lang="en"] .archive-price-note,
+html[data-lang="en"] .purchase-button,
+html[data-lang="en"] .archive-description,
+html[data-lang="en"] .archive-credit {
+  font-family: var(--font-en-regular);
+  font-weight: var(--font-weight-en-regular);
+}
+
+.archive-price {
+  font-family: var(--font-en-medium);
+  font-weight: var(--font-weight-en-medium);
+  letter-spacing: var(--tracking-ui);
 }
