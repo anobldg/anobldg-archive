@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase3-1-4-loader-prep";
+const DATA_VERSION = "20260610-phase4-1-text-spacing-vars";
 const DEBUG_TEXT = false;
 const DEBUG_LOAD = false;
 const LOADER_MIN_DISPLAY = 3000;
@@ -98,6 +98,7 @@ async function init() {
   state.loaderMinimumReady = new Promise((resolve) => {
     state.resolveLoaderMinimum = resolve;
   });
+  document.documentElement.dataset.lang = state.lang;
   bindEvents();
 
   try {
@@ -215,6 +216,7 @@ function setLanguage(lang) {
   if (state.lang === lang) return;
   state.lang = lang;
   document.documentElement.lang = lang;
+  document.documentElement.dataset.lang = lang;
   els.app.dataset.lang = lang;
   els.langButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === lang);
