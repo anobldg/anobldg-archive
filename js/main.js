@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase4-1-text-spacing-vars";
+const DATA_VERSION = "20260610-phase4-1-1-slide-lock-scrollbar";
 const DEBUG_TEXT = false;
 const DEBUG_LOAD = false;
 const LOADER_MIN_DISPLAY = 3000;
@@ -169,6 +169,7 @@ function collectElements() {
 function bindEvents() {
   document.querySelectorAll('[data-action="show-exhibition"]').forEach((trigger) => {
     trigger.addEventListener("click", () => {
+      if (state.mediaSliding.anoBuilding) return;
       setPage("exhibition");
     });
   });
@@ -352,6 +353,7 @@ async function animateAnoViewportStage(nextItem, direction) {
 
   state.mediaSliding[gallery] = true;
   state.isAnimating = true;
+  page.classList.add("is-slide-locked");
 
   const enteringInfo = await getPreparedMediaInfo(nextItem);
   const enteringMedia = createMediaElement(nextItem);
@@ -362,6 +364,7 @@ async function animateAnoViewportStage(nextItem, direction) {
   if (!enteringReady) {
     pauseMedia(enteringMedia);
     enteringMedia.remove();
+    page.classList.remove("is-slide-locked");
     state.mediaSliding[gallery] = false;
     state.isAnimating = false;
     return;
@@ -406,7 +409,7 @@ async function animateAnoViewportStage(nextItem, direction) {
     pauseMedia(leavingItem.querySelector(".stage-media"));
     pauseMedia(enteringItem.querySelector(".stage-media"));
     layer.remove();
-    page.classList.remove("is-viewport-sliding");
+    page.classList.remove("is-viewport-sliding", "is-slide-locked");
     state.mediaSliding[gallery] = false;
     state.isAnimating = false;
   }, duration + 40);
@@ -1152,7 +1155,7 @@ function pad2(number) {
 }
 
 function getSlideDuration(gallery) {
-  return gallery === "anoBuilding" ? 3000 : 2000;
+  return gallery === "anoBuilding" ? 2000 : 1500;
 }
 
 function delayUntilMinimumLoaderTime() {
