@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase3-1-loader-text-slide";
+const DATA_VERSION = "20260610-phase3-1-2-slide-stability";
 const DEBUG_TEXT = false;
 const LOADER_MIN_DISPLAY = 3000;
 const LOADER_FADE_DURATION = 1000;
@@ -256,7 +256,7 @@ function changeImage(gallery, direction) {
   }
 }
 
-function animateStage(gallery, nextItem, direction) {
+async function animateStage(gallery, nextItem, direction) {
   const stage = els.stages[gallery];
   const className = direction > 0 ? "is-next" : "is-prev";
   const duration = getSlideDuration(gallery);
@@ -271,33 +271,47 @@ function animateStage(gallery, nextItem, direction) {
   incomingMedia.dataset.role = "incoming-image";
   incomingMedia.classList.add("incoming", "is-current", "is-entering");
   incomingMedia.style.transition = "none";
-  incomingMedia.style.transform = `translateX(${enterFrom})`;
+  incomingMedia.style.transform = `translate3d(${enterFrom}, 0, 0)`;
 
   current?.classList.remove("is-current");
   current?.classList.add("is-leaving");
   if (current) {
     current.style.transition = "none";
-    current.style.transform = "translateX(0)";
+    current.style.transform = "translate3d(0, 0, 0)";
   }
 
   pauseMedia(incomingSlot);
+  pauseMedia(incomingMedia);
   if (incomingSlot) {
     incomingSlot.replaceWith(incomingMedia);
   } else {
     stage.appendChild(incomingMedia);
   }
-  incomingMedia.getBoundingClientRect();
-  stage.classList.add(className);
+  stage.classList.add("is-sliding");
 
-  requestAnimationFrame(() => {
-    const transition = `transform ${duration}ms var(--ease)`;
-    if (current) {
-      current.style.transition = transition;
-      current.style.transform = `translateX(${leaveTo})`;
-    }
-    incomingMedia.style.transition = transition;
-    incomingMedia.style.transform = "translateX(0)";
-  });
+  const isReady = await prepareMediaForSlide(incomingMedia);
+  if (!isReady) {
+    pauseMedia(incomingMedia);
+    incomingMedia.remove();
+    current?.classList.add("is-current");
+    current?.classList.remove("is-leaving");
+    current && (current.style.transition = "");
+    current && (current.style.transform = "");
+    stage.classList.remove("is-sliding");
+    state.mediaSliding[gallery] = false;
+    state.isAnimating = false;
+    return;
+  }
+  await waitForPaint();
+
+  stage.classList.add(className);
+  const transition = `transform ${duration}ms var(--ease)`;
+  if (current) {
+    current.style.transition = transition;
+    current.style.transform = `translate3d(${leaveTo}, 0, 0)`;
+  }
+  incomingMedia.style.transition = transition;
+  incomingMedia.style.transform = "translate3d(0, 0, 0)";
 
   window.setTimeout(() => {
     pauseMedia(current);
@@ -307,8 +321,9 @@ function animateStage(gallery, nextItem, direction) {
     incomingMedia.classList.add("current", "is-current");
     incomingMedia.style.transition = "";
     incomingMedia.style.transform = "";
-    stage.classList.remove(className);
+    stage.classList.remove(className, "is-sliding");
     cleanupStageMedia(stage);
+    if (incomingMedia.tagName === "VIDEO") playVideo(incomingMedia, incomingMedia.src);
     state.mediaSliding[gallery] = false;
     state.isAnimating = false;
   }, duration + 40);
@@ -632,6 +647,63 @@ function createMediaElement(item) {
     image.classList.add("is-loaded");
   }
   return image;
+}
+
+async function prepareMediaForSlide(media) {
+  if (!media) return false;
+  if (media.tagName === "VIDEO") {
+    return prepareVideoForSlide(media);
+  }
+  return prepareImageForSlide(media);
+}
+
+async function prepareImageForSlide(image) {
+  if (!image) return false;
+
+  if (!(image.complete && image.naturalWidth > 0)) {
+    await new Promise((resolve) => {
+      image.addEventListener("load", resolve, { once: true });
+      image.addEventListener("error", resolve, { once: true });
+    });
+  }
+
+  if (image.complete && image.naturalWidth > 0) {
+    image.classList.add("is-loaded");
+  } else {
+    return false;
+  }
+
+  if (image.decode) {
+    try {
+      await image.decode();
+    } catch (_) {
+      // Continue even when a browser cannot decode before animation.
+    }
+  }
+
+  return true;
+}
+
+async function prepareVideoForSlide(video) {
+  if (!video) return false;
+  if (video.readyState < 1) {
+    await new Promise((resolve) => {
+      video.addEventListener("loadedmetadata", resolve, { once: true });
+      video.addEventListener("error", resolve, { once: true });
+    });
+  }
+  if (video.readyState < 1) return false;
+  video.classList.add("is-loaded");
+  return true;
+}
+
+async function waitForPaint() {
+  await nextFrame();
+  await nextFrame();
+}
+
+function nextFrame() {
+  return new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
 function requestEnterSite(reason) {
