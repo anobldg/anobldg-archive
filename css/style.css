@@ -244,8 +244,8 @@ a:hover,
   object-fit: contain;
   object-position: center center;
   opacity: 0;
-  transform: translateX(0);
-  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .stage-media.is-current.is-loaded,
@@ -272,23 +272,33 @@ video.stage-media.is-leaving {
   transition: none;
 }
 
+.image-stage.is-sliding .stage-image,
+.image-stage.is-sliding .stage-media {
+  will-change: transform;
+}
+
+.ano-stage.is-sliding {
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+
 .image-stage.is-next .stage-image.current {
-  transform: translateX(-100vw);
+  transform: translate3d(-100vw, 0, 0);
   transition: transform var(--slide-speed) var(--ease);
 }
 
 .image-stage.is-next .stage-image.incoming {
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
   transition: transform var(--slide-speed) var(--ease);
 }
 
 .image-stage.is-prev .stage-image.current {
-  transform: translateX(100vw);
+  transform: translate3d(100vw, 0, 0);
   transition: transform var(--slide-speed) var(--ease);
 }
 
 .image-stage.is-prev .stage-image.incoming {
-  transform: translateX(0);
+  transform: translate3d(0, 0, 0);
   transition: transform var(--slide-speed) var(--ease);
 }
 
