@@ -100,6 +100,16 @@ a:hover,
   cursor: pointer;
 }
 
+.view-ano.is-slide-locked [data-action="show-exhibition"] {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+}
+
+.view-ano.is-slide-locked [data-action="show-exhibition"]:hover {
+  text-decoration: none;
+}
+
 .app {
   position: relative;
   width: 100%;
@@ -384,9 +394,10 @@ video.stage-media.is-leaving {
 }
 
 .copy-scroll,
-.exhibition-info {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+.exhibition-info,
+.archive-panel {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .copy-scroll.copy-body {
@@ -444,18 +455,22 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 }
 
 .copy-scroll::-webkit-scrollbar,
-.exhibition-info::-webkit-scrollbar {
-  width: 1px;
+.exhibition-info::-webkit-scrollbar,
+.archive-panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .copy-scroll::-webkit-scrollbar-track,
-.exhibition-info::-webkit-scrollbar-track {
+.exhibition-info::-webkit-scrollbar-track,
+.archive-panel::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .copy-scroll::-webkit-scrollbar-thumb,
-.exhibition-info::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.18);
+.exhibition-info::-webkit-scrollbar-thumb,
+.archive-panel::-webkit-scrollbar-thumb {
+  background-color: transparent;
   border-radius: 0;
 }
 
@@ -529,7 +544,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   }
 
   .ano-stage {
-    --slide-speed: 3000ms;
+    --slide-speed: 2000ms;
     width: min(82vw, 1320px, calc(68vh * 1.58));
     aspect-ratio: 1.58 / 1;
     height: auto;
@@ -592,7 +607,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-right: 14px;
+    padding-right: 0;
     white-space: normal;
   }
 
@@ -605,7 +620,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   }
 
   .exhibition-stage {
-    --slide-speed: 2000ms;
+    --slide-speed: 1500ms;
     width: 100%;
     aspect-ratio: 1.58 / 1;
   }
@@ -852,7 +867,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   }
 
   .ano-stage {
-    --slide-speed: 3000ms;
+    --slide-speed: 2000ms;
     width: 86vw;
     aspect-ratio: 1.58 / 1;
     margin: 0 auto;
@@ -904,7 +919,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   }
 
   .exhibition-stage {
-    --slide-speed: 2000ms;
+    --slide-speed: 1500ms;
     width: 100%;
     aspect-ratio: 1.58 / 1;
   }
