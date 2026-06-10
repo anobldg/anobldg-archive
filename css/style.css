@@ -188,6 +188,7 @@ a:hover,
   position: relative;
   display: block;
   overflow: hidden;
+  isolation: isolate;
   border: 0 !important;
   outline: 0 !important;
   background: #fff;
@@ -229,6 +230,8 @@ a:hover,
   position: absolute;
   z-index: 1;
   inset: 0;
+  display: block;
+  overflow: hidden;
   border: 0 !important;
   outline: 0 !important;
   width: 100%;
@@ -242,6 +245,7 @@ a:hover,
   object-position: center center;
   opacity: 0;
   transform: translateX(0);
+  will-change: transform;
 }
 
 .stage-media.is-current.is-loaded,
@@ -260,7 +264,7 @@ video.stage-media.is-leaving {
 
 .stage-image.is-broken,
 .stage-image.is-error {
-  display: none;
+  display: none !important;
 }
 
 .stage-image.current,
@@ -413,7 +417,7 @@ video.stage-media.is-leaving {
   }
 
   .ano-stage {
-    --slide-speed: 2000ms;
+    --slide-speed: 3000ms;
     width: min(82vw, 1320px, calc(68vh * 1.58));
     aspect-ratio: 1.58 / 1;
     height: auto;
@@ -489,7 +493,7 @@ video.stage-media.is-leaving {
   }
 
   .exhibition-stage {
-    --slide-speed: 1000ms;
+    --slide-speed: 2000ms;
     width: 100%;
     aspect-ratio: 1.58 / 1;
   }
@@ -706,7 +710,7 @@ video.stage-media.is-leaving {
   }
 
   .ano-stage {
-    --slide-speed: 2000ms;
+    --slide-speed: 3000ms;
     width: 86vw;
     aspect-ratio: 1.58 / 1;
     margin: 0 auto;
@@ -758,7 +762,7 @@ video.stage-media.is-leaving {
   }
 
   .exhibition-stage {
-    --slide-speed: 1000ms;
+    --slide-speed: 2000ms;
     width: 100%;
     aspect-ratio: 1.58 / 1;
   }
