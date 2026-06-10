@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260609-phase2-1-stage-cleanup";
+const DATA_VERSION = "20260610-phase2-2-number-based-data";
 const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
@@ -35,6 +35,7 @@ const state = {
   mediaWarmCache: new Map(),
   currentTextGroup: "",
   currentTextLang: "",
+  currentTitleKey: "",
   currentArchiveGroup: null,
   currentArchiveLang: "",
   mediaWarmTokens: new Map(),
@@ -179,10 +180,16 @@ function changeImage(gallery, direction) {
   } else {
     const nextTextGroup = getTextGroup(nextItem);
     const isSameTextGroup = nextTextGroup && nextTextGroup === state.currentTextGroup && state.lang === state.currentTextLang;
+    const nextTitleKey = getTitleKey(nextItem);
+    const isSameTitle = nextTitleKey && nextTitleKey === state.currentTitleKey;
     const prevArchiveGroup = getArchiveGroup(prevItem);
     const nextArchiveGroup = getArchiveGroup(nextItem);
     const isSameArchiveGroup = prevArchiveGroup === nextArchiveGroup && state.lang === state.currentArchiveLang;
     const targets = [els.currentCount];
+
+    if (!isSameTitle) {
+      targets.push(els.exhibitionTitle);
+    }
 
     if (!isSameTextGroup) {
       targets.push(document.querySelector('[data-role="exhibition-copy"]'));
@@ -244,6 +251,7 @@ async function renderExhibitionDetails(options = {}) {
   const current = state.indexes.exhibition + 1;
 
   els.exhibitionTitle.textContent = item ? getTitle(item) : "";
+  state.currentTitleKey = item ? getTitleKey(item) : "";
   els.currentCount.textContent = total ? pad2(current) : "00";
   els.totalCount.textContent = total ? ` | ${pad2(total)}` : " | 00";
   els.exhibitionInfo.innerHTML = COPY.exhibitionInfo[state.lang];
@@ -318,6 +326,11 @@ function getCurrentItem(gallery) {
 function getTitle(item) {
   const key = state.lang === "ja" ? "titleJa" : "titleEn";
   return item[key] || fallbackName(item.src).title;
+}
+
+function getTitleKey(item) {
+  if (!item) return "";
+  return `${state.lang}:${item.titleJa || ""}:${item.titleEn || ""}`;
 }
 
 function getSubtitle(item) {
@@ -491,11 +504,14 @@ function createMediaElement(item) {
   }
 
   const image = document.createElement("img");
-  image.src = item.src;
   image.alt = item.titleJa || item.titleEn || "";
   image.className = "stage-image stage-media";
   image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
-  image.addEventListener("error", () => image.classList.add("is-broken", "is-error"));
+  image.addEventListener("error", () => {
+    console.warn("[media load failed]", item.id, item.src);
+    image.classList.add("is-broken", "is-error");
+  });
+  image.src = item.src;
   return image;
 }
 
