@@ -78,6 +78,58 @@ a:hover,
   background: #fff;
 }
 
+.loading-screen {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--text-color);
+  opacity: 1;
+  transition: opacity 360ms ease, visibility 360ms ease;
+}
+
+.loading-screen.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-enter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45em;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+}
+
+.loading-title-ja,
+.loading-subtitle-en,
+.loading-date {
+  display: block;
+}
+
+.loading-title-ja {
+  font-size: clamp(24px, 4.2vw, 52px);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.loading-subtitle-en,
+.loading-date {
+  font-family: var(--font-en);
+  font-size: clamp(12px, 1.45vw, 18px);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
 .app[data-lang="en"] {
   font-family: var(--font-en);
 }
