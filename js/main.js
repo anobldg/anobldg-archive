@@ -1,7 +1,9 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase2-2-1-archive-copy-frame-fix";
+const DATA_VERSION = "20260610-phase3-loading-preload";
 const DEBUG_TEXT = false;
+const MEDIA_LOAD_TIMEOUT = 8000;
+const ANO_BUILDING_MAX_WAIT = 12000;
 
 const ARCHIVE_CONTENT = {
   ja: {
@@ -34,6 +36,7 @@ const state = {
     exhibition: []
   },
   textCache: new Map(),
+  mediaLoadCache: new Map(),
   mediaWarmCache: new Map(),
   currentTextGroup: "",
   currentTextLang: "",
@@ -41,7 +44,13 @@ const state = {
   currentArchiveGroup: null,
   currentArchiveLang: "",
   mediaWarmTokens: new Map(),
-  isAnimating: false
+  isAnimating: false,
+  loaderSkipped: false,
+  loaderEntered: false,
+  loaderMinimumReady: Promise.resolve(),
+  resolveLoaderMinimum: null,
+  anoPreloadPromise: Promise.resolve(),
+  backgroundPreloadStarted: false
 };
 
 const COPY = {
@@ -74,6 +83,9 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   collectElements();
+  state.loaderMinimumReady = new Promise((resolve) => {
+    state.resolveLoaderMinimum = resolve;
+  });
   bindEvents();
 
   try {
@@ -86,8 +98,20 @@ async function init() {
   }
 
   renderAll({ immediate: true });
-  scheduleWarmAdjacent("anoBuilding", state.indexes.anoBuilding);
-  scheduleWarmAdjacent("exhibition", state.indexes.exhibition);
+  const firstAnoReady = preloadMedia(getCurrentItem("anoBuilding"));
+  state.anoPreloadPromise = preloadAnoBuildingMedia();
+  Promise.all([firstAnoReady])
+    .catch(() => null)
+    .then(() => state.resolveLoaderMinimum?.());
+
+  const maxWait = delay(ANO_BUILDING_MAX_WAIT).then(() => {
+    console.warn("[ano building preload timeout]", ANO_BUILDING_MAX_WAIT);
+  });
+
+  Promise.all([
+    state.loaderMinimumReady,
+    Promise.race([state.anoPreloadPromise, maxWait])
+  ]).then(() => enterSite());
 }
 
 function collectElements() {
@@ -110,6 +134,7 @@ function collectElements() {
   els.archiveDescription = document.querySelector('[data-bind="archiveDescription"]');
   els.archiveCredit = document.querySelector('[data-bind="archiveCredit"]');
   els.purchaseButton = document.querySelector('[data-bind="purchaseButton"]');
+  els.loadingScreen = document.querySelector('[data-bind="loadingScreen"]');
   els.stages = {
     anoBuilding: document.querySelector('[data-gallery="anoBuilding"]'),
     exhibition: document.querySelector('[data-gallery="exhibition"]')
@@ -131,6 +156,12 @@ function bindEvents() {
     button.addEventListener("click", () => setLanguage(button.dataset.lang));
   });
 
+  const requestLoaderEntry = () => {
+    state.loaderSkipped = true;
+    state.loaderMinimumReady.then(() => enterSite());
+  };
+  els.loadingScreen?.addEventListener("click", requestLoaderEntry);
+
   Object.entries(els.stages).forEach(([gallery, stage]) => {
     stage.addEventListener("click", (event) => {
       const rect = stage.getBoundingClientRect();
@@ -150,6 +181,9 @@ function setPage(page) {
   els.app.dataset.page = page;
   els.anoView.classList.toggle("is-active", page === "anoBuilding");
   els.exhibitionView.classList.toggle("is-active", page === "exhibition");
+  if (page === "exhibition") {
+    preloadExhibitionInBackground();
+  }
   renderAll();
 }
 
@@ -230,7 +264,9 @@ function animateStage(gallery, nextItem, direction) {
 function renderAll(options = {}) {
   els.anoHeading.textContent = COPY.heading[state.lang];
   renderStage("anoBuilding");
-  renderStage("exhibition");
+  if (state.loaderEntered || state.page === "exhibition") {
+    renderStage("exhibition");
+  }
   renderAnoCaption();
   renderExhibitionDetails();
 }
@@ -239,7 +275,9 @@ function renderStage(gallery) {
   const item = getCurrentItem(gallery);
   setStageMedia(els.stages[gallery], "current-image", item);
   cleanupStageMedia(els.stages[gallery]);
-  scheduleWarmAdjacent(gallery, state.indexes[gallery]);
+  if (state.loaderEntered || gallery === "anoBuilding") {
+    scheduleWarmAdjacent(gallery, state.indexes[gallery]);
+  }
 }
 
 function renderAnoCaption() {
@@ -345,7 +383,7 @@ function getSubtitle(item) {
 }
 
 function fallbackName(src = "") {
-  const file = decodeURIComponent(src.split("/").pop() || "");
+  const file = decodeURIComponent(stripQuery(src).split("/").pop() || "");
   const base = file.replace(/\.[^.]+$/, "").replace(/^\d+_/, "");
   const parts = base.split("_").filter(Boolean);
   return {
@@ -441,6 +479,10 @@ function withDataVersion(path) {
   return `${path}${separator}v=${DATA_VERSION}`;
 }
 
+function stripQuery(src = "") {
+  return String(src).split("?")[0];
+}
+
 function logArchiveTextCheck(item, resolvedPath) {
   if (!DEBUG_TEXT || !item?.archive) return;
   console.info("[archive text debug]", {
@@ -528,6 +570,111 @@ function createMediaElement(item) {
   return image;
 }
 
+function enterSite() {
+  if (state.loaderEntered) return;
+  state.loaderEntered = true;
+  els.loadingScreen?.classList.add("is-hidden");
+  renderStage("exhibition");
+  scheduleWarmAdjacent("anoBuilding", state.indexes.anoBuilding);
+  preloadExhibitionInBackground();
+}
+
+async function preloadAnoBuildingMedia() {
+  const list = Array.isArray(state.data.anoBuilding) ? state.data.anoBuilding : [];
+  const results = await Promise.all(list.map((item) => preloadMedia(item)));
+  const failed = results.filter((result) => !result.ok);
+  failed.forEach((result) => console.warn("[ano building media preload failed]", result));
+  return results;
+}
+
+function preloadExhibitionInBackground() {
+  if (state.backgroundPreloadStarted) return;
+  const list = Array.isArray(state.data.exhibition) ? state.data.exhibition : [];
+  if (!list.length) return;
+  state.backgroundPreloadStarted = true;
+
+  const currentIndex = state.indexes.exhibition;
+  const ordered = [
+    list[currentIndex],
+    list[wrapIndex(currentIndex - 1, list.length)],
+    list[wrapIndex(currentIndex + 1, list.length)],
+    ...list.filter((_, index) => ![currentIndex, wrapIndex(currentIndex - 1, list.length), wrapIndex(currentIndex + 1, list.length)].includes(index))
+  ].filter(Boolean);
+  let index = 0;
+
+  const runNext = () => {
+    const item = ordered[index];
+    index += 1;
+    if (!item) return;
+
+    preloadMedia(item).finally(() => {
+      scheduleIdle(runNext);
+    });
+  };
+
+  scheduleIdle(runNext);
+}
+
+function preloadMedia(item) {
+  if (!item || !item.src) return Promise.resolve({ ok: false, src: "" });
+  if (state.mediaLoadCache.has(item.src)) return state.mediaLoadCache.get(item.src);
+
+  const task = withTimeout(
+    item.type === "video" ? preloadVideo(item.src) : preloadImage(item.src),
+    MEDIA_LOAD_TIMEOUT,
+    item.src
+  ).then((result) => {
+    if (!result.ok) console.warn("[media preload failed]", result);
+    return result;
+  });
+
+  state.mediaLoadCache.set(item.src, task);
+  return task;
+}
+
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => resolve({ ok: true, src });
+    image.onerror = () => resolve({ ok: false, src });
+    image.src = src;
+  });
+}
+
+function preloadVideo(src) {
+  return new Promise((resolve) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.onloadedmetadata = () => resolve({ ok: true, src });
+    video.onerror = () => resolve({ ok: false, src });
+    video.src = src;
+  });
+}
+
+function withTimeout(promise, timeout, src) {
+  let timeoutId;
+  const timeoutPromise = new Promise((resolve) => {
+    timeoutId = window.setTimeout(() => {
+      console.warn("[media preload timeout]", src);
+      resolve({ ok: false, src, timeout: true });
+    }, timeout);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => window.clearTimeout(timeoutId));
+}
+
+function scheduleIdle(callback) {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(callback);
+  } else {
+    window.setTimeout(callback, 300);
+  }
+}
+
 function scheduleWarmAdjacent(gallery, index) {
   const list = state.data[gallery];
   if (!Array.isArray(list) || !list.length) return;
@@ -550,21 +697,7 @@ function scheduleWarmAdjacent(gallery, index) {
 
 function warmMedia(item) {
   if (!item || !item.src || state.mediaWarmCache.has(item.src)) return;
-
-  if (item.type === "video") {
-    const video = document.createElement("video");
-    video.src = item.src;
-    video.preload = "metadata";
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    state.mediaWarmCache.set(item.src, video);
-    return;
-  }
-
-  const image = new Image();
-  image.src = item.src;
-  state.mediaWarmCache.set(item.src, image);
+  state.mediaWarmCache.set(item.src, preloadMedia(item));
 }
 
 function cleanupStageMedia(stage) {
@@ -605,4 +738,8 @@ function wrapIndex(index, length) {
 
 function pad2(number) {
   return String(number).padStart(2, "0");
+}
+
+function delay(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
