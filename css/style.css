@@ -1,9 +1,14 @@
 :root {
-  --color-k-100: rgba(0, 0, 0, 1);
-  --color-k-80: rgba(0, 0, 0, 0.8);
-  --color-k-60: rgba(0, 0, 0, 0.6);
-  --color-k-50: rgba(0, 0, 0, 0.55);
-  --color-k-0: #fff;
+  --k-100: rgba(0, 0, 0, 1);
+  --k-80: rgba(0, 0, 0, 0.8);
+  --k-60: rgba(0, 0, 0, 0.6);
+  --k-50: rgba(0, 0, 0, 0.5);
+  --k-0: #fff;
+  --color-k-100: var(--k-100);
+  --color-k-80: var(--k-80);
+  --color-k-60: var(--k-60);
+  --color-k-50: var(--k-50);
+  --color-k-0: var(--k-0);
   --text-color: var(--color-k-80);
   --muted-color: var(--color-k-60);
   --light-color: var(--color-k-50);
@@ -28,55 +33,62 @@
   --font-weight-ja-strong: var(--weight-ja-strong);
   --font-weight-en-regular: var(--weight-en-regular);
   --font-weight-en-medium: var(--weight-en-medium);
-  --tracking-loader-ja: 0.22em;
+  --pt-8: 10.67px;
+  --pt-10: 13.33px;
+  --pt-15: 20px;
+  --pt-40: 53.33px;
+  --leading-13pt: 17.33px;
+  --leading-17-5pt: 23.33px;
+  --leading-19pt: 25.33px;
+  --tracking-loader-ja: 0.5em;
   --tracking-ja-title: 0.12em;
   --tracking-ja-wide: 0.08em;
-  --tracking-ja-body: 0.01em;
-  --tracking-ano-ja-title: 0.18em;
-  --tracking-ano-ja-caption: 0.2em;
+  --tracking-ja-body: 0;
+  --tracking-ano-ja-title: 0.85em;
+  --tracking-ano-ja-caption: 0.85em;
   --tracking-en-title: 0.04em;
-  --tracking-en-body: 0.01em;
+  --tracking-en-body: 0;
   --tracking-ui: 0.02em;
-  --loader-title-size: clamp(32px, 4.2vw, 53px);
-  --loader-subtitle-size: 13px;
-  --ano-title-size-desktop: 13px;
+  --loader-title-size: var(--pt-40);
+  --loader-subtitle-size: var(--pt-10);
+  --ano-title-size-desktop: var(--pt-10);
   --ano-title-size-mobile: 13px;
-  --ano-caption-title-size-desktop: 13px;
+  --ano-caption-title-size-desktop: var(--pt-10);
   --ano-caption-title-size-mobile: 13px;
-  --ano-subtitle-size-desktop: 13px;
+  --ano-subtitle-size-desktop: var(--pt-10);
   --ano-subtitle-size-mobile: 13px;
-  --text-size-desktop: 13px;
-  --text-size-mobile: 13px;
-  --line-height-ja-body: 1.75;
-  --line-height-en-body: 1.9;
-  --line-height-credit: 1.625;
-  --line-height-archive: 1.625;
+  --text-size-desktop: var(--pt-10);
+  --text-size-mobile: var(--pt-10);
+  --line-height-ja-body: var(--leading-17-5pt);
+  --line-height-en-body: var(--leading-19pt);
+  --line-height-credit: var(--leading-13pt);
+  --line-height-archive: var(--leading-13pt);
   --text-leading-ja: var(--line-height-ja-body);
   --text-leading-en: var(--line-height-en-body);
-  --credit-size-desktop: 10.5px;
+  --credit-size-desktop: var(--pt-8);
   --credit-size-mobile: 11px;
   --credit-leading-ja: var(--line-height-credit);
   --credit-leading-en: var(--line-height-credit);
   --credit-opacity-mobile: 0.72;
-  --archive-body-size-desktop: 10.5px;
+  --archive-body-size-desktop: var(--pt-8);
   --archive-body-size-mobile: 12px;
   --archive-body-leading-ja: var(--line-height-archive);
   --archive-body-leading-en: var(--line-height-archive);
-  --archive-title-size-desktop: 10.5px;
+  --archive-title-size-desktop: var(--pt-8);
   --archive-title-size-mobile: 13px;
-  --archive-price-size: 20px;
-  --archive-price-note-size-desktop: 10.5px;
+  --archive-price-size: var(--pt-15);
+  --archive-price-note-size-desktop: var(--pt-8);
   --archive-price-note-size-mobile: 12px;
-  --archive-price-note-leading: 1.5;
-  --purchase-button-size-desktop: 13px;
+  --archive-price-note-leading: var(--leading-13pt);
+  --purchase-button-size-desktop: var(--pt-10);
   --purchase-button-size-mobile: 13px;
-  --caption-title-size-desktop: 12px;
+  --caption-title-size-desktop: var(--pt-8);
   --caption-title-size-mobile: 12px;
-  --caption-count-size-desktop: 10.5px;
+  --caption-count-size-desktop: var(--pt-8);
   --caption-count-size-mobile: 12px;
   --caption-leading-ja: 1.5;
   --caption-leading-en: 1.45;
-  --ui-small-size-desktop: 10.5px;
+  --ui-small-size-desktop: var(--pt-8);
   --ui-small-size-mobile: 12px;
 }
 
@@ -1480,5 +1492,357 @@ html[data-lang="en"] .exhibition-info {
 
   .exhibition-caption .caption-count {
     font-size: var(--caption-count-size-mobile);
+  }
+}
+
+/* Phase 4.4.1 PDF text spec enforcement. CSS-only layer; layout and motion remain untouched. */
+.loading-title-ja,
+.loader-title-ja {
+  font-family: var(--font-ja-title);
+  font-weight: var(--weight-ja-title);
+  font-size: var(--pt-40);
+  line-height: 1;
+  color: var(--k-60);
+  letter-spacing: 0.5em;
+  text-align: center;
+}
+
+.loading-subtitle-en,
+.loading-date,
+.loader-subtitle,
+.loader-date {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-10);
+  line-height: 1.4;
+  color: var(--k-80);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.top-nav,
+.back-link,
+.nav-link,
+.lang-switch,
+.lang-toggle,
+.lang-button,
+.counter,
+.current-count,
+.total-count {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-8);
+  line-height: 1.2;
+  color: var(--k-80);
+  letter-spacing: 0.02em;
+}
+
+.lang-button,
+.lang-toggle .is-inactive {
+  color: var(--k-60);
+}
+
+.lang-button.is-active,
+.lang-toggle .is-active {
+  color: var(--k-80);
+}
+
+html[data-lang="ja"] .ano-heading,
+html[data-lang="ja"] .ano-title,
+html[data-lang="ja"] .ano-top-title,
+.app[data-lang="ja"] .ano-heading,
+.app[data-lang="ja"] .ano-title,
+.app[data-lang="ja"] .ano-top-title {
+  font-family: var(--font-ja-title);
+  font-weight: var(--weight-ja-title);
+  font-size: var(--pt-10);
+  line-height: 1.2;
+  color: var(--k-50);
+  letter-spacing: 0.85em;
+}
+
+html[data-lang="en"] .ano-heading,
+html[data-lang="en"] .ano-title,
+html[data-lang="en"] .ano-top-title,
+.app[data-lang="en"] .ano-heading,
+.app[data-lang="en"] .ano-title,
+.app[data-lang="en"] .ano-top-title {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-10);
+  line-height: 1.2;
+  color: var(--k-80);
+  letter-spacing: 0.04em;
+}
+
+html[data-lang="ja"] .ano-caption .caption-title,
+html[data-lang="ja"] .ano-caption-title,
+html[data-lang="ja"] .media-title,
+.app[data-lang="ja"] .ano-caption .caption-title,
+.app[data-lang="ja"] .ano-caption-title,
+.app[data-lang="ja"] .media-title {
+  font-family: var(--font-ja-strong);
+  font-weight: var(--weight-ja-strong);
+  font-size: var(--pt-10);
+  line-height: 1.2;
+  color: var(--k-50);
+  letter-spacing: 0.85em;
+}
+
+html[data-lang="en"] .ano-caption .caption-title,
+html[data-lang="en"] .ano-caption-title,
+html[data-lang="en"] .media-title,
+.app[data-lang="en"] .ano-caption .caption-title,
+.app[data-lang="en"] .ano-caption-title,
+.app[data-lang="en"] .media-title {
+  font-family: var(--font-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-size: var(--pt-10);
+  line-height: 1.2;
+  color: var(--k-80);
+  letter-spacing: 0.03em;
+}
+
+.ano-caption .caption-subtitle,
+.ano-season,
+.ano-date,
+.media-season {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-10);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+}
+
+html[data-lang="ja"] .ano-caption .caption-subtitle,
+html[data-lang="ja"] .ano-season,
+html[data-lang="ja"] .ano-date,
+html[data-lang="ja"] .media-season,
+.app[data-lang="ja"] .ano-caption .caption-subtitle,
+.app[data-lang="ja"] .ano-season,
+.app[data-lang="ja"] .ano-date,
+.app[data-lang="ja"] .media-season {
+  color: var(--k-50);
+}
+
+html[data-lang="en"] .ano-caption .caption-subtitle,
+html[data-lang="en"] .ano-season,
+html[data-lang="en"] .ano-date,
+html[data-lang="en"] .media-season,
+.app[data-lang="en"] .ano-caption .caption-subtitle,
+.app[data-lang="en"] .ano-season,
+.app[data-lang="en"] .ano-date,
+.app[data-lang="en"] .media-season {
+  color: var(--k-80);
+}
+
+html[data-lang="ja"] .copy-body {
+  font-family: var(--font-ja-body);
+  font-weight: var(--weight-ja-body);
+  font-size: var(--pt-10);
+  line-height: var(--leading-17-5pt);
+  color: var(--k-100);
+  letter-spacing: 0;
+  white-space: pre-line;
+}
+
+html[data-lang="en"] .copy-body {
+  font-family: var(--font-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-size: var(--pt-10);
+  line-height: var(--leading-19pt);
+  color: var(--k-80);
+  letter-spacing: 0;
+  white-space: pre-line;
+}
+
+html[data-lang="ja"] .exhibition-info,
+html[data-lang="ja"] .credit-text {
+  font-family: var(--font-ja-body);
+  font-weight: var(--weight-ja-body);
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+  letter-spacing: 0;
+}
+
+html[data-lang="en"] .exhibition-info,
+html[data-lang="en"] .credit-text {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+  letter-spacing: 0;
+}
+
+html[data-lang="ja"] .archive-panel,
+html[data-lang="ja"] .archive-body,
+html[data-lang="ja"] .archive-description,
+html[data-lang="ja"] .archive-credit {
+  font-family: var(--font-ja-body);
+  font-weight: var(--weight-ja-body);
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+  letter-spacing: 0;
+}
+
+html[data-lang="en"] .archive-panel,
+html[data-lang="en"] .archive-body,
+html[data-lang="en"] .archive-description,
+html[data-lang="en"] .archive-credit {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+  letter-spacing: 0;
+}
+
+.archive-panel h2 {
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+}
+
+.archive-price {
+  font-family: var(--font-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-size: var(--pt-15);
+  line-height: 1.1;
+  color: var(--k-80);
+  letter-spacing: 0.02em;
+}
+
+.archive-price-note,
+.archive-limited,
+.archive-note,
+.archive-meta {
+  font-size: var(--pt-8);
+  line-height: var(--leading-13pt);
+  color: var(--k-80);
+}
+
+.archive-description,
+.archive-credit {
+  white-space: pre-line;
+}
+
+.archive-button,
+.purchase-button {
+  font-size: var(--pt-10);
+  line-height: 1.35;
+  color: var(--k-0);
+}
+
+html[data-lang="ja"] .exhibition-caption .caption-title,
+html[data-lang="ja"] .exhibition-caption-title,
+.app[data-lang="ja"] .exhibition-caption .caption-title,
+.app[data-lang="ja"] .exhibition-caption-title {
+  font-family: var(--font-ja-strong);
+  font-weight: var(--weight-ja-strong);
+  font-size: var(--pt-8);
+  line-height: 1.4;
+  color: var(--k-80);
+  letter-spacing: 0.04em;
+}
+
+html[data-lang="en"] .exhibition-caption .caption-title,
+html[data-lang="en"] .exhibition-caption-title,
+.app[data-lang="en"] .exhibition-caption .caption-title,
+.app[data-lang="en"] .exhibition-caption-title {
+  font-family: var(--font-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-size: var(--pt-8);
+  line-height: 1.4;
+  color: var(--k-80);
+  letter-spacing: 0.02em;
+}
+
+.exhibition-caption .caption-count,
+.caption-count {
+  font-family: var(--font-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-size: var(--pt-8);
+  line-height: 1.2;
+  color: var(--k-80);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .loading-title-ja,
+  .loader-title-ja {
+    font-size: clamp(30px, 8vw, var(--pt-40));
+    letter-spacing: 0.24em;
+  }
+
+  .loading-subtitle-en,
+  .loading-date,
+  .loader-subtitle,
+  .loader-date {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  html[data-lang="ja"] .ano-heading,
+  html[data-lang="ja"] .ano-title,
+  html[data-lang="ja"] .ano-top-title,
+  .app[data-lang="ja"] .ano-heading,
+  .app[data-lang="ja"] .ano-title,
+  .app[data-lang="ja"] .ano-top-title {
+    letter-spacing: 0.35em;
+  }
+
+  html[data-lang="ja"] .ano-caption .caption-title,
+  html[data-lang="ja"] .ano-caption-title,
+  html[data-lang="ja"] .media-title,
+  .app[data-lang="ja"] .ano-caption .caption-title,
+  .app[data-lang="ja"] .ano-caption-title,
+  .app[data-lang="ja"] .media-title {
+    letter-spacing: 0.38em;
+  }
+
+  html[data-lang="ja"] .exhibition-info,
+  html[data-lang="en"] .exhibition-info,
+  html[data-lang="ja"] .credit-text,
+  html[data-lang="en"] .credit-text {
+    font-size: 11px;
+    line-height: 16px;
+    color: rgba(0, 0, 0, var(--credit-opacity-mobile));
+  }
+
+  html[data-lang="ja"] .archive-panel,
+  html[data-lang="en"] .archive-panel,
+  html[data-lang="ja"] .archive-body,
+  html[data-lang="en"] .archive-body,
+  html[data-lang="ja"] .archive-description,
+  html[data-lang="en"] .archive-description,
+  html[data-lang="ja"] .archive-credit,
+  html[data-lang="en"] .archive-credit {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .archive-price-note,
+  .archive-limited,
+  .archive-note,
+  .archive-meta {
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .purchase-button,
+  .archive-button {
+    font-size: 12px;
+  }
+
+  .exhibition-caption .caption-title {
+    font-size: 11px;
+  }
+
+  .exhibition-caption .caption-count,
+  .caption-count {
+    font-size: 11px;
   }
 }
