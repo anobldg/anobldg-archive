@@ -281,7 +281,11 @@ function animateStage(gallery, nextItem, direction) {
   }
 
   pauseMedia(incomingSlot);
-  incomingSlot?.replaceWith(incomingMedia);
+  if (incomingSlot) {
+    incomingSlot.replaceWith(incomingMedia);
+  } else {
+    stage.appendChild(incomingMedia);
+  }
   incomingMedia.getBoundingClientRect();
   stage.classList.add(className);
 
@@ -303,11 +307,6 @@ function animateStage(gallery, nextItem, direction) {
     incomingMedia.classList.add("current", "is-current");
     incomingMedia.style.transition = "";
     incomingMedia.style.transform = "";
-    const placeholder = document.createElement("img");
-    placeholder.className = "stage-image incoming is-broken is-error";
-    placeholder.dataset.role = "incoming-image";
-    placeholder.alt = "";
-    stage.appendChild(placeholder);
     stage.classList.remove(className);
     cleanupStageMedia(stage);
     state.mediaSliding[gallery] = false;
@@ -570,7 +569,11 @@ function setStageMedia(stage, role, item) {
     current?.classList.add("is-leaving");
   }
   pauseMedia(previous);
-  previous.replaceWith(media);
+  if (previous) {
+    previous.replaceWith(media);
+  } else {
+    stage.appendChild(media);
+  }
 }
 
 function clearStageMedia(stage, role, fallback) {
@@ -808,6 +811,13 @@ function warmMedia(item) {
 function cleanupStageMedia(stage) {
   if (!stage) return;
 
+  Array.from(stage.querySelectorAll(".stage-image")).forEach((media) => {
+    if (media.dataset.role !== "current-image" && !media.classList.contains("is-current")) {
+      pauseMedia(media);
+      media.remove();
+    }
+  });
+
   const medias = Array.from(stage.querySelectorAll(".stage-media"));
   medias.forEach((media) => {
     if (!media.classList.contains("is-current")) {
@@ -846,7 +856,7 @@ function pad2(number) {
 }
 
 function getSlideDuration(gallery) {
-  return gallery === "anoBuilding" ? 2000 : 1000;
+  return gallery === "anoBuilding" ? 3000 : 2000;
 }
 
 function delayUntilMinimumLoaderTime() {
