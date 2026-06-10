@@ -1,7 +1,12 @@
 :root {
-  --text-color: rgba(0, 0, 0, 0.8);
-  --muted-color: rgba(0, 0, 0, 0.62);
-  --light-color: rgba(0, 0, 0, 0.5);
+  --color-k-100: rgba(0, 0, 0, 1);
+  --color-k-80: rgba(0, 0, 0, 0.8);
+  --color-k-60: rgba(0, 0, 0, 0.6);
+  --color-k-50: rgba(0, 0, 0, 0.55);
+  --color-k-0: #fff;
+  --text-color: var(--color-k-80);
+  --muted-color: var(--color-k-60);
+  --light-color: var(--color-k-50);
   --hairline: rgba(0, 0, 0, 0.26);
   --fade-speed: 180ms;
   --slide-speed: 1000ms;
@@ -23,37 +28,55 @@
   --font-weight-ja-strong: var(--weight-ja-strong);
   --font-weight-en-regular: var(--weight-en-regular);
   --font-weight-en-medium: var(--weight-en-medium);
+  --tracking-loader-ja: 0.22em;
   --tracking-ja-title: 0.12em;
   --tracking-ja-wide: 0.08em;
-  --tracking-en-title: 0.06em;
+  --tracking-ja-body: 0.01em;
+  --tracking-ano-ja-title: 0.18em;
+  --tracking-ano-ja-caption: 0.2em;
+  --tracking-en-title: 0.04em;
   --tracking-en-body: 0.01em;
   --tracking-ui: 0.02em;
-  --text-size-desktop: 10px;
-  --text-size-mobile: 12px;
-  --text-leading-ja: 1.75;
-  --text-leading-en: 1.9;
-  --credit-size-desktop: 10px;
+  --loader-title-size: clamp(32px, 4.2vw, 53px);
+  --loader-subtitle-size: 13px;
+  --ano-title-size-desktop: 13px;
+  --ano-title-size-mobile: 13px;
+  --ano-caption-title-size-desktop: 13px;
+  --ano-caption-title-size-mobile: 13px;
+  --ano-subtitle-size-desktop: 13px;
+  --ano-subtitle-size-mobile: 13px;
+  --text-size-desktop: 13px;
+  --text-size-mobile: 13px;
+  --line-height-ja-body: 1.75;
+  --line-height-en-body: 1.9;
+  --line-height-credit: 1.625;
+  --line-height-archive: 1.625;
+  --text-leading-ja: var(--line-height-ja-body);
+  --text-leading-en: var(--line-height-en-body);
+  --credit-size-desktop: 10.5px;
   --credit-size-mobile: 11px;
-  --credit-leading-ja: 1.65;
-  --credit-leading-en: 1.55;
+  --credit-leading-ja: var(--line-height-credit);
+  --credit-leading-en: var(--line-height-credit);
   --credit-opacity-mobile: 0.72;
-  --archive-body-size-desktop: 10px;
+  --archive-body-size-desktop: 10.5px;
   --archive-body-size-mobile: 12px;
-  --archive-body-leading-ja: 1.65;
-  --archive-body-leading-en: 1.55;
-  --archive-title-size-desktop: 10px;
+  --archive-body-leading-ja: var(--line-height-archive);
+  --archive-body-leading-en: var(--line-height-archive);
+  --archive-title-size-desktop: 10.5px;
   --archive-title-size-mobile: 13px;
-  --archive-price-size: 18px;
-  --archive-price-note-size-desktop: 10px;
+  --archive-price-size: 20px;
+  --archive-price-note-size-desktop: 10.5px;
   --archive-price-note-size-mobile: 12px;
   --archive-price-note-leading: 1.5;
-  --caption-title-size-desktop: 10px;
+  --purchase-button-size-desktop: 13px;
+  --purchase-button-size-mobile: 13px;
+  --caption-title-size-desktop: 12px;
   --caption-title-size-mobile: 12px;
-  --caption-count-size-desktop: 10px;
+  --caption-count-size-desktop: 10.5px;
   --caption-count-size-mobile: 12px;
   --caption-leading-ja: 1.5;
   --caption-leading-en: 1.45;
-  --ui-small-size-desktop: 10px;
+  --ui-small-size-desktop: 10.5px;
   --ui-small-size-mobile: 12px;
 }
 
@@ -1223,4 +1246,239 @@ html[data-lang="en"] .archive-credit {
   font-weight: var(--weight-en-medium);
   font-style: normal;
   letter-spacing: var(--tracking-ui);
+}
+
+/* Phase 4.4 text appearance tuning. Layout and motion rules above stay unchanged. */
+.loading-screen {
+  color: var(--color-k-80);
+}
+
+.loading-title-ja {
+  color: var(--color-k-60);
+  font-size: var(--loader-title-size);
+  line-height: 1.18;
+  letter-spacing: var(--tracking-loader-ja);
+}
+
+.loading-subtitle-en,
+.loading-date {
+  color: var(--color-k-80);
+  font-size: var(--loader-subtitle-size);
+  line-height: 1.45;
+  letter-spacing: var(--tracking-en-title);
+}
+
+.top-nav,
+.nav-link,
+.lang-switch,
+.lang-button {
+  color: var(--color-k-80);
+  font-size: var(--ui-small-size-desktop);
+  line-height: 1;
+}
+
+.lang-button {
+  color: var(--color-k-60);
+}
+
+.lang-button.is-active {
+  color: var(--color-k-80);
+}
+
+.app[data-lang="ja"] .ano-heading {
+  color: var(--color-k-50);
+  font-size: var(--ano-title-size-desktop);
+  line-height: 1;
+  letter-spacing: var(--tracking-ano-ja-title);
+}
+
+.app[data-lang="en"] .ano-heading {
+  color: var(--color-k-80);
+  font-size: var(--ano-title-size-desktop);
+  line-height: 1;
+  letter-spacing: var(--tracking-en-title);
+}
+
+.app[data-lang="ja"] .ano-caption .caption-title {
+  color: var(--color-k-50);
+  font-size: var(--ano-caption-title-size-desktop);
+  line-height: 1.35;
+  letter-spacing: var(--tracking-ano-ja-caption);
+}
+
+.app[data-lang="en"] .ano-caption .caption-title {
+  color: var(--color-k-80);
+  font-size: var(--ano-caption-title-size-desktop);
+  line-height: 1.35;
+  letter-spacing: var(--tracking-en-title);
+}
+
+.ano-caption .caption-subtitle {
+  font-size: var(--ano-subtitle-size-desktop);
+  line-height: 1.35;
+}
+
+.app[data-lang="ja"] .ano-caption .caption-subtitle {
+  color: var(--color-k-50);
+}
+
+.app[data-lang="en"] .ano-caption .caption-subtitle {
+  color: var(--color-k-80);
+}
+
+.exhibition-copy {
+  color: var(--color-k-100);
+  font-size: var(--text-size-desktop);
+}
+
+html[data-lang="en"] .exhibition-copy {
+  color: var(--color-k-80);
+}
+
+.copy-body {
+  letter-spacing: var(--tracking-ja-body);
+}
+
+html[data-lang="ja"] .copy-body {
+  color: var(--color-k-100);
+  line-height: var(--line-height-ja-body);
+}
+
+html[data-lang="en"] .copy-body {
+  color: var(--color-k-80);
+  line-height: var(--line-height-en-body);
+  letter-spacing: var(--tracking-en-body);
+}
+
+.exhibition-info {
+  color: var(--color-k-80);
+  font-size: var(--credit-size-desktop);
+  line-height: var(--line-height-credit);
+}
+
+html[data-lang="ja"] .exhibition-info,
+html[data-lang="en"] .exhibition-info {
+  color: var(--color-k-80);
+  line-height: var(--line-height-credit);
+}
+
+.exhibition-caption .caption-title {
+  color: var(--color-k-80);
+  font-size: var(--caption-title-size-desktop);
+  line-height: var(--caption-leading-ja);
+}
+
+.app[data-lang="ja"] .exhibition-caption .caption-title {
+  letter-spacing: var(--tracking-ja-wide);
+}
+
+.app[data-lang="en"] .exhibition-caption .caption-title {
+  line-height: var(--caption-leading-en);
+  letter-spacing: var(--tracking-en-title);
+}
+
+.exhibition-caption .caption-count {
+  color: var(--color-k-80);
+  font-size: var(--caption-count-size-desktop);
+  line-height: 1.45;
+}
+
+.archive-panel {
+  color: var(--color-k-80);
+  font-size: var(--archive-body-size-desktop);
+  line-height: var(--line-height-archive);
+}
+
+.archive-panel h2 {
+  color: var(--color-k-80);
+  font-size: var(--archive-title-size-desktop);
+  line-height: 1.35;
+}
+
+.archive-price {
+  color: var(--color-k-80);
+  font-size: var(--archive-price-size);
+  line-height: 1.05;
+}
+
+.archive-price-note {
+  color: var(--color-k-80);
+  font-size: var(--archive-price-note-size-desktop);
+  line-height: var(--archive-price-note-leading);
+}
+
+.purchase-button {
+  color: var(--color-k-0);
+  font-size: var(--purchase-button-size-desktop);
+  line-height: 1.35;
+}
+
+.archive-description,
+.archive-credit {
+  color: var(--color-k-80);
+  font-size: var(--archive-body-size-desktop);
+  line-height: var(--line-height-archive);
+}
+
+@media (max-width: 768px) {
+  .top-nav,
+  .nav-link,
+  .lang-switch,
+  .lang-button {
+    font-size: var(--ui-small-size-mobile);
+  }
+
+  .app[data-lang="ja"] .ano-heading,
+  .app[data-lang="en"] .ano-heading {
+    font-size: var(--ano-title-size-mobile);
+  }
+
+  .app[data-lang="ja"] .ano-caption .caption-title,
+  .app[data-lang="en"] .ano-caption .caption-title {
+    font-size: var(--ano-caption-title-size-mobile);
+  }
+
+  .ano-caption .caption-subtitle {
+    font-size: var(--ano-subtitle-size-mobile);
+  }
+
+  .exhibition-copy {
+    font-size: var(--text-size-mobile);
+  }
+
+  .exhibition-info,
+  html[data-lang="ja"] .exhibition-info,
+  html[data-lang="en"] .exhibition-info {
+    color: rgba(0, 0, 0, var(--credit-opacity-mobile));
+    font-size: var(--credit-size-mobile);
+  }
+
+  .archive-panel {
+    font-size: var(--archive-body-size-mobile);
+  }
+
+  .archive-panel h2 {
+    font-size: var(--archive-title-size-mobile);
+  }
+
+  .archive-price-note {
+    font-size: var(--archive-price-note-size-mobile);
+  }
+
+  .purchase-button {
+    font-size: var(--purchase-button-size-mobile);
+  }
+
+  .archive-description,
+  .archive-credit {
+    font-size: var(--archive-body-size-mobile);
+  }
+
+  .exhibition-caption .caption-title {
+    font-size: var(--caption-title-size-mobile);
+  }
+
+  .exhibition-caption .caption-count {
+    font-size: var(--caption-count-size-mobile);
+  }
 }
