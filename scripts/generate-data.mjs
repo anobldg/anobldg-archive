@@ -1,4 +1,6 @@
 import { promises as fs } from "node:fs";
+import { readFileSync } from "node:fs";
+import crypto from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -118,7 +120,7 @@ function parseAnoBuildingEntry(entry) {
 
   return {
     id,
-    src: makeAssetSrc(anoBuildingImageBasePath, filename),
+    src: makeMediaAssetSrc(anoBuildingImageBasePath, anoBuildingImageDir, filename),
     type: getMediaType(rawExtension),
     titleJa,
     subtitleJa: subtitle,
@@ -254,7 +256,7 @@ function parseMediaEntry(entry, textGroups, titleList) {
   const titleEn = title.titleEn;
   const type = getMediaType(rawExtension);
   const group = findTextGroup({ id, titleJa, filename: actualFileName }, textGroups);
-  const src = makeAssetSrc(imageBasePath, filename);
+  const src = makeMediaAssetSrc(imageBasePath, imageDir, filename);
   const archive = isArchiveId(id);
 
   return {
@@ -355,6 +357,18 @@ function normalizeIdList(rawIds) {
 
 function makeAssetSrc(base, actualFileName) {
   return `${base}/${encodeURI(actualFileName)}`;
+}
+
+function makeMediaAssetSrc(base, dir, actualFileName) {
+  return `${makeAssetSrc(base, actualFileName)}?m=${fileHash(path.join(dir, actualFileName))}`;
+}
+
+function fileHash(filePath) {
+  return crypto
+    .createHash("sha1")
+    .update(readFileSync(filePath))
+    .digest("hex")
+    .slice(0, 10);
 }
 
 function printReport(mediaCount, textGroupCount) {
