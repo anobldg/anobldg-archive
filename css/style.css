@@ -6,8 +6,13 @@
   --fade-speed: 180ms;
   --slide-speed: 1000ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-ja: "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
-  --font-en: "Franklin Gothic ATF", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  --font-ja-body: "yu-gothic-pr6n", "Yu Gothic Pr6N", "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  --font-ja-strong: "hiragino-kaku-gothic-pron", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
+  --font-ja-title: "toppan-bunkyu-midashi-go-std", "Toppan BunkyuMidashiGoStd", "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-en-regular: "franklin-gothic-atf", "Franklin Gothic ATF", "Franklin Gothic", "Arial Narrow", Arial, sans-serif;
+  --font-en-medium: "franklin-gothic-atf", "Franklin Gothic ATF", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  --font-ja: var(--font-ja-body);
+  --font-en: var(--font-en-regular);
   --text-size-desktop: 10px;
   --text-size-mobile: 12px;
   --text-leading-ja: 1.75;
@@ -55,6 +60,12 @@ body {
 
 body {
   height: 100%;
+}
+
+html.wf-loading body,
+html.wf-active body,
+html.wf-inactive body {
+  visibility: visible;
 }
 
 button,
