@@ -6,18 +6,23 @@
   --fade-speed: 180ms;
   --slide-speed: 1000ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-ja-body: "yu-gothic-pr6n", "Yu Gothic Pr6N", "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
-  --font-ja-strong: "hiragino-kaku-gothic-pron", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
-  --font-ja-title: "toppan-bunkyu-midashi-go-std", "Toppan BunkyuMidashiGoStd", "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", sans-serif;
-  --font-en-regular: "franklin-gothic-atf", "Franklin Gothic ATF", "Franklin Gothic", "Arial Narrow", Arial, sans-serif;
-  --font-en-medium: "franklin-gothic-atf", "Franklin Gothic ATF", "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  --font-ja-body: "yu-gothic-pr6n", "Yu Gothic", "YuGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+  --font-ja-strong: "hiragino-kaku-gothic-pron", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --font-ja-title: "toppan-bunkyu-midashi-go-std", "Yu Gothic", "YuGothic", sans-serif;
+  --font-en-regular: "franklin-gothic-atf", "Franklin Gothic", Arial, sans-serif;
+  --font-en-medium: "franklin-gothic-atf", "Franklin Gothic", Arial, sans-serif;
   --font-ja: var(--font-ja-body);
   --font-en: var(--font-en-regular);
-  --font-weight-ja-regular: 400;
-  --font-weight-ja-medium: 500;
-  --font-weight-ja-strong: 600;
-  --font-weight-en-regular: 400;
-  --font-weight-en-medium: 500;
+  --weight-en-regular: 400;
+  --weight-en-medium: 500;
+  --weight-ja-body: 400;
+  --weight-ja-strong: 600;
+  --weight-ja-title: 900;
+  --font-weight-ja-regular: var(--weight-ja-body);
+  --font-weight-ja-medium: var(--weight-ja-strong);
+  --font-weight-ja-strong: var(--weight-ja-strong);
+  --font-weight-en-regular: var(--weight-en-regular);
+  --font-weight-en-medium: var(--weight-en-medium);
   --tracking-ja-title: 0.12em;
   --tracking-ja-wide: 0.08em;
   --tracking-en-title: 0.06em;
@@ -1095,14 +1100,16 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 /* Phase 4.3 font assignment layer. Spacing/layout rules above stay authoritative. */
 .loading-title-ja {
   font-family: var(--font-ja-title);
-  font-weight: var(--font-weight-ja-strong);
+  font-weight: var(--weight-ja-title);
+  font-style: normal;
   letter-spacing: var(--tracking-ja-title);
 }
 
 .loading-subtitle-en,
 .loading-date {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
   letter-spacing: var(--tracking-en-title);
 }
 
@@ -1111,51 +1118,60 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 .lang-switch,
 .lang-button {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
   letter-spacing: var(--tracking-ui);
 }
 
 .app[data-lang="ja"] .ano-heading {
   font-family: var(--font-ja-title);
-  font-weight: var(--font-weight-ja-strong);
+  font-weight: var(--weight-ja-title);
+  font-style: normal;
 }
 
 .app[data-lang="en"] .ano-heading {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
 }
 
 .app[data-lang="ja"] .ano-caption .caption-title {
   font-family: var(--font-ja-strong);
-  font-weight: var(--font-weight-ja-strong);
+  font-weight: var(--weight-ja-strong);
+  font-style: normal;
 }
 
 .app[data-lang="en"] .ano-caption .caption-title {
   font-family: var(--font-en-medium);
-  font-weight: var(--font-weight-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-style: normal;
   letter-spacing: var(--tracking-en-title);
 }
 
 .ano-caption .caption-subtitle {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
   letter-spacing: var(--tracking-en-body);
 }
 
 .app[data-lang="ja"] .exhibition-caption .caption-title {
   font-family: var(--font-ja-strong);
-  font-weight: var(--font-weight-ja-strong);
+  font-weight: var(--weight-ja-strong);
+  font-style: normal;
 }
 
 .app[data-lang="en"] .exhibition-caption .caption-title {
   font-family: var(--font-en-medium);
-  font-weight: var(--font-weight-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-style: normal;
   letter-spacing: var(--tracking-en-title);
 }
 
 .exhibition-caption .caption-count {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
   letter-spacing: var(--tracking-ui);
 }
 
@@ -1163,19 +1179,22 @@ html[data-lang="ja"] .copy-body,
 html[data-lang="ja"] .exhibition-info,
 html[data-lang="ja"] .archive-panel {
   font-family: var(--font-ja-body);
-  font-weight: var(--font-weight-ja-regular);
+  font-weight: var(--weight-ja-body);
+  font-style: normal;
 }
 
 html[data-lang="en"] .copy-body {
   font-family: var(--font-en-medium);
-  font-weight: var(--font-weight-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-style: normal;
   letter-spacing: var(--tracking-en-body);
 }
 
 html[data-lang="en"] .exhibition-info,
 html[data-lang="en"] .archive-panel {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
   letter-spacing: var(--tracking-en-body);
 }
 
@@ -1185,6 +1204,8 @@ html[data-lang="ja"] .purchase-button,
 html[data-lang="ja"] .archive-description,
 html[data-lang="ja"] .archive-credit {
   font-family: var(--font-ja-body);
+  font-weight: var(--weight-ja-body);
+  font-style: normal;
 }
 
 html[data-lang="en"] .archive-panel h2,
@@ -1193,11 +1214,13 @@ html[data-lang="en"] .purchase-button,
 html[data-lang="en"] .archive-description,
 html[data-lang="en"] .archive-credit {
   font-family: var(--font-en-regular);
-  font-weight: var(--font-weight-en-regular);
+  font-weight: var(--weight-en-regular);
+  font-style: normal;
 }
 
 .archive-price {
   font-family: var(--font-en-medium);
-  font-weight: var(--font-weight-en-medium);
+  font-weight: var(--weight-en-medium);
+  font-style: normal;
   letter-spacing: var(--tracking-ui);
 }
