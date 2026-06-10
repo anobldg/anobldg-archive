@@ -1,22 +1,24 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase2-2-number-based-data";
+const DATA_VERSION = "20260610-phase2-2-1-archive-copy-frame-fix";
 const DEBUG_TEXT = false;
 
 const ARCHIVE_CONTENT = {
   ja: {
     title: "アノビルのこと　アーカイブブック",
     price: "¥5,000",
+    priceNote: "限定 20 部。税込・送料込み。",
     button: "購入する",
-    description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブックです。横山町でのリサーチ、図面、模型写真、展示テキストを収録しています。\n210×210mm、約104ページ。限定20部。税込・送料込み。",
-    credit: "編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n発行日：2026年5月〇〇日\nA4判変形 210×210mm / 〇〇頁 /"
+    description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブブック。横山町でのリサーチ、図面、テキストを改めて制作し直し、展示会写真と共に収録しています。\n\n編集・企画：大塚史奈、喜井雅治\nデザイン：平川航太\n写真・撮影協力：大塚紫乃\n\n発行日：2026 年 5 月〇〇日\nA4 判変形 210×210mm / 104項",
+    credit: ""
   },
   en: {
     title: "Ano Building Archive Book",
     price: "¥5,000",
+    priceNote: "Limited to 20 copies　Tax / shipping included",
     button: "purchase",
-    description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes research conducted in Yokoyamacho, drawings, model photographs, and exhibition texts.\nSpecifications: 210 × 210 mm, approx. 104 pages, limited edition of 20 copies, tax and shipping included.",
-    credit: "Venue / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Riku Hirakawa\nText / Editorial Support: Fumina Otsuka\nPublication date: May 00, 2026\nPrice: ¥5,000 / tax and shipping included"
+    description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes newly reworked research, drawings, and texts from Yokoyama-cho, together with photographs of the exhibition.\n\nEditing / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Kota Hirakawa\nPhotography: Shino Otsuka\n\nPublication Date: May 00, 2026\nModified A4 Format, 210 × 210 mm / 104 pages",
+    credit: ""
   }
 };
 
@@ -57,7 +59,7 @@ const COPY = {
       "連絡先：<br><a href=\"mailto:mshr.tmkii@gmail.com\">mshr.tmkii@gmail.com</a>"
     ].map((text) => `<p>${text}</p>`).join(""),
     en: [
-      "ANO Building<br>An Exhibition of Drawings and Models",
+      "Ano Building<br>An Exhibition of Drawings and Models",
       "Special Thanks:<br>Hiroshi Tomikawa Architects & Associates<br>Hiroshi Tomikawa",
       "Model Production Support:<br>Yuki Sato, Haruki Fukushima, Akari Nozu, Shinnosuke Adachi, Kyota Yotsuji, Ryo Shibata, Kota Katori, Kiminori Nakashima, Yoshino Sasaki, Yusuke Sasaki, Nano Sato, Norihisa Nagata, Sora Hashimoto, Saki Matsumoto, Shoki Yasue, Takuto Yoshida",
       "Instagram:<br><a href=\"https://www.instagram.com/ano_bldg/\" target=\"_blank\" rel=\"noreferrer\">@ano_bldg</a><br><a href=\"https://www.instagram.com/_mimi._.23/\" target=\"_blank\" rel=\"noreferrer\">@_mimi._.23</a><br><a href=\"https://www.instagram.com/masaharukii/\" target=\"_blank\" rel=\"noreferrer\">@masaharukii</a>",
@@ -104,6 +106,7 @@ function collectElements() {
   els.archivePanel = document.querySelector('[data-role="archive-panel"]');
   els.archiveTitle = document.querySelector('[data-bind="archiveTitle"]');
   els.archivePrice = document.querySelector('[data-bind="archivePrice"]');
+  els.archivePriceNote = document.querySelector('[data-bind="archivePriceNote"]');
   els.archiveDescription = document.querySelector('[data-bind="archiveDescription"]');
   els.archiveCredit = document.querySelector('[data-bind="archiveCredit"]');
   els.purchaseButton = document.querySelector('[data-bind="purchaseButton"]');
@@ -279,8 +282,11 @@ function renderArchive(item) {
 
   els.archiveTitle.textContent = archive.title;
   els.archivePrice.textContent = archive.price;
+  els.archivePriceNote.textContent = archive.priceNote;
   els.archiveDescription.textContent = archive.description;
+  els.archiveDescription.hidden = !archive.description;
   els.archiveCredit.textContent = archive.credit;
+  els.archiveCredit.hidden = !archive.credit;
   els.purchaseButton.textContent = archive.button;
   els.purchaseButton.href = PURCHASE_URL;
   state.currentArchiveGroup = shouldShow ? getArchiveGroup(item) : null;
@@ -493,7 +499,7 @@ function createMediaElement(item) {
     video.playsInline = true;
     video.preload = "metadata";
     video.setAttribute("playsinline", "");
-    video.className = "stage-image stage-media";
+    video.className = "stage-image stage-media is-loaded";
     video.addEventListener("canplay", () => playVideo(video, item.src));
     requestAnimationFrame(() => playVideo(video, item.src));
     return video;
@@ -505,13 +511,20 @@ function createMediaElement(item) {
 
   const image = document.createElement("img");
   image.alt = item.titleJa || item.titleEn || "";
+  image.decoding = "async";
   image.className = "stage-image stage-media";
-  image.addEventListener("load", () => image.classList.remove("is-broken", "is-error"));
+  image.addEventListener("load", () => {
+    image.classList.add("is-loaded");
+    image.classList.remove("is-broken", "is-error");
+  });
   image.addEventListener("error", () => {
     console.warn("[media load failed]", item.id, item.src);
-    image.classList.add("is-broken", "is-error");
+    image.remove();
   });
   image.src = item.src;
+  if (image.complete && image.naturalWidth > 0) {
+    image.classList.add("is-loaded");
+  }
   return image;
 }
 
