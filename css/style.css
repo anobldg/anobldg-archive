@@ -19,6 +19,7 @@ body {
   width: 100%;
   min-height: 100%;
   margin: 0;
+  overflow-x: hidden;
   background: #fff;
   color: var(--text-color);
   font-family: var(--font-ja);
@@ -277,9 +278,33 @@ video.stage-media.is-leaving {
   will-change: transform;
 }
 
-.ano-stage.is-sliding {
-  overflow-x: visible;
-  overflow-y: hidden;
+.ano-viewport-slide-layer {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+}
+
+.ano-viewport-slide-item {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.ano-viewport-slide-item .stage-media {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.view-ano.is-viewport-sliding .ano-stage .stage-media {
+  visibility: hidden;
 }
 
 .image-stage.is-next .stage-image.current {
