@@ -1,6 +1,6 @@
 const PURCHASE_URL = "#";
 const DATA_URL = "data/images.json";
-const DATA_VERSION = "20260610-phase3-1-2-slide-stability";
+const DATA_VERSION = "20260610-phase3-1-3-viewport-slide";
 const DEBUG_TEXT = false;
 const LOADER_MIN_DISPLAY = 3000;
 const LOADER_FADE_DURATION = 1000;
@@ -257,6 +257,10 @@ function changeImage(gallery, direction) {
 }
 
 async function animateStage(gallery, nextItem, direction) {
+  if (gallery === "anoBuilding") {
+    return animateAnoViewportStage(nextItem, direction);
+  }
+
   const stage = els.stages[gallery];
   const className = direction > 0 ? "is-next" : "is-prev";
   const duration = getSlideDuration(gallery);
@@ -327,6 +331,162 @@ async function animateStage(gallery, nextItem, direction) {
     state.mediaSliding[gallery] = false;
     state.isAnimating = false;
   }, duration + 40);
+}
+
+async function animateAnoViewportStage(nextItem, direction) {
+  const gallery = "anoBuilding";
+  const stage = els.stages[gallery];
+  const page = els.anoView;
+  const duration = getSlideDuration(gallery);
+  const currentMedia = stage.querySelector('[data-role="current-image"]');
+  const enteringMedia = createMediaElement(nextItem);
+
+  state.mediaSliding[gallery] = true;
+  state.isAnimating = true;
+
+  enteringMedia.dataset.role = "viewport-entering-image";
+  enteringMedia.classList.add("is-current", "is-entering");
+
+  const enteringReady = await prepareMediaForSlide(enteringMedia);
+  if (!enteringReady) {
+    pauseMedia(enteringMedia);
+    enteringMedia.remove();
+    state.mediaSliding[gallery] = false;
+    state.isAnimating = false;
+    return;
+  }
+
+  const stageRect = stage.getBoundingClientRect();
+  const leavingRect = getRenderedMediaRect(currentMedia, stageRect);
+  const enteringRect = getRenderedMediaRect(enteringMedia, stageRect);
+  const distance = window.innerWidth || document.documentElement.clientWidth || stageRect.width;
+  const enterFrom = direction > 0 ? distance : -distance;
+  const leaveTo = direction > 0 ? -distance : distance;
+  const layer = document.createElement("div");
+  const leavingItem = createAnoViewportSlideItem(cloneMediaForSlide(currentMedia), leavingRect, "is-leaving");
+  const enteringItem = createAnoViewportSlideItem(enteringMedia, enteringRect, "is-entering");
+
+  layer.className = "ano-viewport-slide-layer";
+  layer.setAttribute("aria-hidden", "true");
+  leavingItem.style.transform = "translate3d(0, 0, 0)";
+  enteringItem.style.transform = `translate3d(${enterFrom}px, 0, 0)`;
+  layer.append(leavingItem, enteringItem);
+  document.body.appendChild(layer);
+  page.classList.add("is-viewport-sliding");
+
+  await waitForPaint();
+
+  const transition = `transform ${duration}ms var(--ease)`;
+  leavingItem.style.transition = transition;
+  enteringItem.style.transition = transition;
+  leavingItem.style.transform = `translate3d(${leaveTo}px, 0, 0)`;
+  enteringItem.style.transform = "translate3d(0, 0, 0)";
+
+  window.setTimeout(async () => {
+    setStageMedia(stage, "current-image", nextItem);
+    cleanupStageMedia(stage);
+    const newCurrent = stage.querySelector('[data-role="current-image"]');
+    await prepareMediaForSlide(newCurrent);
+    await waitForPaint();
+    pauseMedia(leavingItem.querySelector(".stage-media"));
+    pauseMedia(enteringItem.querySelector(".stage-media"));
+    layer.remove();
+    page.classList.remove("is-viewport-sliding");
+    state.mediaSliding[gallery] = false;
+    state.isAnimating = false;
+  }, duration + 40);
+}
+
+function createAnoViewportSlideItem(media, rect, className) {
+  const item = document.createElement("div");
+  item.className = `ano-viewport-slide-item ${className}`;
+  applyRect(item, rect);
+  media.classList.add("is-current", "is-loaded");
+  media.style.transition = "";
+  media.style.transform = "";
+  item.appendChild(media);
+  return item;
+}
+
+function cloneMediaForSlide(media) {
+  if (!media) {
+    const fallback = document.createElement("img");
+    fallback.alt = "";
+    fallback.className = "stage-image stage-media is-loaded";
+    return fallback;
+  }
+
+  const clone = media.cloneNode(true);
+  clone.dataset.role = "viewport-leaving-image";
+  clone.classList.add("is-current", "is-loaded");
+  clone.classList.remove("incoming", "is-entering", "is-leaving", "is-broken", "is-error");
+  clone.style.transition = "";
+  clone.style.transform = "";
+  if (clone.tagName === "VIDEO") {
+    clone.muted = true;
+    clone.loop = true;
+    clone.playsInline = true;
+    clone.preload = "metadata";
+    clone.setAttribute("playsinline", "");
+  }
+  return clone;
+}
+
+function applyRect(element, rect) {
+  Object.assign(element.style, {
+    left: `${rect.left}px`,
+    top: `${rect.top}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`
+  });
+}
+
+function getRenderedMediaRect(media, stageRect) {
+  const size = getMediaIntrinsicSize(media);
+  if (!size) {
+    return {
+      left: stageRect.left,
+      top: stageRect.top,
+      width: stageRect.width,
+      height: stageRect.height
+    };
+  }
+  return getContainRect(stageRect, size.width, size.height);
+}
+
+function getMediaIntrinsicSize(media) {
+  if (!media) return null;
+  if (media.tagName === "VIDEO") {
+    const width = media.videoWidth;
+    const height = media.videoHeight;
+    return width > 0 && height > 0 ? { width, height } : null;
+  }
+
+  const width = media.naturalWidth;
+  const height = media.naturalHeight;
+  return width > 0 && height > 0 ? { width, height } : null;
+}
+
+function getContainRect(stageRect, naturalWidth, naturalHeight) {
+  const stageRatio = stageRect.width / stageRect.height;
+  const mediaRatio = naturalWidth / naturalHeight;
+  let width;
+  let height;
+
+  if (mediaRatio > stageRatio) {
+    width = stageRect.width;
+    height = width / mediaRatio;
+  } else {
+    height = stageRect.height;
+    width = height * mediaRatio;
+  }
+
+  return {
+    left: stageRect.left + (stageRect.width - width) / 2,
+    top: stageRect.top + (stageRect.height - height) / 2,
+    width,
+    height
+  };
 }
 
 function renderAll(options = {}) {
