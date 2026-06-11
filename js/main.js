@@ -6,8 +6,8 @@ const DEBUG_LOAD = false;
 const LOADER_MIN_DISPLAY = 3000;
 const LOADER_MAX_DISPLAY = 5000;
 const LOADER_FADE_DURATION = 1000;
-const LOADER_TEXT_FADE_DURATION = 500;
-const LOADER_FONT_TIMEOUT = 3000;
+const LOADER_TEXT_FADE_DURATION = 100;
+const LOADER_FONT_TIMEOUT = 1000;
 const MEDIA_LOAD_TIMEOUT = 8000;
 
 const ARCHIVE_CONTENT = {
@@ -108,7 +108,7 @@ async function init() {
   });
   document.documentElement.dataset.lang = state.lang;
   bindEvents();
-  state.loaderTextVisiblePromise = waitForLoaderTextVisible();
+  state.loaderTextVisiblePromise = prepareLoaderTextFast();
 
   try {
     const response = await fetch(withDataVersion(DATA_URL));
@@ -923,34 +923,27 @@ function nextFrame() {
   return new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
-function waitForLoaderTextVisible() {
-  const root = document.documentElement;
+function prepareLoaderTextFast() {
+  const loaderFonts = document.fonts?.load
+    ? Promise.all([
+      document.fonts.load('900 40px "toppan-bunkyu-midashi-go-std"'),
+      document.fonts.load('400 10px "franklin-gothic-atf"')
+    ])
+    : Promise.resolve();
 
-  return new Promise((resolve) => {
-    const resolveWhenReady = () => {
-      const isActive = root.classList.contains("wf-active");
-      const isInactive = root.classList.contains("wf-inactive");
-      if (!isActive && !isInactive) return false;
+  return Promise.race([
+    loaderFonts.then(() => {
+      state.fontReady = true;
+    }).catch(() => null),
+    delay(LOADER_FONT_TIMEOUT)
+  ]).then(showLoaderText);
+}
 
-      state.fontReady = isActive;
-      window.setTimeout(() => {
-        state.loaderTextVisible = true;
-        state.loaderVisibleStartTime = Date.now();
-        logLoad("loader text visible", state.loaderVisibleStartTime - state.loaderStartTime);
-        resolve();
-      }, LOADER_TEXT_FADE_DURATION);
-      return true;
-    };
-
-    if (resolveWhenReady()) return;
-
-    const observer = new MutationObserver(() => {
-      if (!resolveWhenReady()) return;
-      observer.disconnect();
-    });
-
-    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
-  });
+function showLoaderText() {
+  state.loaderTextVisible = true;
+  state.loaderVisibleStartTime = Date.now();
+  els.loadingScreen?.classList.add("is-text-visible");
+  logLoad("loader text visible", state.loaderVisibleStartTime - state.loaderStartTime);
 }
 
 function requestEnterSite(reason) {
