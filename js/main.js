@@ -6,6 +6,8 @@ const DEBUG_LOAD = false;
 const LOADER_MIN_DISPLAY = 3000;
 const LOADER_MAX_DISPLAY = 5000;
 const LOADER_FADE_DURATION = 1000;
+const LOADER_TEXT_FADE_DURATION = 500;
+const LOADER_FONT_TIMEOUT = 3000;
 const MEDIA_LOAD_TIMEOUT = 8000;
 
 const ARCHIVE_CONTENT = {
@@ -43,6 +45,8 @@ const state = {
   mediaWarmCache: new Map(),
   currentTextGroup: "",
   currentTextLang: "",
+  currentTextPath: "",
+  currentTextContent: "",
   currentTitleKey: "",
   currentArchiveGroup: null,
   currentArchiveLang: "",
@@ -53,10 +57,14 @@ const state = {
     exhibition: false
   },
   loaderStartTime: 0,
+  loaderVisibleStartTime: 0,
   loaderSkipped: false,
   loaderEntered: false,
   loaderExitStarted: false,
+  fontReady: false,
+  loaderTextVisible: false,
   loaderMinimumReady: Promise.resolve(),
+  loaderTextVisiblePromise: Promise.resolve(),
   resolveLoaderMinimum: null,
   anoPreloadPromise: Promise.resolve(),
   textPreloadPromise: Promise.resolve(),
@@ -100,6 +108,7 @@ async function init() {
   });
   document.documentElement.dataset.lang = state.lang;
   bindEvents();
+  state.loaderTextVisiblePromise = waitForLoaderTextVisible();
 
   try {
     const response = await fetch(withDataVersion(DATA_URL));
@@ -120,11 +129,11 @@ async function init() {
     .catch(() => null)
     .then(() => state.resolveLoaderMinimum?.());
 
-  const maxWait = delayUntilMaximumLoaderTime().then(() => {
+  const maxWait = state.loaderTextVisiblePromise.then(() => delayUntilMaximumLoaderTime()).then(() => {
     console.warn("[loader max wait reached]", LOADER_MAX_DISPLAY);
     return "timeout";
   });
-  const minimumDisplay = delayUntilMinimumLoaderTime();
+  const minimumDisplay = state.loaderTextVisiblePromise.then(() => delayUntilMinimumLoaderTime());
   const initialPreload = Promise.allSettled([
     state.anoPreloadPromise,
     state.textPreloadPromise
@@ -184,7 +193,7 @@ function bindEvents() {
 
   const requestLoaderEntry = () => {
     state.loaderSkipped = true;
-    state.loaderMinimumReady.then(() => requestEnterSite("click"));
+    Promise.all([state.loaderTextVisiblePromise, state.loaderMinimumReady]).then(() => requestEnterSite("click"));
   };
   els.loadingScreen?.addEventListener("click", requestLoaderEntry);
 
@@ -539,6 +548,15 @@ function renderAnoCaption() {
   els.anoSubtitle.textContent = item ? getSubtitle(item) : "";
 }
 
+function resetExhibitionTextScroll() {
+  const scrollContainer = els.exhibitionText?.closest(".copy-scroll");
+  requestAnimationFrame(() => {
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0;
+    }
+  });
+}
+
 async function renderExhibitionDetails(options = {}) {
   const item = getCurrentItem("exhibition");
   const total = state.data.exhibition.length;
@@ -554,17 +572,31 @@ async function renderExhibitionDetails(options = {}) {
 
   if (!item) {
     els.exhibitionText.textContent = "";
+    resetExhibitionTextScroll();
     state.currentTextGroup = "";
     state.currentTextLang = "";
+    state.currentTextPath = "";
+    state.currentTextContent = "";
     return;
   }
 
   const nextTextGroup = getTextGroup(item);
   if (options.keepText && nextTextGroup === state.currentTextGroup && state.lang === state.currentTextLang) return;
+  const nextTextPath = getTextPath(item, state.lang);
+  const nextTextContent = await loadText(item);
+  const textWillChange = nextTextGroup !== state.currentTextGroup ||
+    state.lang !== state.currentTextLang ||
+    nextTextPath !== state.currentTextPath ||
+    nextTextContent !== state.currentTextContent;
 
   state.currentTextGroup = nextTextGroup;
   state.currentTextLang = state.lang;
-  els.exhibitionText.textContent = await loadText(item);
+  state.currentTextPath = nextTextPath;
+  state.currentTextContent = nextTextContent;
+  els.exhibitionText.textContent = nextTextContent;
+  if (textWillChange) {
+    resetExhibitionTextScroll();
+  }
 }
 
 function renderArchive(item) {
@@ -891,6 +923,36 @@ function nextFrame() {
   return new Promise((resolve) => requestAnimationFrame(resolve));
 }
 
+function waitForLoaderTextVisible() {
+  const root = document.documentElement;
+
+  return new Promise((resolve) => {
+    const resolveWhenReady = () => {
+      const isActive = root.classList.contains("wf-active");
+      const isInactive = root.classList.contains("wf-inactive");
+      if (!isActive && !isInactive) return false;
+
+      state.fontReady = isActive;
+      window.setTimeout(() => {
+        state.loaderTextVisible = true;
+        state.loaderVisibleStartTime = Date.now();
+        logLoad("loader text visible", state.loaderVisibleStartTime - state.loaderStartTime);
+        resolve();
+      }, LOADER_TEXT_FADE_DURATION);
+      return true;
+    };
+
+    if (resolveWhenReady()) return;
+
+    const observer = new MutationObserver(() => {
+      if (!resolveWhenReady()) return;
+      observer.disconnect();
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+  });
+}
+
 function requestEnterSite(reason) {
   if (state.loaderExitStarted) return;
   state.loaderExitStarted = true;
@@ -1159,12 +1221,12 @@ function getSlideDuration(gallery) {
 }
 
 function delayUntilMinimumLoaderTime() {
-  const elapsed = Date.now() - state.loaderStartTime;
+  const elapsed = Date.now() - state.loaderVisibleStartTime;
   return delay(Math.max(0, LOADER_MIN_DISPLAY - elapsed));
 }
 
 function delayUntilMaximumLoaderTime() {
-  const elapsed = Date.now() - state.loaderStartTime;
+  const elapsed = Date.now() - state.loaderVisibleStartTime;
   return delay(Math.max(0, LOADER_MAX_DISPLAY - elapsed));
 }
 
