@@ -112,6 +112,29 @@ body {
   height: 100%;
 }
 
+.page-background {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.page-background__layer {
+  position: absolute;
+  inset: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  will-change: opacity;
+}
+
+.page-background__layer.is-active {
+  opacity: 1;
+}
+
 html.wf-loading body,
 html.wf-active body,
 html.wf-inactive body {
@@ -173,8 +196,9 @@ a:hover,
 
 .app {
   position: relative;
+  z-index: 1;
   width: 100%;
-  background: #fff;
+  background: transparent;
 }
 
 .loading-screen {
@@ -193,6 +217,10 @@ a:hover,
 .loading-screen.is-hiding {
   opacity: 0;
   pointer-events: none;
+}
+
+.loading-screen.is-text-visible {
+  background: transparent;
 }
 
 .loading-screen.is-hidden {
