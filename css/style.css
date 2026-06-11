@@ -2222,7 +2222,34 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
 
 /* Phase 5-A2: background layer visual fixes only. */
 .loading-screen {
-  background: transparent;
+  overflow: hidden;
+  background: #fff;
+}
+
+.loading-screen::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-color: #fff;
+  background-image: url("../assets/back-images/0000_archive.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.loading-screen.is-text-visible::before {
+  opacity: 1;
+}
+
+.loading-screen.is-hiding::before {
+  opacity: 0;
+}
+
+.loading-enter {
+  z-index: 1;
 }
 
 .image-stage,
