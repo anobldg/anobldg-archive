@@ -1846,3 +1846,196 @@ html[data-lang="en"] .exhibition-caption-title,
     font-size: 11px;
   }
 }
+
+/* Phase 4.4.3: display refinements without touching media, loading, or slide logic. */
+:root {
+  --phase443-tight-leading: 16px;
+  --phase443-left-width: min(calc(var(--pc-left-width) + 1.2vw), 39vw);
+  --phase443-copy-extra-height: 46px;
+  --phase443-exhibition-caption-color: rgba(0, 0, 0, 0.64);
+  --phase443-ano-small-size: var(--pt-8);
+  --phase443-ano-jp-caption-measure: 255px;
+}
+
+html:not(.wf-active):not(.wf-inactive) .loading-enter,
+html.wf-loading .loading-enter {
+  visibility: hidden;
+  opacity: 0;
+}
+
+html.wf-active .loading-enter,
+html.wf-inactive .loading-enter {
+  visibility: visible;
+  opacity: 1;
+}
+
+.loading-screen {
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.loading-enter {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  transition: opacity 180ms ease;
+}
+
+.loading-title-ja {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max-content;
+  max-width: 92vw;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.loading-subtitle-en {
+  position: absolute;
+  top: calc(50% + 3.2em);
+  left: 50%;
+  width: max-content;
+  max-width: 92vw;
+  transform: translateX(-50%);
+}
+
+.loading-date {
+  position: absolute;
+  top: calc(50% + 4.8em);
+  left: 50%;
+  width: max-content;
+  max-width: 92vw;
+  transform: translateX(-50%);
+}
+
+html[data-lang="ja"] .exhibition-caption .caption-title,
+html[data-lang="ja"] .exhibition-caption-title,
+.app[data-lang="ja"] .exhibition-caption .caption-title,
+.app[data-lang="ja"] .exhibition-caption-title,
+html[data-lang="en"] .exhibition-caption .caption-title,
+html[data-lang="en"] .exhibition-caption-title,
+.app[data-lang="en"] .exhibition-caption .caption-title,
+.app[data-lang="en"] .exhibition-caption-title {
+  color: var(--phase443-exhibition-caption-color);
+}
+
+.exhibition-caption .caption-count,
+.caption-count,
+.current-count,
+.total-count {
+  font-weight: var(--weight-en-regular);
+}
+
+.purchase-button,
+.archive-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+html[data-lang="ja"] .ano-caption .caption-title,
+html[data-lang="ja"] .ano-caption-title,
+.app[data-lang="ja"] .ano-caption .caption-title,
+.app[data-lang="ja"] .ano-caption-title {
+  display: block;
+  width: min(var(--phase443-ano-jp-caption-measure), 72vw);
+  margin-inline: auto;
+  color: var(--k-50);
+  letter-spacing: 0.16em;
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-character;
+}
+
+html[data-lang="ja"] .ano-caption .caption-subtitle,
+.app[data-lang="ja"] .ano-caption .caption-subtitle {
+  font-size: var(--phase443-ano-small-size);
+  color: var(--k-50);
+}
+
+html[data-lang="en"] .ano-caption .caption-title,
+html[data-lang="en"] .ano-caption-title,
+.app[data-lang="en"] .ano-caption .caption-title,
+.app[data-lang="en"] .ano-caption-title,
+html[data-lang="en"] .ano-caption .caption-subtitle,
+.app[data-lang="en"] .ano-caption .caption-subtitle {
+  font-size: var(--phase443-ano-small-size);
+  color: var(--k-50);
+}
+
+@media (min-width: 769px) {
+  .exhibition-copy,
+  .left-lower-area {
+    width: var(--phase443-left-width);
+  }
+
+  .exhibition-copy {
+    height: calc(var(--pc-copy-height) + var(--phase443-copy-extra-height));
+  }
+
+  .left-lower-area {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 2vw;
+  }
+
+  .left-lower-area > *,
+  .archive-panel {
+    min-width: 0;
+  }
+
+  .archive-panel {
+    width: 100%;
+    max-width: none;
+  }
+
+  html[data-lang="ja"] .exhibition-info,
+  html[data-lang="en"] .exhibition-info,
+  html[data-lang="ja"] .archive-panel,
+  html[data-lang="en"] .archive-panel,
+  html[data-lang="ja"] .archive-body,
+  html[data-lang="en"] .archive-body,
+  html[data-lang="ja"] .archive-description,
+  html[data-lang="en"] .archive-description,
+  html[data-lang="ja"] .archive-credit,
+  html[data-lang="en"] .archive-credit,
+  .archive-price-note,
+  .archive-limited,
+  .archive-note,
+  .archive-meta {
+    line-height: var(--phase443-tight-leading);
+  }
+}
+
+@media (max-width: 768px) {
+  .loading-title-ja {
+    font-size: clamp(30px, 8vw, var(--pt-40));
+    letter-spacing: 0.24em;
+  }
+
+  .loading-subtitle-en {
+    top: calc(50% + 3em);
+  }
+
+  .loading-date {
+    top: calc(50% + 4.5em);
+  }
+
+  html[data-lang="ja"] .ano-caption .caption-title,
+  html[data-lang="ja"] .ano-caption-title,
+  .app[data-lang="ja"] .ano-caption .caption-title,
+  .app[data-lang="ja"] .ano-caption-title {
+    width: min(255px, 76vw);
+    letter-spacing: 0.14em;
+  }
+}
