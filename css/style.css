@@ -2308,3 +2308,8 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
     inset: -2vh -2vw;
   }
 }
+
+/* Final micro fix: English ano building title tracking only. */
+.app[data-lang="en"] .ano-heading {
+  letter-spacing: 0.06em;
+}
