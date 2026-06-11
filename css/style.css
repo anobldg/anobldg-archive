@@ -1857,20 +1857,12 @@ html[data-lang="en"] .exhibition-caption-title,
   --phase443-ano-jp-caption-measure: 255px;
 }
 
-html:not(.wf-active):not(.wf-inactive) .loading-enter,
-html.wf-loading .loading-enter {
-  visibility: hidden;
-  opacity: 0;
-}
-
 .loading-enter {
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 100ms ease;
 }
 
-html.wf-active .loading-enter,
-html.wf-inactive .loading-enter {
-  visibility: visible;
+.loading-screen.is-text-visible .loading-enter {
   opacity: 1;
 }
 
