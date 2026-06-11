@@ -2036,3 +2036,94 @@ html[data-lang="en"] .ano-caption .caption-subtitle,
     letter-spacing: 0.14em;
   }
 }
+/* Phase 4.4.4-B: exhibition layout and typography only. */
+@media (min-width: 769px) {
+  :root {
+    --pc-content-top: var(--pc-page-top);
+    --pc-exhibition-caption-top: calc(100dvh - 12.2vh);
+    --pc-exhibition-stage-height: calc(var(--pc-exhibition-caption-top) - var(--pc-content-top) - 5.2vh);
+  }
+
+  .exhibition-copy {
+    top: var(--pc-content-top);
+  }
+
+  .exhibition-copy .copy-scroll {
+    height: 100%;
+  }
+
+  .exhibition-media {
+    top: var(--pc-content-top);
+  }
+
+  .exhibition-stage {
+    height: min(var(--pc-exhibition-stage-height), calc(var(--pc-image-width) / 1.58));
+    aspect-ratio: auto;
+  }
+
+  .exhibition-caption {
+    position: fixed;
+    top: var(--pc-exhibition-caption-top);
+    left: var(--pc-image-left);
+    width: var(--pc-image-width);
+    margin-top: 0;
+  }
+
+  .app[data-page="exhibition"] .lang-switch {
+    position: fixed;
+    right: calc(100vw - (var(--pc-image-left) + var(--pc-image-width)));
+  }
+}
+
+html[data-lang="ja"] .exhibition-caption .caption-title,
+html[data-lang="ja"] .exhibition-caption-title,
+.app[data-lang="ja"] .exhibition-caption .caption-title,
+.app[data-lang="ja"] .exhibition-caption-title,
+html[data-lang="en"] .exhibition-caption .caption-title,
+html[data-lang="en"] .exhibition-caption-title,
+.app[data-lang="en"] .exhibition-caption .caption-title,
+.app[data-lang="en"] .exhibition-caption-title {
+  font-family: yu-gothic-pr6n, sans-serif;
+  font-weight: 400;
+  font-size: 10.67px;
+  font-style: normal;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.8);
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.exhibition-caption .caption-count {
+  font-weight: 400;
+  font-size: 10.67px;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+html[data-lang="en"] .copy-body {
+  line-height: 24px;
+}
+
+.exhibition-copy .copy-body,
+.exhibition-info,
+.archive-description,
+.archive-credit,
+.archive-price-note {
+  text-align: justify;
+  text-align-last: left;
+}
+
+html[data-lang="ja"] .exhibition-copy .copy-body,
+html[data-lang="ja"] .exhibition-info,
+html[data-lang="ja"] .archive-description,
+html[data-lang="ja"] .archive-credit,
+html[data-lang="ja"] .archive-price-note {
+  text-justify: inter-character;
+}
+
+html[data-lang="en"] .exhibition-copy .copy-body,
+html[data-lang="en"] .exhibition-info,
+html[data-lang="en"] .archive-description,
+html[data-lang="en"] .archive-credit,
+html[data-lang="en"] .archive-price-note {
+  text-justify: auto;
+}
