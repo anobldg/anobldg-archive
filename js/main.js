@@ -42,7 +42,7 @@ const ARCHIVE_CONTENT = {
     price: "¥5,000",
     priceNote: "Limited to 20 copies　Tax / shipping included",
     button: "purchase",
-    description: "An archive book documenting the architecture exhibition “Ano Building.”\nIt includes newly reworked research, drawings, and texts from Yokoyama-cho, together with photographs of the exhibition.\n\nEditing / Planning: Fumina Otsuka, Masaharu Kii\nDesign: Kota Hirakawa\nPhotography: Shino Otsuka\n\nPublication Date: May 00, 2026\nModified A4 Format, 210 × 210 mm / 104 pages",
+    description: "An archive book documenting the architecture exhibition “Ano Bldg.”\nIt includes newly reworked research, drawings, and texts from Yokoyama-cho, together with photographs of the exhibition.\n\nEditing: Fumina Otsuka, Masaharu Kii\nDesign: Kota Hirakawa\nPhotography: Shino Otsuka\n\nPublication Date: May 00, 2026\nModified A4 Format, 210 × 210 mm / 104 pages",
     credit: ""
   }
 };
