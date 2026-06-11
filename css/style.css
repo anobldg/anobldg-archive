@@ -2311,5 +2311,12 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
 
 /* Final micro fix: English ano building title tracking only. */
 .app[data-lang="en"] .ano-heading {
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
+}
+
+html[data-lang="en"] .ano-heading,
+.app[data-lang="en"] .ano-heading,
+html[data-lang="en"] .ano-heading .quiet-link,
+.app[data-lang="en"] .ano-heading .quiet-link {
+  letter-spacing: 0.12em;
 }
