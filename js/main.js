@@ -14,6 +14,7 @@ const BACKGROUND_FADE_ANO = 2000;
 const BACKGROUND_FADE_EXHIBITION = 1500;
 const BACKGROUND_LOAD_TIMEOUT = 5000;
 const BACKGROUND_WHITE = "__white__";
+const LOADER_IMAGE_PATH = "assets/road/road.png";
 const BACKGROUND_IMAGES = {
   archive: "assets/back-images/0000_archive.png",
   first: "assets/back-images/0001_first.png",
@@ -812,7 +813,7 @@ function preloadInitialBackgrounds() {
 }
 
 function getLoaderBackgroundPath() {
-  return BACKGROUND_IMAGES.archive;
+  return LOADER_IMAGE_PATH;
 }
 
 function getAnoBackgroundPath(item) {
