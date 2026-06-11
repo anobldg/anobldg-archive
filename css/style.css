@@ -2232,7 +2232,7 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   z-index: 0;
   inset: 0;
   background-color: #fff;
-  background-image: url("../assets/back-images/0000_archive.png");
+  background-image: url("../assets/road/road.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2250,12 +2250,19 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
 
 .loading-enter {
   z-index: 1;
+  color: transparent;
 }
 
 /* Phase 5-A4: sync loader text and archive background fades. */
 .loading-enter,
 .loading-screen::before {
   transition: opacity 500ms ease;
+}
+
+.loading-title-ja,
+.loading-subtitle-en,
+.loading-date {
+  display: none;
 }
 
 .loading-screen:not(.is-text-visible) .loading-enter,
