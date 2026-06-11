@@ -2156,6 +2156,7 @@ html[data-lang="ja"] .ano-heading,
 
 html[data-lang="ja"] .ano-heading .quiet-link,
 .app[data-lang="ja"] .ano-heading .quiet-link {
+  position: relative;
   display: block;
   width: 100%;
   margin-inline: auto;
@@ -2166,7 +2167,26 @@ html[data-lang="ja"] .ano-heading .quiet-link,
 
 html[data-lang="ja"] .ano-heading .quiet-link:hover,
 .app[data-lang="ja"] .ano-heading .quiet-link:hover {
-  text-decoration: underline;
-  text-decoration-thickness: 0.5px;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
+}
+
+html[data-lang="ja"] .ano-heading .quiet-link::after,
+.app[data-lang="ja"] .ano-heading .quiet-link::after {
+  content: "";
+  position: absolute;
+  right: auto;
+  bottom: -0.18em;
+  left: 50%;
+  width: calc(100% - 0.96em);
+  height: 0.5px;
+  background: currentColor;
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+html[data-lang="ja"] .ano-heading .quiet-link:hover::after,
+.app[data-lang="ja"] .ano-heading .quiet-link:hover::after,
+html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
+.app[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after {
+  opacity: 1;
 }
