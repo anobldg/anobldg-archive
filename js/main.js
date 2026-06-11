@@ -13,6 +13,7 @@ const BACKGROUND_FADE_LOADER = 500;
 const BACKGROUND_FADE_ANO = 2000;
 const BACKGROUND_FADE_EXHIBITION = 1500;
 const BACKGROUND_LOAD_TIMEOUT = 5000;
+const BACKGROUND_WHITE = "__white__";
 const BACKGROUND_IMAGES = {
   archive: "assets/back-images/0000_archive.png",
   first: "assets/back-images/0001_first.png",
@@ -824,10 +825,16 @@ function getAnoBackgroundPath(item) {
 
 function getExhibitionBackgroundPath(item) {
   const number = getItemNumber(item, state.data.exhibition);
-  if (number >= 6 && number <= 14) return BACKGROUND_IMAGES.first;
+  if (number >= 1 && number <= 5) return BACKGROUND_WHITE;
+  if (number >= 6 && number <= 9) return BACKGROUND_IMAGES.first;
+  if (number === 10) return BACKGROUND_WHITE;
+  if (number >= 11 && number <= 12) return BACKGROUND_IMAGES.first;
+  if (number === 13) return BACKGROUND_WHITE;
+  if (number === 14) return BACKGROUND_IMAGES.first;
   if (number >= 15 && number <= 16) return BACKGROUND_IMAGES.second;
+  if (number === 18) return BACKGROUND_WHITE;
   if (number >= 17 && number <= 34) return BACKGROUND_IMAGES.third;
-  return BACKGROUND_IMAGES.archive;
+  return BACKGROUND_WHITE;
 }
 
 function getItemNumber(item, list = []) {
@@ -864,7 +871,8 @@ function setPageBackground(path, duration = BACKGROUND_FADE_LOADER) {
     if (!nextLayer) return;
 
     nextLayer.style.transitionDuration = `${duration}ms`;
-    nextLayer.style.backgroundImage = `url("${path}")`;
+    nextLayer.style.backgroundColor = path === BACKGROUND_WHITE ? "#fff" : "transparent";
+    nextLayer.style.backgroundImage = path === BACKGROUND_WHITE ? "none" : `url("${path}")`;
     previousLayer && (previousLayer.style.transitionDuration = `${duration}ms`);
     nextLayer.classList.add("is-active");
     previousLayer?.classList.remove("is-active");
@@ -874,6 +882,7 @@ function setPageBackground(path, duration = BACKGROUND_FADE_LOADER) {
 }
 
 function preloadBackground(path) {
+  if (path === BACKGROUND_WHITE) return Promise.resolve({ ok: true, src: path });
   if (!path) return Promise.resolve({ ok: false, src: "" });
   if (state.backgroundLoadCache.has(path)) return state.backgroundLoadCache.get(path);
 
