@@ -2148,5 +2148,25 @@ html[data-lang="ja"] .ano-caption .caption-title,
 
 html[data-lang="ja"] .ano-heading,
 .app[data-lang="ja"] .ano-heading {
-  letter-spacing: 0.92em;
+  font-size: 14.67px;
+  letter-spacing: 0.96em;
+  text-align: center;
+  text-align-last: center;
+}
+
+html[data-lang="ja"] .ano-heading .quiet-link,
+.app[data-lang="ja"] .ano-heading .quiet-link {
+  display: block;
+  width: 100%;
+  margin-inline: auto;
+  text-align: center;
+  text-align-last: center;
+  text-decoration: none;
+}
+
+html[data-lang="ja"] .ano-heading .quiet-link:hover,
+.app[data-lang="ja"] .ano-heading .quiet-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 0.18em;
 }
