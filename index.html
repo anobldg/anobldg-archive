@@ -32,6 +32,11 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
   <body>
+    <div class="page-background" data-bind="pageBackground" aria-hidden="true">
+      <div class="page-background__layer is-active" data-background-layer="0"></div>
+      <div class="page-background__layer" data-background-layer="1"></div>
+    </div>
+
     <div class="loading-screen" data-bind="loadingScreen">
       <button class="loading-enter" type="button" data-action="enter-loading">
         <span class="loading-title-ja">アノビルのこと</span>
