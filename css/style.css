@@ -2145,3 +2145,8 @@ html[data-lang="ja"] .ano-caption .caption-title,
   text-justify: inter-character;
   white-space: nowrap;
 }
+
+html[data-lang="ja"] .ano-heading,
+.app[data-lang="ja"] .ano-heading {
+  letter-spacing: 0.92em;
+}
