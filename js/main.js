@@ -9,6 +9,22 @@ const LOADER_FADE_DURATION = 1000;
 const LOADER_TEXT_FADE_DURATION = 100;
 const LOADER_FONT_TIMEOUT = 1000;
 const MEDIA_LOAD_TIMEOUT = 8000;
+const BACKGROUND_FADE_LOADER = 500;
+const BACKGROUND_FADE_ANO = 2000;
+const BACKGROUND_FADE_EXHIBITION = 1500;
+const BACKGROUND_LOAD_TIMEOUT = 5000;
+const BACKGROUND_IMAGES = {
+  archive: "assets/back-images/0000_archive.png",
+  first: "assets/back-images/0001_first.png",
+  second: "assets/back-images/0002_second.png",
+  third: "assets/back-images/0003_third.png"
+};
+const BACKGROUND_IMAGE_LIST = [
+  BACKGROUND_IMAGES.archive,
+  BACKGROUND_IMAGES.first,
+  BACKGROUND_IMAGES.second,
+  BACKGROUND_IMAGES.third
+];
 
 const ARCHIVE_CONTENT = {
   ja: {
@@ -43,6 +59,9 @@ const state = {
   textCache: new Map(),
   mediaLoadCache: new Map(),
   mediaWarmCache: new Map(),
+  backgroundLoadCache: new Map(),
+  currentBackgroundPath: "",
+  activeBackgroundLayer: 0,
   currentTextGroup: "",
   currentTextLang: "",
   currentTextPath: "",
@@ -103,6 +122,10 @@ async function init() {
   collectElements();
   state.loaderStartTime = Date.now();
   logLoad("loader start", 0);
+  preloadInitialBackgrounds();
+  preloadBackground(getLoaderBackgroundPath()).then(() => {
+    setPageBackground(getLoaderBackgroundPath(), BACKGROUND_FADE_LOADER);
+  });
   state.loaderMinimumReady = new Promise((resolve) => {
     state.resolveLoaderMinimum = resolve;
   });
@@ -122,6 +145,7 @@ async function init() {
 
   renderAll({ immediate: true });
   const firstAnoReady = preloadMedia(getCurrentItem("anoBuilding"));
+  preloadBackground(getAnoBackgroundPath(getCurrentItem("anoBuilding")));
   state.anoPreloadPromise = preloadAnoBuildingMedia();
   state.textPreloadPromise = preloadAllTexts();
   preloadExhibitionInBackground();
@@ -169,6 +193,8 @@ function collectElements() {
   els.archiveCredit = document.querySelector('[data-bind="archiveCredit"]');
   els.purchaseButton = document.querySelector('[data-bind="purchaseButton"]');
   els.loadingScreen = document.querySelector('[data-bind="loadingScreen"]');
+  els.pageBackground = document.querySelector('[data-bind="pageBackground"]');
+  els.backgroundLayers = Array.from(document.querySelectorAll("[data-background-layer]"));
   els.stages = {
     anoBuilding: document.querySelector('[data-gallery="anoBuilding"]'),
     exhibition: document.querySelector('[data-gallery="exhibition"]')
@@ -220,6 +246,7 @@ function setPage(page) {
     preloadExhibitionInBackground();
   }
   renderAll();
+  updateCurrentPageBackground();
 }
 
 function setLanguage(lang) {
@@ -245,6 +272,7 @@ function changeImage(gallery, direction) {
   const prevItem = items[current];
   const nextItem = items[next];
   state.indexes[gallery] = next;
+  updateCurrentPageBackground(gallery);
   animateStage(gallery, nextItem, direction);
   scheduleWarmAdjacent(gallery, next);
 
@@ -531,6 +559,7 @@ function renderAll(options = {}) {
   }
   renderAnoCaption();
   renderExhibitionDetails();
+  if (state.loaderEntered) updateCurrentPageBackground();
 }
 
 function renderStage(gallery) {
@@ -775,6 +804,106 @@ function stripQuery(src = "") {
   return String(src).split("?")[0];
 }
 
+function preloadInitialBackgrounds() {
+  preloadBackground(BACKGROUND_IMAGES.archive);
+  preloadBackground(BACKGROUND_IMAGES.first);
+  BACKGROUND_IMAGE_LIST.slice(2).forEach((path) => preloadBackground(path));
+}
+
+function getLoaderBackgroundPath() {
+  return BACKGROUND_IMAGES.archive;
+}
+
+function getAnoBackgroundPath(item) {
+  const number = getItemNumber(item, state.data.anoBuilding);
+  if (number === 1) return BACKGROUND_IMAGES.first;
+  if (number === 2) return BACKGROUND_IMAGES.second;
+  if (number === 3) return BACKGROUND_IMAGES.third;
+  return BACKGROUND_IMAGES.archive;
+}
+
+function getExhibitionBackgroundPath(item) {
+  const number = getItemNumber(item, state.data.exhibition);
+  if (number >= 6 && number <= 14) return BACKGROUND_IMAGES.first;
+  if (number >= 15 && number <= 16) return BACKGROUND_IMAGES.second;
+  if (number >= 17 && number <= 34) return BACKGROUND_IMAGES.third;
+  return BACKGROUND_IMAGES.archive;
+}
+
+function getItemNumber(item, list = []) {
+  const idNumber = Number.parseInt(item?.id, 10);
+  if (Number.isFinite(idNumber)) return idNumber;
+  const index = list.indexOf(item);
+  return index >= 0 ? index + 1 : 0;
+}
+
+function updateCurrentPageBackground(sourceGallery = state.page, duration) {
+  if (!state.loaderEntered && sourceGallery !== "loader") return;
+  if (sourceGallery !== state.page && sourceGallery !== "loader") return;
+
+  const item = getCurrentItem(state.page);
+  const path = state.page === "exhibition"
+    ? getExhibitionBackgroundPath(item)
+    : getAnoBackgroundPath(item);
+  const fadeDuration = duration ?? (state.page === "exhibition" ? BACKGROUND_FADE_EXHIBITION : BACKGROUND_FADE_ANO);
+  setPageBackground(path, fadeDuration);
+}
+
+function setPageBackground(path, duration = BACKGROUND_FADE_LOADER) {
+  if (!path || !els.backgroundLayers?.length || path === state.currentBackgroundPath) return;
+
+  preloadBackground(path).then((result) => {
+    if (!result.ok) {
+      console.warn("[background preload failed]", path);
+      return;
+    }
+
+    const nextIndex = state.activeBackgroundLayer === 0 ? 1 : 0;
+    const nextLayer = els.backgroundLayers[nextIndex];
+    const previousLayer = els.backgroundLayers[state.activeBackgroundLayer];
+    if (!nextLayer) return;
+
+    nextLayer.style.transitionDuration = `${duration}ms`;
+    nextLayer.style.backgroundImage = `url("${path}")`;
+    previousLayer && (previousLayer.style.transitionDuration = `${duration}ms`);
+    nextLayer.classList.add("is-active");
+    previousLayer?.classList.remove("is-active");
+    state.activeBackgroundLayer = nextIndex;
+    state.currentBackgroundPath = path;
+  });
+}
+
+function preloadBackground(path) {
+  if (!path) return Promise.resolve({ ok: false, src: "" });
+  if (state.backgroundLoadCache.has(path)) return state.backgroundLoadCache.get(path);
+
+  const task = new Promise((resolve) => {
+    const image = new Image();
+    const cleanup = () => {
+      window.clearTimeout(timeout);
+      image.onload = null;
+      image.onerror = null;
+    };
+    const timeout = window.setTimeout(() => {
+      cleanup();
+      resolve({ ok: false, src: path, reason: "timeout" });
+    }, BACKGROUND_LOAD_TIMEOUT);
+
+    image.onload = () => {
+      cleanup();
+      resolve({ ok: true, src: path });
+    };
+    image.onerror = () => {
+      cleanup();
+      resolve({ ok: false, src: path, reason: "error" });
+    };
+    image.src = path;
+  });
+
+  state.backgroundLoadCache.set(path, task);
+  return task;
+}
+
 function logArchiveTextCheck(item, resolvedPath) {
   if (!DEBUG_TEXT || !item?.archive) return;
   console.info("[archive text debug]", {
@@ -930,9 +1059,10 @@ function prepareLoaderTextFast() {
       document.fonts.load('400 10px "franklin-gothic-atf"')
     ])
     : Promise.resolve();
+  const loaderBackground = preloadBackground(getLoaderBackgroundPath());
 
   return Promise.race([
-    loaderFonts.then(() => {
+    Promise.all([loaderFonts, loaderBackground]).then(() => {
       state.fontReady = true;
     }).catch(() => null),
     delay(LOADER_FONT_TIMEOUT)
@@ -965,6 +1095,7 @@ function enterSite() {
   if (state.loaderEntered) return;
   state.loaderEntered = true;
   logLoad("loader total visible");
+  updateCurrentPageBackground("loader", BACKGROUND_FADE_LOADER);
   renderStage("exhibition");
   scheduleWarmAdjacent("anoBuilding", state.indexes.anoBuilding);
   preloadExhibitionInBackground();
