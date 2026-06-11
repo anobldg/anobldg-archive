@@ -2127,3 +2127,21 @@ html[data-lang="en"] .archive-credit,
 html[data-lang="en"] .archive-price-note {
   text-justify: auto;
 }
+
+/* Phase 4.4.4-C: ano building JP caption width only. */
+:root {
+  --ano-jp-title-width: min(var(--phase443-ano-jp-caption-measure), 76vw);
+}
+
+html[data-lang="ja"] .ano-heading,
+.app[data-lang="ja"] .ano-heading,
+html[data-lang="ja"] .ano-caption .caption-title,
+.app[data-lang="ja"] .ano-caption .caption-title {
+  display: block;
+  width: var(--ano-jp-title-width);
+  margin-inline: auto;
+  text-align: justify;
+  text-align-last: justify;
+  text-justify: inter-character;
+  white-space: nowrap;
+}
