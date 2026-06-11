@@ -64,6 +64,7 @@ const state = {
   backgroundLoadCache: new Map(),
   currentBackgroundPath: "",
   activeBackgroundLayer: 0,
+  backgroundRequestId: 0,
   currentTextGroup: "",
   currentTextLang: "",
   currentTextPath: "",
@@ -126,6 +127,7 @@ async function init() {
   logLoad("loader start", 0);
   preloadInitialBackgrounds();
   preloadBackground(getLoaderBackgroundPath()).then(() => {
+    if (state.loaderEntered) return;
     setPageBackground(getLoaderBackgroundPath(), BACKGROUND_FADE_LOADER);
   });
   state.loaderMinimumReady = new Promise((resolve) => {
@@ -859,8 +861,11 @@ function updateCurrentPageBackground(sourceGallery = state.page, duration) {
 
 function setPageBackground(path, duration = BACKGROUND_FADE_LOADER) {
   if (!path || !els.backgroundLayers?.length || path === state.currentBackgroundPath) return;
+  const requestId = state.backgroundRequestId + 1;
+  state.backgroundRequestId = requestId;
 
   preloadBackground(path).then((result) => {
+    if (requestId !== state.backgroundRequestId) return;
     if (!result.ok) {
       console.warn("[background preload failed]", path);
       return;
