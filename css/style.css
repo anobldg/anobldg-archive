@@ -2252,6 +2252,24 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   z-index: 1;
 }
 
+/* Phase 5-A4: sync loader text and archive background fades. */
+.loading-enter,
+.loading-screen::before {
+  transition: opacity 500ms ease;
+}
+
+.loading-screen:not(.is-text-visible) .loading-enter,
+.loading-screen:not(.is-text-visible)::before,
+.loading-screen.is-hiding .loading-enter,
+.loading-screen.is-hiding::before {
+  opacity: 0;
+}
+
+.loading-screen.is-text-visible .loading-enter,
+.loading-screen.is-text-visible::before {
+  opacity: 1;
+}
+
 .image-stage,
 .media-stage,
 .ano-media-stage,
