@@ -2219,3 +2219,40 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
 .app[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after {
   opacity: 1;
 }
+
+/* Phase 5-A2: background layer visual fixes only. */
+.loading-screen {
+  background: transparent;
+}
+
+.image-stage,
+.media-stage,
+.ano-media-stage,
+.exhibition-media-stage,
+.ano-stage,
+.exhibition-stage,
+.exhibition-media,
+.stage-image,
+.stage-media {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .page-background__layer {
+    inset: -2vh -2vw;
+  }
+}
