@@ -2333,7 +2333,18 @@ html[data-lang="en"] .ano-heading .quiet-link,
   html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-subtitle,
   html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title,
   html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-season,
-  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-date {
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-date,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-copy,
+  html[data-lang="en"] .app[data-page="exhibition"] .copy-body,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-caption,
+  html[data-lang="en"] .app[data-page="exhibition"] .caption-title,
+  html[data-lang="en"] .app[data-page="exhibition"] .caption-count,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption .caption-subtitle,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption-title,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-season,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-date {
     transition: none !important;
     animation: none !important;
     transform: none !important;
@@ -2343,7 +2354,10 @@ html[data-lang="en"] .ano-heading .quiet-link,
 
   html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-copy.is-fading,
   html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-caption.is-fading,
-  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption.is-fading {
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption.is-fading,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-copy.is-fading,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-caption.is-fading,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption.is-fading {
     opacity: 1 !important;
   }
 
