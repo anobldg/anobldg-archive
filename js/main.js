@@ -9,6 +9,10 @@ const LOADER_FADE_DURATION = 500;
 const LOADER_TEXT_FADE_DURATION = 100;
 const LOADER_FONT_TIMEOUT = 1000;
 const LOADER_ROAD_MIN_VISIBLE_MS = 3000;
+const GESTURE_DRAG_START_PX = 8;
+const GESTURE_POINTER_COMMIT_PX = 80;
+const GESTURE_WHEEL_COMMIT_PX = 100;
+const GESTURE_SNAP_DURATION = 180;
 const MEDIA_LOAD_TIMEOUT = 8000;
 const BACKGROUND_FADE_LOADER = 500;
 const BACKGROUND_FADE_ANO = 2000;
@@ -78,6 +82,11 @@ const state = {
   mediaSliding: {
     anoBuilding: false,
     exhibition: false
+  },
+  gesture: {
+    active: null,
+    suppressClickUntil: 0,
+    wheel: null
   },
   loaderStartTime: 0,
   loaderVisibleStartTime: 0,
@@ -240,16 +249,200 @@ function bindEvents() {
 
   Object.entries(els.stages).forEach(([gallery, stage]) => {
     stage.addEventListener("click", (event) => {
+      if (Date.now() < state.gesture.suppressClickUntil) {
+        event.preventDefault();
+        return;
+      }
       const rect = stage.getBoundingClientRect();
       const direction = event.clientX - rect.left >= rect.width / 2 ? 1 : -1;
       changeImage(gallery, direction);
     });
+    bindStageGesture(gallery, stage);
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") changeImage(state.page, 1);
     if (event.key === "ArrowLeft") changeImage(state.page, -1);
   });
+}
+
+function bindStageGesture(gallery, stage) {
+  stage.addEventListener("pointerdown", (event) => startStagePointerGesture(gallery, stage, event));
+  stage.addEventListener("pointermove", moveStagePointerGesture);
+  stage.addEventListener("pointerup", endStagePointerGesture);
+  stage.addEventListener("pointercancel", cancelStagePointerGesture);
+  stage.addEventListener("wheel", (event) => handleStageWheelGesture(gallery, stage, event), { passive: false });
+}
+
+function startStagePointerGesture(gallery, stage, event) {
+  if (!event.isPrimary || state.mediaSliding[gallery] || stage.classList.contains("is-gesture-settling") || !getAdjacentGestureItem(gallery, 1)) return;
+  state.gesture.active = {
+    gallery,
+    stage,
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    deltaX: 0,
+    isDragging: false,
+    direction: 0,
+    preview: null,
+    width: Math.max(stage.getBoundingClientRect().width, 1)
+  };
+}
+
+function moveStagePointerGesture(event) {
+  const gesture = state.gesture.active;
+  if (!gesture || gesture.pointerId !== event.pointerId || state.mediaSliding[gesture.gallery]) return;
+
+  const deltaX = event.clientX - gesture.startX;
+  const deltaY = event.clientY - gesture.startY;
+  const absX = Math.abs(deltaX);
+  const absY = Math.abs(deltaY);
+
+  if (!gesture.isDragging) {
+    if (absX < GESTURE_DRAG_START_PX || absX <= absY) return;
+    gesture.isDragging = true;
+    gesture.stage.classList.add("is-gesture-dragging");
+    try {
+      gesture.stage.setPointerCapture(gesture.pointerId);
+    } catch {
+      // Pointer capture can fail if the pointer already ended.
+    }
+  }
+
+  event.preventDefault();
+  gesture.deltaX = deltaX;
+  updateGesturePreview(gesture, deltaX);
+}
+
+function endStagePointerGesture(event) {
+  const gesture = state.gesture.active;
+  if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+  if (!gesture.isDragging) {
+    state.gesture.active = null;
+    return;
+  }
+
+  const commitDistance = Math.min(gesture.width * 0.25, GESTURE_POINTER_COMMIT_PX);
+  const direction = gesture.deltaX < 0 ? 1 : -1;
+  state.gesture.suppressClickUntil = Date.now() + 500;
+  settleGesturePreview(gesture, Math.abs(gesture.deltaX) >= commitDistance ? direction : 0);
+  try {
+    gesture.stage.releasePointerCapture(gesture.pointerId);
+  } catch {
+    // Matching the guarded capture call above.
+  }
+  state.gesture.active = null;
+}
+
+function cancelStagePointerGesture(event) {
+  const gesture = state.gesture.active;
+  if (!gesture || gesture.pointerId !== event.pointerId) return;
+  settleGesturePreview(gesture, 0);
+  state.gesture.active = null;
+}
+
+function handleStageWheelGesture(gallery, stage, event) {
+  if (state.mediaSliding[gallery] || stage.classList.contains("is-gesture-settling") || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+
+  event.preventDefault();
+
+  const width = Math.max(stage.getBoundingClientRect().width, 1);
+  const wheel = state.gesture.wheel && state.gesture.wheel.gallery === gallery
+    ? state.gesture.wheel
+    : { gallery, stage, deltaX: 0, direction: 0, preview: null, width, timer: 0 };
+
+  window.clearTimeout(wheel.timer);
+  wheel.width = width;
+  wheel.deltaX += event.deltaX;
+  const visualDelta = -wheel.deltaX;
+  updateGesturePreview(wheel, visualDelta);
+  state.gesture.wheel = wheel;
+
+  if (Math.abs(wheel.deltaX) >= GESTURE_WHEEL_COMMIT_PX) {
+    const direction = wheel.deltaX > 0 ? 1 : -1;
+    state.gesture.wheel = null;
+    state.gesture.suppressClickUntil = Date.now() + 500;
+    settleGesturePreview(wheel, direction);
+    return;
+  }
+
+  wheel.timer = window.setTimeout(() => {
+    if (state.gesture.wheel === wheel) state.gesture.wheel = null;
+    settleGesturePreview(wheel, 0);
+  }, 160);
+}
+
+function updateGesturePreview(gesture, deltaX) {
+  const direction = deltaX < 0 ? 1 : -1;
+  const current = gesture.stage.querySelector('[data-role="current-image"]');
+
+  if (!current || direction === 0) return;
+  if (gesture.direction !== direction) {
+    gesture.preview?.remove();
+    gesture.preview = createGesturePreview(gesture.gallery, direction);
+    gesture.direction = direction;
+    if (gesture.preview) gesture.stage.appendChild(gesture.preview);
+  }
+
+  const previewOffset = direction > 0 ? gesture.width : -gesture.width;
+  current.style.transition = "none";
+  current.style.transform = `translate3d(${deltaX}px, 0, 0)`;
+  if (gesture.preview) {
+    gesture.preview.style.transition = "none";
+    gesture.preview.style.transform = `translate3d(${deltaX + previewOffset}px, 0, 0)`;
+  }
+}
+
+function settleGesturePreview(gesture, direction) {
+  const current = gesture.stage.querySelector('[data-role="current-image"]');
+  const preview = gesture.preview;
+  const transition = `transform ${GESTURE_SNAP_DURATION}ms var(--ease)`;
+  const leaveTo = gesture.direction > 0 ? -gesture.width : gesture.width;
+  const previewRest = gesture.direction > 0 ? gesture.width : -gesture.width;
+
+  gesture.stage.classList.remove("is-gesture-dragging");
+  gesture.stage.classList.add("is-gesture-settling");
+
+  if (current) {
+    current.style.transition = transition;
+    current.style.transform = direction ? `translate3d(${leaveTo}px, 0, 0)` : "";
+  }
+  if (preview) {
+    preview.style.transition = transition;
+    preview.style.transform = direction ? "translate3d(0, 0, 0)" : `translate3d(${previewRest}px, 0, 0)`;
+  }
+
+  window.setTimeout(() => {
+    if (current) {
+      current.style.transition = "";
+      current.style.transform = "";
+    }
+    gesture.stage.classList.remove("is-gesture-settling");
+    if (direction) {
+      changeImage(gesture.gallery, direction, { skipStageAnimation: true, preparedMedia: preview });
+    } else {
+      preview?.remove();
+    }
+  }, GESTURE_SNAP_DURATION);
+}
+
+function createGesturePreview(gallery, direction) {
+  const item = getAdjacentGestureItem(gallery, direction);
+  if (!item) return null;
+  const media = createMediaElement(item);
+  media.dataset.role = "gesture-preview-image";
+  media.classList.add("gesture-preview", "is-current");
+  media.style.transform = direction > 0 ? "translate3d(100%, 0, 0)" : "translate3d(-100%, 0, 0)";
+  prepareMediaForSlide(media);
+  return media;
+}
+
+function getAdjacentGestureItem(gallery, direction) {
+  const items = state.data[gallery] || [];
+  if (!items.length) return null;
+  return items[wrapIndex(state.indexes[gallery] + direction, items.length)] || null;
 }
 
 function setPage(page) {
@@ -276,7 +469,7 @@ function setLanguage(lang) {
   renderAll();
 }
 
-function changeImage(gallery, direction) {
+function changeImage(gallery, direction, options = {}) {
   const items = state.data[gallery] || [];
   if (!items.length || state.mediaSliding[gallery]) return;
 
@@ -288,7 +481,11 @@ function changeImage(gallery, direction) {
   const nextItem = items[next];
   state.indexes[gallery] = next;
   updateCurrentPageBackground(gallery);
-  animateStage(gallery, nextItem, direction);
+  if (options.skipStageAnimation) {
+    replaceCurrentStageMedia(gallery, nextItem, options.preparedMedia);
+  } else {
+    animateStage(gallery, nextItem, direction);
+  }
   scheduleWarmAdjacent(gallery, next);
 
   if (gallery === "anoBuilding") {
@@ -317,6 +514,28 @@ function changeImage(gallery, direction) {
 
     fadeUpdate(targets, () => renderExhibitionDetails({ keepText: isSameTextGroup, keepArchive: isSameArchiveGroup }));
   }
+}
+
+function replaceCurrentStageMedia(gallery, item, preparedMedia) {
+  const stage = els.stages[gallery];
+  const current = stage.querySelector('[data-role="current-image"]');
+  const media = preparedMedia || createMediaElement(item);
+
+  pauseMedia(current);
+  if (preparedMedia?.parentElement !== stage) {
+    stage.appendChild(media);
+  }
+  current?.remove();
+
+  media.dataset.role = "current-image";
+  media.classList.remove("gesture-preview", "incoming", "is-entering", "is-leaving");
+  media.classList.add("current", "is-current");
+  media.style.transition = "";
+  media.style.transform = "";
+  cleanupStageMedia(stage);
+  prepareMediaForSlide(media).then((isReady) => {
+    if (isReady && media.tagName === "VIDEO") playVideo(media, media.src);
+  });
 }
 
 async function animateStage(gallery, nextItem, direction) {
