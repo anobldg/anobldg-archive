@@ -11,8 +11,6 @@ const LOADER_FONT_TIMEOUT = 1000;
 const LOADER_ROAD_MIN_VISIBLE_MS = 3000;
 const GESTURE_DRAG_START_PX = 20;
 const GESTURE_POINTER_COMMIT_PX = 50;
-const GESTURE_WHEEL_COMMIT_PX = 100;
-const GESTURE_WHEEL_QUIET_MS = 500;
 const MEDIA_LOAD_TIMEOUT = 8000;
 const BACKGROUND_FADE_LOADER = 500;
 const BACKGROUND_FADE_ANO = 2000;
@@ -85,8 +83,7 @@ const state = {
   },
   gesture: {
     active: null,
-    suppressClickUntil: 0,
-    wheel: null
+    suppressClickUntil: 0
   },
   loaderStartTime: 0,
   loaderVisibleStartTime: 0,
@@ -271,11 +268,10 @@ function bindStageGesture(gallery, stage) {
   stage.addEventListener("pointermove", moveStagePointerGesture);
   stage.addEventListener("pointerup", endStagePointerGesture);
   stage.addEventListener("pointercancel", cancelStagePointerGesture);
-  stage.addEventListener("wheel", (event) => handleStageWheelGesture(gallery, stage, event), { passive: false });
 }
 
 function startStagePointerGesture(gallery, stage, event) {
-  if (!event.isPrimary || state.mediaSliding[gallery] || !getAdjacentGestureItem(gallery, 1)) return;
+  if (!isMobileGestureViewport() || !event.isPrimary || state.mediaSliding[gallery] || !getAdjacentGestureItem(gallery, 1)) return;
   state.gesture.active = {
     gallery,
     stage,
@@ -290,7 +286,7 @@ function startStagePointerGesture(gallery, stage, event) {
 
 function moveStagePointerGesture(event) {
   const gesture = state.gesture.active;
-  if (!gesture || gesture.pointerId !== event.pointerId || state.mediaSliding[gesture.gallery] || gesture.hasTriggered) return;
+  if (!gesture || !isMobileGestureViewport() || gesture.pointerId !== event.pointerId || state.mediaSliding[gesture.gallery] || gesture.hasTriggered) return;
 
   const deltaX = event.clientX - gesture.startX;
   const deltaY = event.clientY - gesture.startY;
@@ -339,36 +335,16 @@ function cancelStagePointerGesture(event) {
   state.gesture.active = null;
 }
 
-function handleStageWheelGesture(gallery, stage, event) {
-  if (state.mediaSliding[gallery] || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
-
-  event.preventDefault();
-
-  const wheel = state.gesture.wheel && state.gesture.wheel.gallery === gallery
-    ? state.gesture.wheel
-    : { gallery, deltaX: 0, locked: false, timer: 0 };
-
-  window.clearTimeout(wheel.timer);
-  state.gesture.wheel = wheel;
-
-  if (!wheel.locked) {
-    wheel.deltaX += event.deltaX;
-    if (Math.abs(wheel.deltaX) >= GESTURE_WHEEL_COMMIT_PX) {
-      wheel.locked = true;
-      triggerGestureImageChange(gallery, wheel.deltaX > 0 ? 1 : -1);
-    }
-  }
-
-  wheel.timer = window.setTimeout(() => {
-    if (state.gesture.wheel === wheel) {
-      state.gesture.wheel = null;
-    }
-  }, GESTURE_WHEEL_QUIET_MS);
-}
-
 function triggerGestureImageChange(gallery, direction) {
   if (state.mediaSliding[gallery]) return;
   changeImage(gallery, direction, { skipStageAnimation: true });
+}
+
+function isMobileGestureViewport() {
+  if (window.matchMedia) {
+    return window.matchMedia("(max-width: 767px)").matches;
+  }
+  return window.innerWidth <= 767;
 }
 
 function getAdjacentGestureItem(gallery, direction) {
@@ -1127,6 +1103,9 @@ function setStageMedia(stage, role, item) {
   } else {
     stage.appendChild(media);
   }
+  if (role === "current-image") {
+    playVisibleVideo(media, item?.src);
+  }
 }
 
 function clearStageMedia(stage, role, fallback) {
@@ -1157,7 +1136,10 @@ function createMediaElement(item) {
     video.loop = true;
     video.playsInline = true;
     video.preload = "metadata";
+    video.setAttribute("autoplay", "");
+    video.setAttribute("muted", "");
     video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
     video.className = "stage-image stage-media is-loaded";
     video.addEventListener("canplay", () => playVideo(video, item.src));
     requestAnimationFrame(() => playVideo(video, item.src));
@@ -1550,7 +1532,19 @@ function pauseMedia(media) {
   }
 }
 
+function playVisibleVideo(media, src) {
+  if (media?.tagName !== "VIDEO") return;
+  playVideo(media, src || media.currentSrc || media.src);
+}
+
 function playVideo(video, src) {
+  video.muted = true;
+  video.playsInline = true;
+  video.autoplay = true;
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("autoplay", "");
   video.play().catch((error) => {
     console.warn("[video autoplay failed]", src, error);
   });
