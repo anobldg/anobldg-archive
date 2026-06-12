@@ -5,7 +5,7 @@ const DEBUG_TEXT = false;
 const DEBUG_LOAD = false;
 const LOADER_MIN_DISPLAY = 3000;
 const LOADER_MAX_DISPLAY = 5000;
-const LOADER_FADE_DURATION = 1000;
+const LOADER_FADE_DURATION = 500;
 const LOADER_TEXT_FADE_DURATION = 100;
 const LOADER_FONT_TIMEOUT = 1000;
 const MEDIA_LOAD_TIMEOUT = 8000;
@@ -14,7 +14,7 @@ const BACKGROUND_FADE_ANO = 2000;
 const BACKGROUND_FADE_EXHIBITION = 1500;
 const BACKGROUND_LOAD_TIMEOUT = 5000;
 const BACKGROUND_WHITE = "__white__";
-const LOADER_IMAGE_PATH = "assets/road/road.png";
+const LOADER_IMAGE_PATH = "assets/back-images/0000_archive.png";
 const BACKGROUND_IMAGES = {
   archive: "assets/back-images/0000_archive.png",
   first: "assets/back-images/0001_first.png",
@@ -87,7 +87,10 @@ const state = {
   loaderTextVisible: false,
   loaderMinimumReady: Promise.resolve(),
   loaderTextVisiblePromise: Promise.resolve(),
+  loaderImageReadyPromise: Promise.resolve(),
+  loaderReadyPromise: Promise.resolve(),
   resolveLoaderMinimum: null,
+  resolveLoaderReady: null,
   anoPreloadPromise: Promise.resolve(),
   textPreloadPromise: Promise.resolve(),
   backgroundPreloadStarted: false
@@ -126,16 +129,19 @@ async function init() {
   state.loaderStartTime = Date.now();
   logLoad("loader start", 0);
   preloadInitialBackgrounds();
-  preloadBackground(getLoaderBackgroundPath()).then(() => {
-    if (state.loaderEntered) return;
-    setPageBackground(getLoaderBackgroundPath(), BACKGROUND_FADE_LOADER);
+  state.loaderImageReadyPromise = preloadLoaderImage(getLoaderBackgroundPath()).then((result) => {
+    if (result.ok) showLoaderText();
+    return result;
+  });
+  state.loaderReadyPromise = new Promise((resolve) => {
+    state.resolveLoaderReady = resolve;
   });
   state.loaderMinimumReady = new Promise((resolve) => {
     state.resolveLoaderMinimum = resolve;
   });
   document.documentElement.dataset.lang = state.lang;
   bindEvents();
-  state.loaderTextVisiblePromise = prepareLoaderTextFast();
+  state.loaderTextVisiblePromise = state.loaderImageReadyPromise;
 
   try {
     const response = await fetch(withDataVersion(DATA_URL));
@@ -149,7 +155,7 @@ async function init() {
 
   renderAll({ immediate: true });
   const firstAnoReady = preloadMedia(getCurrentItem("anoBuilding"));
-  preloadBackground(getAnoBackgroundPath(getCurrentItem("anoBuilding")));
+  const initialAnoBackgroundReady = preloadBackground(getAnoBackgroundPath(getCurrentItem("anoBuilding")));
   state.anoPreloadPromise = preloadAnoBuildingMedia();
   state.textPreloadPromise = preloadAllTexts();
   preloadExhibitionInBackground();
@@ -157,23 +163,22 @@ async function init() {
     .catch(() => null)
     .then(() => state.resolveLoaderMinimum?.());
 
-  const maxWait = state.loaderTextVisiblePromise.then(() => delayUntilMaximumLoaderTime()).then(() => {
-    console.warn("[loader max wait reached]", LOADER_MAX_DISPLAY);
-    return "timeout";
-  });
-  const minimumDisplay = state.loaderTextVisiblePromise.then(() => delayUntilMinimumLoaderTime());
+  const fontsReady = waitForFontsReady();
   const initialPreload = Promise.allSettled([
+    firstAnoReady,
     state.anoPreloadPromise,
-    state.textPreloadPromise
+    initialAnoBackgroundReady,
+    fontsReady,
+    state.loaderTextVisiblePromise
   ]).then((result) => {
     logLoad("initial preload settled");
     return result;
   });
 
-  Promise.race([
-    Promise.all([minimumDisplay, initialPreload]).then(() => "ready"),
-    maxWait
-  ]).then((reason) => requestEnterSite(reason));
+  initialPreload.then(() => {
+    state.resolveLoaderReady?.();
+    requestEnterSite("ready");
+  });
 }
 
 function collectElements() {
@@ -223,7 +228,7 @@ function bindEvents() {
 
   const requestLoaderEntry = () => {
     state.loaderSkipped = true;
-    Promise.all([state.loaderTextVisiblePromise, state.loaderMinimumReady]).then(() => requestEnterSite("click"));
+    Promise.all([state.loaderTextVisiblePromise, state.loaderReadyPromise]).then(() => requestEnterSite("click"));
   };
   els.loadingScreen?.addEventListener("click", requestLoaderEntry);
 
@@ -1080,6 +1085,37 @@ async function waitForPaint() {
 
 function nextFrame() {
   return new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+function preloadLoaderImage(path) {
+  return withTimeout(new Promise((resolve) => {
+    const image = new Image();
+    image.decoding = "async";
+    image.fetchPriority = "high";
+    image.onload = async () => {
+      if (image.decode) {
+        try {
+          await image.decode();
+        } catch (_) {
+          // Continue if a browser cannot decode after load.
+        }
+      }
+      resolve({ ok: true, src: path });
+    };
+    image.onerror = () => resolve({ ok: false, src: path, reason: "error" });
+    image.src = path;
+  }), BACKGROUND_LOAD_TIMEOUT, path).then((result) => {
+    if (!result.ok) console.warn("[loader image preload failed]", result);
+    return result;
+  });
+}
+
+function waitForFontsReady() {
+  if (!document.fonts?.ready) return Promise.resolve({ ok: true });
+  return Promise.race([
+    document.fonts.ready.then(() => ({ ok: true })),
+    delay(BACKGROUND_LOAD_TIMEOUT).then(() => ({ ok: false, reason: "font-timeout" }))
+  ]);
 }
 
 function prepareLoaderTextFast() {
