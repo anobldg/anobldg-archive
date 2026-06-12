@@ -9,10 +9,10 @@ const LOADER_FADE_DURATION = 500;
 const LOADER_TEXT_FADE_DURATION = 100;
 const LOADER_FONT_TIMEOUT = 1000;
 const LOADER_ROAD_MIN_VISIBLE_MS = 3000;
-const GESTURE_DRAG_START_PX = 8;
-const GESTURE_POINTER_COMMIT_PX = 80;
+const GESTURE_DRAG_START_PX = 20;
+const GESTURE_POINTER_COMMIT_PX = 50;
 const GESTURE_WHEEL_COMMIT_PX = 100;
-const GESTURE_SNAP_DURATION = 180;
+const GESTURE_WHEEL_QUIET_MS = 500;
 const MEDIA_LOAD_TIMEOUT = 8000;
 const BACKGROUND_FADE_LOADER = 500;
 const BACKGROUND_FADE_ANO = 2000;
@@ -275,7 +275,7 @@ function bindStageGesture(gallery, stage) {
 }
 
 function startStagePointerGesture(gallery, stage, event) {
-  if (!event.isPrimary || state.mediaSliding[gallery] || stage.classList.contains("is-gesture-settling") || !getAdjacentGestureItem(gallery, 1)) return;
+  if (!event.isPrimary || state.mediaSliding[gallery] || !getAdjacentGestureItem(gallery, 1)) return;
   state.gesture.active = {
     gallery,
     stage,
@@ -283,26 +283,23 @@ function startStagePointerGesture(gallery, stage, event) {
     startX: event.clientX,
     startY: event.clientY,
     deltaX: 0,
-    isDragging: false,
-    direction: 0,
-    preview: null,
-    width: Math.max(stage.getBoundingClientRect().width, 1)
+    isSwipe: false,
+    hasTriggered: false
   };
 }
 
 function moveStagePointerGesture(event) {
   const gesture = state.gesture.active;
-  if (!gesture || gesture.pointerId !== event.pointerId || state.mediaSliding[gesture.gallery]) return;
+  if (!gesture || gesture.pointerId !== event.pointerId || state.mediaSliding[gesture.gallery] || gesture.hasTriggered) return;
 
   const deltaX = event.clientX - gesture.startX;
   const deltaY = event.clientY - gesture.startY;
   const absX = Math.abs(deltaX);
   const absY = Math.abs(deltaY);
 
-  if (!gesture.isDragging) {
+  if (!gesture.isSwipe) {
     if (absX < GESTURE_DRAG_START_PX || absX <= absY) return;
-    gesture.isDragging = true;
-    gesture.stage.classList.add("is-gesture-dragging");
+    gesture.isSwipe = true;
     try {
       gesture.stage.setPointerCapture(gesture.pointerId);
     } catch {
@@ -312,22 +309,22 @@ function moveStagePointerGesture(event) {
 
   event.preventDefault();
   gesture.deltaX = deltaX;
-  updateGesturePreview(gesture, deltaX);
+  if (absX >= GESTURE_POINTER_COMMIT_PX) {
+    gesture.hasTriggered = true;
+    state.gesture.suppressClickUntil = Date.now() + 500;
+    triggerGestureImageChange(gesture.gallery, deltaX < 0 ? 1 : -1);
+  }
 }
 
 function endStagePointerGesture(event) {
   const gesture = state.gesture.active;
   if (!gesture || gesture.pointerId !== event.pointerId) return;
 
-  if (!gesture.isDragging) {
-    state.gesture.active = null;
-    return;
+  if (gesture.isSwipe) {
+    event.preventDefault();
+    state.gesture.suppressClickUntil = Date.now() + 500;
   }
 
-  const commitDistance = Math.min(gesture.width * 0.25, GESTURE_POINTER_COMMIT_PX);
-  const direction = gesture.deltaX < 0 ? 1 : -1;
-  state.gesture.suppressClickUntil = Date.now() + 500;
-  settleGesturePreview(gesture, Math.abs(gesture.deltaX) >= commitDistance ? direction : 0);
   try {
     gesture.stage.releasePointerCapture(gesture.pointerId);
   } catch {
@@ -339,104 +336,39 @@ function endStagePointerGesture(event) {
 function cancelStagePointerGesture(event) {
   const gesture = state.gesture.active;
   if (!gesture || gesture.pointerId !== event.pointerId) return;
-  settleGesturePreview(gesture, 0);
   state.gesture.active = null;
 }
 
 function handleStageWheelGesture(gallery, stage, event) {
-  if (state.mediaSliding[gallery] || stage.classList.contains("is-gesture-settling") || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+  if (state.mediaSliding[gallery] || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
 
   event.preventDefault();
 
-  const width = Math.max(stage.getBoundingClientRect().width, 1);
   const wheel = state.gesture.wheel && state.gesture.wheel.gallery === gallery
     ? state.gesture.wheel
-    : { gallery, stage, deltaX: 0, direction: 0, preview: null, width, timer: 0 };
+    : { gallery, deltaX: 0, locked: false, timer: 0 };
 
   window.clearTimeout(wheel.timer);
-  wheel.width = width;
-  wheel.deltaX += event.deltaX;
-  const visualDelta = -wheel.deltaX;
-  updateGesturePreview(wheel, visualDelta);
   state.gesture.wheel = wheel;
 
-  if (Math.abs(wheel.deltaX) >= GESTURE_WHEEL_COMMIT_PX) {
-    const direction = wheel.deltaX > 0 ? 1 : -1;
-    state.gesture.wheel = null;
-    state.gesture.suppressClickUntil = Date.now() + 500;
-    settleGesturePreview(wheel, direction);
-    return;
+  if (!wheel.locked) {
+    wheel.deltaX += event.deltaX;
+    if (Math.abs(wheel.deltaX) >= GESTURE_WHEEL_COMMIT_PX) {
+      wheel.locked = true;
+      triggerGestureImageChange(gallery, wheel.deltaX > 0 ? 1 : -1);
+    }
   }
 
   wheel.timer = window.setTimeout(() => {
-    if (state.gesture.wheel === wheel) state.gesture.wheel = null;
-    settleGesturePreview(wheel, 0);
-  }, 160);
-}
-
-function updateGesturePreview(gesture, deltaX) {
-  const direction = deltaX < 0 ? 1 : -1;
-  const current = gesture.stage.querySelector('[data-role="current-image"]');
-
-  if (!current || direction === 0) return;
-  if (gesture.direction !== direction) {
-    gesture.preview?.remove();
-    gesture.preview = createGesturePreview(gesture.gallery, direction);
-    gesture.direction = direction;
-    if (gesture.preview) gesture.stage.appendChild(gesture.preview);
-  }
-
-  const previewOffset = direction > 0 ? gesture.width : -gesture.width;
-  current.style.transition = "none";
-  current.style.transform = `translate3d(${deltaX}px, 0, 0)`;
-  if (gesture.preview) {
-    gesture.preview.style.transition = "none";
-    gesture.preview.style.transform = `translate3d(${deltaX + previewOffset}px, 0, 0)`;
-  }
-}
-
-function settleGesturePreview(gesture, direction) {
-  const current = gesture.stage.querySelector('[data-role="current-image"]');
-  const preview = gesture.preview;
-  const transition = `transform ${GESTURE_SNAP_DURATION}ms var(--ease)`;
-  const leaveTo = gesture.direction > 0 ? -gesture.width : gesture.width;
-  const previewRest = gesture.direction > 0 ? gesture.width : -gesture.width;
-
-  gesture.stage.classList.remove("is-gesture-dragging");
-  gesture.stage.classList.add("is-gesture-settling");
-
-  if (current) {
-    current.style.transition = transition;
-    current.style.transform = direction ? `translate3d(${leaveTo}px, 0, 0)` : "";
-  }
-  if (preview) {
-    preview.style.transition = transition;
-    preview.style.transform = direction ? "translate3d(0, 0, 0)" : `translate3d(${previewRest}px, 0, 0)`;
-  }
-
-  window.setTimeout(() => {
-    if (current) {
-      current.style.transition = "";
-      current.style.transform = "";
+    if (state.gesture.wheel === wheel) {
+      state.gesture.wheel = null;
     }
-    gesture.stage.classList.remove("is-gesture-settling");
-    if (direction) {
-      changeImage(gesture.gallery, direction, { skipStageAnimation: true, preparedMedia: preview });
-    } else {
-      preview?.remove();
-    }
-  }, GESTURE_SNAP_DURATION);
+  }, GESTURE_WHEEL_QUIET_MS);
 }
 
-function createGesturePreview(gallery, direction) {
-  const item = getAdjacentGestureItem(gallery, direction);
-  if (!item) return null;
-  const media = createMediaElement(item);
-  media.dataset.role = "gesture-preview-image";
-  media.classList.add("gesture-preview", "is-current");
-  media.style.transform = direction > 0 ? "translate3d(100%, 0, 0)" : "translate3d(-100%, 0, 0)";
-  prepareMediaForSlide(media);
-  return media;
+function triggerGestureImageChange(gallery, direction) {
+  if (state.mediaSliding[gallery]) return;
+  changeImage(gallery, direction, { skipStageAnimation: true });
 }
 
 function getAdjacentGestureItem(gallery, direction) {
@@ -528,7 +460,7 @@ function replaceCurrentStageMedia(gallery, item, preparedMedia) {
   current?.remove();
 
   media.dataset.role = "current-image";
-  media.classList.remove("gesture-preview", "incoming", "is-entering", "is-leaving");
+  media.classList.remove("incoming", "is-entering", "is-leaving");
   media.classList.add("current", "is-current");
   media.style.transition = "";
   media.style.transform = "";
