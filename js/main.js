@@ -577,8 +577,23 @@ function renderStage(gallery) {
 
 function renderAnoCaption() {
   const item = getCurrentItem("anoBuilding");
-  els.anoTitle.textContent = item ? getTitle(item) : "";
+  const title = item ? getTitle(item) : "";
+  els.anoTitle.textContent = title;
   els.anoSubtitle.textContent = item ? getSubtitle(item) : "";
+  const titleKey = getAnoCaptionTitleKey(title);
+  if (titleKey) {
+    els.anoTitle.dataset.anoTitle = titleKey;
+  } else {
+    delete els.anoTitle.dataset.anoTitle;
+  }
+}
+
+function getAnoCaptionTitleKey(title) {
+  if (title === "抽象化への探求") return "abstraction";
+  if (title === "断片から全体へ") return "fragments";
+  if (title === "読む建築展") return "reading";
+  if (title === "アノビルアーカイブ") return "archive";
+  return "";
 }
 
 function resetExhibitionTextScroll() {
