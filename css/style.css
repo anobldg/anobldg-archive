@@ -2320,3 +2320,41 @@ html[data-lang="en"] .ano-heading .quiet-link,
 .app[data-lang="en"] .ano-heading .quiet-link {
   letter-spacing: 0.12em;
 }
+
+/* Mobile JP text switching: avoid glyph overlap/deformation during text replacement. */
+@media (max-width: 767px) {
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-copy,
+  html[data-lang="ja"] .app[data-page="exhibition"] .copy-body,
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-caption,
+  html[data-lang="ja"] .app[data-page="exhibition"] .caption-title,
+  html[data-lang="ja"] .app[data-page="exhibition"] .caption-count,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-subtitle,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-season,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-date {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-copy.is-fading,
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-caption.is-fading,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption.is-fading {
+    opacity: 1 !important;
+  }
+
+  html[data-lang="ja"] .app[data-page="exhibition"] .copy-body {
+    font-family: var(--font-ja-body);
+    font-weight: 400;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    text-shadow: none;
+    filter: none;
+    transform: none;
+  }
+}
