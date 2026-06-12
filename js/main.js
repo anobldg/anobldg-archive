@@ -8,6 +8,7 @@ const LOADER_MAX_DISPLAY = 5000;
 const LOADER_FADE_DURATION = 500;
 const LOADER_TEXT_FADE_DURATION = 100;
 const LOADER_FONT_TIMEOUT = 1000;
+const LOADER_ROAD_MIN_VISIBLE_MS = 3000;
 const MEDIA_LOAD_TIMEOUT = 8000;
 const BACKGROUND_FADE_LOADER = 500;
 const BACKGROUND_FADE_ANO = 2000;
@@ -89,8 +90,10 @@ const state = {
   loaderTextVisiblePromise: Promise.resolve(),
   loaderImageReadyPromise: Promise.resolve(),
   loaderReadyPromise: Promise.resolve(),
+  loaderRoadMinimumReady: Promise.resolve(),
   resolveLoaderMinimum: null,
   resolveLoaderReady: null,
+  resolveLoaderRoadMinimum: null,
   anoPreloadPromise: Promise.resolve(),
   textPreloadPromise: Promise.resolve(),
   backgroundPreloadStarted: false
@@ -136,6 +139,9 @@ async function init() {
   state.loaderReadyPromise = new Promise((resolve) => {
     state.resolveLoaderReady = resolve;
   });
+  state.loaderRoadMinimumReady = new Promise((resolve) => {
+    state.resolveLoaderRoadMinimum = resolve;
+  });
   state.loaderMinimumReady = new Promise((resolve) => {
     state.resolveLoaderMinimum = resolve;
   });
@@ -177,7 +183,7 @@ async function init() {
 
   initialPreload.then(() => {
     state.resolveLoaderReady?.();
-    requestEnterSite("ready");
+    Promise.all([state.loaderRoadMinimumReady, state.loaderReadyPromise]).then(() => requestEnterSite("ready"));
   });
 }
 
@@ -1139,6 +1145,7 @@ function showLoaderText() {
   state.loaderTextVisible = true;
   state.loaderVisibleStartTime = Date.now();
   els.loadingScreen?.classList.add("is-text-visible");
+  delay(LOADER_ROAD_MIN_VISIBLE_MS).then(() => state.resolveLoaderRoadMinimum?.());
   logLoad("loader text visible", state.loaderVisibleStartTime - state.loaderStartTime);
 }
 
