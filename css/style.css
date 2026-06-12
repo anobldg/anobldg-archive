@@ -2436,3 +2436,24 @@ html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-t
 .app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"] {
   letter-spacing: 0.42em;
 }
+
+.image-stage.is-gesture-dragging,
+.image-stage.is-gesture-settling {
+  cursor: grabbing;
+}
+
+.image-stage {
+  touch-action: pan-y;
+}
+
+.image-stage.is-gesture-dragging .stage-image,
+.image-stage.is-gesture-dragging .stage-media {
+  transition: none !important;
+  will-change: transform;
+}
+
+.image-stage .gesture-preview {
+  opacity: 1;
+  pointer-events: none;
+  will-change: transform;
+}
