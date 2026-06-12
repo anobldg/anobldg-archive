@@ -2437,6 +2437,8 @@ html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-t
   letter-spacing: 0.42em;
 }
 
-.image-stage {
-  touch-action: pan-y;
+@media (max-width: 767px) {
+  .image-stage {
+    touch-action: pan-y;
+  }
 }
