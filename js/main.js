@@ -441,8 +441,14 @@ function replaceCurrentStageMedia(gallery, item, preparedMedia) {
   media.style.transition = "";
   media.style.transform = "";
   cleanupStageMedia(stage);
+  if (media.tagName === "VIDEO") {
+    requestAnimationFrame(() => {
+      const currentVideo = stage.querySelector('[data-role="current-image"].is-current');
+      if (currentVideo === media) playVisibleVideo(currentVideo, item?.src);
+    });
+  }
   prepareMediaForSlide(media).then((isReady) => {
-    if (isReady && media.tagName === "VIDEO") playVideo(media, media.src);
+    if (isReady && media.tagName === "VIDEO") playVisibleVideo(media, media.src);
   });
 }
 
