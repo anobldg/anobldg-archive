@@ -2372,3 +2372,43 @@ html[data-lang="en"] .ano-heading .quiet-link,
     transform: none;
   }
 }
+
+/* Ano building JP image caption title: natural centered spacing. */
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title,
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title,
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title {
+  display: inline-block;
+  width: auto;
+  margin-inline: auto;
+  letter-spacing: 0.42em;
+  text-align: center;
+  text-align-last: auto;
+  text-justify: auto;
+  white-space: nowrap;
+}
+
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="abstraction"],
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-title="abstraction"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="abstraction"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="abstraction"],
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="fragments"],
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-title="fragments"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="fragments"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="fragments"] {
+  letter-spacing: 0.336em;
+}
+
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="reading"],
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-title="reading"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="reading"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="reading"] {
+  letter-spacing: 0.168em;
+}
+
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="archive"],
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="archive"],
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"] {
+  letter-spacing: 0.42em;
+}
