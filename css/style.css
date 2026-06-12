@@ -2233,7 +2233,7 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   z-index: 0;
   inset: 0;
   background-color: #fff;
-  background-image: url("../assets/back-images/0000_archive.png");
+  background-image: url("../assets/road/road.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
