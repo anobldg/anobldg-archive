@@ -2232,7 +2232,7 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   z-index: 0;
   inset: 0;
   background-color: #fff;
-  background-image: url("../assets/back-images/0000_archive.png");
+  background-image: url("../assets/road/road.png");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2250,12 +2250,19 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
 
 .loading-enter {
   z-index: 1;
+  color: transparent;
 }
 
 /* Phase 5-A4: sync loader text and archive background fades. */
 .loading-enter,
 .loading-screen::before {
   transition: opacity 500ms ease;
+}
+
+.loading-title-ja,
+.loading-subtitle-en,
+.loading-date {
+  display: none;
 }
 
 .loading-screen:not(.is-text-visible) .loading-enter,
@@ -2300,4 +2307,83 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   .page-background__layer {
     inset: -2vh -2vw;
   }
+}
+
+/* Final micro fix: English ano building title tracking only. */
+.app[data-lang="en"] .ano-heading {
+  letter-spacing: 0.12em;
+}
+
+html[data-lang="en"] .ano-heading,
+.app[data-lang="en"] .ano-heading,
+html[data-lang="en"] .ano-heading .quiet-link,
+.app[data-lang="en"] .ano-heading .quiet-link {
+  letter-spacing: 0.12em;
+}
+
+/* Mobile JP text switching: avoid glyph overlap/deformation during text replacement. */
+@media (max-width: 767px) {
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-copy,
+  html[data-lang="ja"] .app[data-page="exhibition"] .copy-body,
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-caption,
+  html[data-lang="ja"] .app[data-page="exhibition"] .caption-title,
+  html[data-lang="ja"] .app[data-page="exhibition"] .caption-count,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-subtitle,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-season,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-date,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-copy,
+  html[data-lang="en"] .app[data-page="exhibition"] .copy-body,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-caption,
+  html[data-lang="en"] .app[data-page="exhibition"] .caption-title,
+  html[data-lang="en"] .app[data-page="exhibition"] .caption-count,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption .caption-subtitle,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption-title,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-season,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-date {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-copy.is-fading,
+  html[data-lang="ja"] .app[data-page="exhibition"] .exhibition-caption.is-fading,
+  html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption.is-fading,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-copy.is-fading,
+  html[data-lang="en"] .app[data-page="exhibition"] .exhibition-caption.is-fading,
+  html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption.is-fading {
+    opacity: 1 !important;
+  }
+
+  html[data-lang="ja"] .app[data-page="exhibition"] .copy-body {
+    font-family: var(--font-ja-body);
+    font-weight: 400;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    text-shadow: none;
+    filter: none;
+    transform: none;
+  }
+}
+
+/* Ano building JP image caption title: natural centered spacing. */
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption .caption-title,
+html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title,
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title,
+.app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title {
+  display: inline-block;
+  width: auto;
+  margin-inline: auto;
+  letter-spacing: 0.42em;
+  text-align: center;
+  text-align-last: auto;
+  text-justify: auto;
+  white-space: nowrap;
 }
