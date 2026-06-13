@@ -465,7 +465,7 @@ function changeImage(gallery, direction, options = {}) {
 function replaceCurrentStageMedia(gallery, item, preparedMedia) {
   const stage = els.stages[gallery];
   const current = stage.querySelector('[data-role="current-image"]');
-  const media = preparedMedia || createMediaElement(item);
+  const media = preparedMedia || createMediaElement(item, gallery);
 
   pauseMedia(current);
   if (preparedMedia?.parentElement !== stage) {
@@ -478,6 +478,8 @@ function replaceCurrentStageMedia(gallery, item, preparedMedia) {
   media.classList.add("current", "is-current");
   media.style.transition = "";
   media.style.transform = "";
+  applyMediaAccessibility(media, item, gallery);
+  updateMediaAccessibility(gallery, item);
   cleanupStageMedia(stage);
   if (media.tagName === "VIDEO") {
     requestAnimationFrame(() => {
@@ -500,7 +502,7 @@ async function animateStage(gallery, nextItem, direction) {
   const duration = getSlideDuration(gallery);
   const current = stage.querySelector('[data-role="current-image"]');
   const incomingSlot = stage.querySelector('[data-role="incoming-image"]');
-  const incomingMedia = createMediaElement(nextItem);
+  const incomingMedia = createMediaElement(nextItem, gallery);
   const enterFrom = direction > 0 ? "100vw" : "-100vw";
   const leaveTo = direction > 0 ? "-100vw" : "100vw";
 
@@ -510,6 +512,7 @@ async function animateStage(gallery, nextItem, direction) {
   incomingMedia.classList.add("incoming", "is-current", "is-entering");
   incomingMedia.style.transition = "none";
   incomingMedia.style.transform = `translate3d(${enterFrom}, 0, 0)`;
+  updateGalleryAriaLabel(gallery, nextItem);
 
   current?.classList.remove("is-current");
   current?.classList.add("is-leaving");
@@ -579,9 +582,10 @@ async function animateAnoViewportStage(nextItem, direction) {
   page.classList.add("is-slide-locked");
 
   const enteringInfo = await getPreparedMediaInfo(nextItem);
-  const enteringMedia = createMediaElement(nextItem);
+  const enteringMedia = createMediaElement(nextItem, gallery);
   enteringMedia.dataset.role = "viewport-entering-image";
   enteringMedia.classList.add("is-current", "is-entering");
+  updateGalleryAriaLabel(gallery, nextItem);
 
   const enteringReady = enteringInfo?.ok || await prepareMediaForSlide(enteringMedia);
   if (!enteringReady) {
@@ -620,7 +624,8 @@ async function animateAnoViewportStage(nextItem, direction) {
   enteringItem.style.transform = "translate3d(0, 0, 0)";
 
   window.setTimeout(async () => {
-    setStageMedia(stage, "current-image", nextItem);
+    setStageMedia(stage, "current-image", nextItem, gallery);
+    updateMediaAccessibility(gallery, nextItem);
     cleanupStageMedia(stage);
     const newCurrent = stage.querySelector('[data-role="current-image"]');
     if (enteringInfo?.ok) {
@@ -750,7 +755,8 @@ function renderAll(options = {}) {
 
 function renderStage(gallery) {
   const item = getCurrentItem(gallery);
-  setStageMedia(els.stages[gallery], "current-image", item);
+  setStageMedia(els.stages[gallery], "current-image", item, gallery);
+  updateMediaAccessibility(gallery, item);
   cleanupStageMedia(els.stages[gallery]);
   if (state.loaderEntered || gallery === "anoBuilding") {
     scheduleWarmAdjacent(gallery, state.indexes[gallery]);
@@ -908,6 +914,88 @@ function getCurrentItem(gallery) {
 function getTitle(item) {
   const key = state.lang === "ja" ? "titleJa" : "titleEn";
   return item[key] || fallbackName(item.src).title;
+}
+
+function getMediaTitle(item) {
+  if (!item) return "";
+  const preferredKey = state.lang === "ja" ? "titleJa" : "titleEn";
+  const fallbackKey = state.lang === "ja" ? "titleEn" : "titleJa";
+  return item[preferredKey] || item[fallbackKey] || "";
+}
+
+function getMediaAlt(item, gallery) {
+  const title = getMediaTitle(item);
+  if (!title) return "";
+
+  if (gallery === "exhibition") {
+    return state.lang === "ja"
+      ? `建築展「アノビルのこと」の展示記録：${title}`
+      : `Exhibition archive image from “Ano bldg”: ${title}`;
+  }
+
+  return state.lang === "ja"
+    ? `建築展「アノビルのこと」のアーカイブ画像：${title}`
+    : `Archive image from the architecture exhibition “Ano bldg”: ${title}`;
+}
+
+function getGalleryAriaLabel(item, gallery) {
+  const title = getMediaTitle(item);
+  if (!title) return "";
+
+  if (gallery === "exhibition") {
+    return state.lang === "ja"
+      ? `展示記録の画像を切り替える：${title}`
+      : `Change exhibition archive image: ${title}`;
+  }
+
+  return state.lang === "ja"
+    ? `アノビルのことの画像を切り替える：${title}`
+    : `Change Ano bldg archive image: ${title}`;
+}
+
+function applyMediaAccessibility(media, item, gallery) {
+  if (!media) return;
+  const label = getMediaAlt(item, gallery);
+
+  if (media.tagName === "IMG") {
+    media.alt = label;
+    media.removeAttribute("aria-label");
+    media.removeAttribute("title");
+    return;
+  }
+
+  if (media.tagName === "VIDEO") {
+    if (label) {
+      media.setAttribute("aria-label", label);
+      media.setAttribute("title", label);
+    } else {
+      media.removeAttribute("aria-label");
+      media.removeAttribute("title");
+    }
+  }
+}
+
+function updateGalleryAriaLabel(gallery, item) {
+  const stage = els.stages[gallery];
+  if (!stage) return;
+
+  const stageLabel = getGalleryAriaLabel(item, gallery);
+  if (stageLabel) {
+    stage.setAttribute("aria-label", stageLabel);
+  } else {
+    stage.removeAttribute("aria-label");
+  }
+}
+
+function updateMediaAccessibility(gallery, item) {
+  const stage = els.stages[gallery];
+  if (!stage) return;
+
+  updateGalleryAriaLabel(gallery, item);
+
+  stage.querySelectorAll('[data-role="current-image"], [data-role="incoming-image"]').forEach((media) => {
+    applyMediaAccessibility(media, item, gallery);
+  });
 }
 
 function getTitleKey(item) {
@@ -1149,9 +1237,9 @@ function logArchiveTextCheck(item, resolvedPath) {
   });
 }
 
-function setStageMedia(stage, role, item) {
+function setStageMedia(stage, role, item, gallery) {
   const previous = stage.querySelector(`[data-role="${role}"]`);
-  const media = createMediaElement(item);
+  const media = createMediaElement(item, gallery);
   media.dataset.role = role;
   media.classList.add(role === "current-image" ? "current" : "incoming");
   if (role === "current-image" || role === "incoming-image") {
@@ -1185,7 +1273,7 @@ function clearStageMedia(stage, role, fallback) {
   current.replaceWith(media);
 }
 
-function createMediaElement(item) {
+function createMediaElement(item, gallery) {
   if (!item || !item.src) {
     const image = document.createElement("img");
     image.alt = "";
@@ -1205,6 +1293,7 @@ function createMediaElement(item) {
     video.setAttribute("muted", "");
     video.setAttribute("playsinline", "");
     video.setAttribute("webkit-playsinline", "");
+    applyMediaAccessibility(video, item, gallery);
     video.className = "stage-image stage-media is-loaded";
     video.addEventListener("canplay", () => playVideo(video, item.src));
     requestAnimationFrame(() => playVideo(video, item.src));
@@ -1216,7 +1305,7 @@ function createMediaElement(item) {
   }
 
   const image = document.createElement("img");
-  image.alt = item.titleJa || item.titleEn || "";
+  image.alt = getMediaAlt(item, gallery);
   image.decoding = "async";
   image.className = "stage-image stage-media";
   image.addEventListener("load", () => {
