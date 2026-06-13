@@ -2261,6 +2261,12 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   opacity: 1;
 }
 
+.loading-screen:not(.is-hiding):not(.is-hidden),
+.loading-screen.is-text-visible:not(.is-hiding):not(.is-hidden) {
+  background: #fff;
+  opacity: 1;
+}
+
 .loading-screen.is-hiding::before {
   opacity: 0;
 }
