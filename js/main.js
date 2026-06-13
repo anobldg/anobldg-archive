@@ -108,7 +108,7 @@ const state = {
 const COPY = {
   heading: {
     ja: "アノビルのこと",
-    en: "Ano Building"
+    en: "Ano Bldg"
   },
   exhibitionInfo: {
     ja: [
@@ -722,14 +722,31 @@ function renderStage(gallery) {
 function renderAnoCaption() {
   const item = getCurrentItem("anoBuilding");
   const title = item ? getTitle(item) : "";
-  els.anoTitle.textContent = title;
-  els.anoSubtitle.textContent = item ? getSubtitle(item) : "";
+  const subtitle = item ? getSubtitle(item) : "";
   const titleKey = getAnoCaptionTitleKey(title);
+  els.anoTitle.textContent = title;
+  renderAnoSubtitle(subtitle, titleKey);
   if (titleKey) {
     els.anoTitle.dataset.anoTitle = titleKey;
   } else {
     delete els.anoTitle.dataset.anoTitle;
   }
+}
+
+function renderAnoSubtitle(subtitle, titleKey) {
+  if (state.lang === "en" && titleKey === "archive" && subtitle === "archive book / available now") {
+    const label = document.createElement("span");
+    const available = document.createElement("span");
+
+    label.className = "ano-archive-label";
+    label.textContent = "archive book / ";
+    available.className = "ano-available-now";
+    available.textContent = "available now";
+    els.anoSubtitle.replaceChildren(label, available);
+    return;
+  }
+
+  els.anoSubtitle.textContent = subtitle;
 }
 
 function getAnoCaptionTitleKey(title) {
