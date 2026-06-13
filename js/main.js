@@ -721,9 +721,10 @@ function renderStage(gallery) {
 
 function renderAnoCaption() {
   const item = getCurrentItem("anoBuilding");
-  const title = item ? getTitle(item) : "";
+  const rawTitle = item ? getTitle(item) : "";
   const subtitle = item ? getSubtitle(item) : "";
-  const titleKey = getAnoCaptionTitleKey(title);
+  const titleKey = getAnoCaptionTitleKey(rawTitle);
+  const title = state.lang === "en" && titleKey === "archive" ? "Ano Bldg Archive" : rawTitle;
   els.anoTitle.textContent = title;
   renderAnoSubtitle(subtitle, titleKey);
   if (titleKey) {
@@ -734,15 +735,18 @@ function renderAnoCaption() {
 }
 
 function renderAnoSubtitle(subtitle, titleKey) {
-  if (state.lang === "en" && titleKey === "archive" && subtitle === "archive book / available now") {
+  if (titleKey === "archive" && subtitle.includes("available now")) {
     const label = document.createElement("span");
+    const separator = document.createElement("span");
     const available = document.createElement("span");
 
     label.className = "ano-archive-label";
-    label.textContent = "archive book / ";
+    label.textContent = "archive book";
+    separator.className = "ano-archive-separator";
+    separator.textContent = " / ";
     available.className = "ano-available-now";
     available.textContent = "available now";
-    els.anoSubtitle.replaceChildren(label, available);
+    els.anoSubtitle.replaceChildren(label, separator, available);
     return;
   }
 
@@ -754,6 +758,7 @@ function getAnoCaptionTitleKey(title) {
   if (title === "断片から全体へ") return "fragments";
   if (title === "読む建築展") return "reading";
   if (title === "アノビルアーカイブ") return "archive";
+  if (title === "Ano Building Archive" || title === "Ano Bldg Archive") return "archive";
   return "";
 }
 
