@@ -2453,8 +2453,7 @@ html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-t
   letter-spacing: 0.42em;
 }
 
-html[data-lang="en"] .app[data-page="anoBuilding"] .ano-available-now,
-.app[data-lang="en"][data-page="anoBuilding"] .ano-available-now {
+.app[data-page="anoBuilding"] .ano-caption .ano-available-now {
   color: #48d1cc;
 }
 
