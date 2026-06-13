@@ -1,7 +1,157 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://anobldg.github.io/anobldg-archive/</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-06-13</lastmod>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/ano-building/images/01_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82_first%20season%20%EF%BC%8F%202025.07.22%20-%2007.31.webp?m=ceeb207b0b</image:loc>
+      <image:title>抽象化への探求</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/ano-building/images/02_%E6%96%AD%E7%89%87%E3%81%8B%E3%82%89%E5%85%A8%E4%BD%93%E3%81%B8_second%20season%20%EF%BC%8F%202025.08.02%20-%2008.07.webp?m=f812835cab</image:loc>
+      <image:title>断片から全体へ</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/ano-building/images/03_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95_third%20season%20%EF%BC%8F%202025.09.27%20-%2010.04.webp?m=9a4c648110</image:loc>
+      <image:title>読む建築展</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/ano-building/images/04_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99_archive%20book%20%EF%BC%8F%20available%20now.webp?m=2e6d92fa88</image:loc>
+      <image:title>アノビルアーカイブ</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/01_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99.webp?m=f7459394a6</image:loc>
+      <image:title>アーカイブブック</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/02_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99.webp?m=f7459394a6</image:loc>
+      <image:title>「序文」 / アーカイブブック</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/03_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99.webp?m=f7459394a6</image:loc>
+      <image:title>「目次」 / アーカイブブック</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/04_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99.webp?m=f7459394a6</image:loc>
+      <image:title>「雑記1」 / アーカイブブック</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/05_%E3%82%A2%E3%83%8E%E3%83%92%E3%82%99%E3%83%AB%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%95%E3%82%99.webp?m=f7459394a6</image:loc>
+      <image:title>「提案」 / アーカイブブック</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/06_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=85283d96f7</image:loc>
+      <image:title>第1期：抽象化への探求</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/07_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=f2ec16a462</image:loc>
+      <image:title>ポール・セザンヌ《りんごとオレンジ》1899年頃、オルセー美術館蔵。Public Domain / Wikimedia Commons.</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/08_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=b678d6fbf5</image:loc>
+      <image:title>周辺6棟コラージュ写真</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/09_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=6294f3929e</image:loc>
+      <image:title>1：100 周辺6棟模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/11_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=e0cc19a445</image:loc>
+      <image:title>1：100模型 アノビルと周辺6棟</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/12_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=1c75a03a01</image:loc>
+      <image:title>コラージュ ドローイング</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/13_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=cab9c4c2df</image:loc>
+      <image:title>1住戸の平面ダイアグラム</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/14_%E6%8A%BD%E8%B1%A1%E5%8C%96%E3%81%B8%E3%81%AE%E6%8E%A2%E6%B1%82.webp?m=b0634d7e90</image:loc>
+      <image:title>模型とドローイングを交互に参照する</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/15_%E6%96%AD%E7%89%87%E3%81%8B%E3%82%89%E5%85%A8%E4%BD%93%E3%81%B8.webp?m=c2c7edb6a7</image:loc>
+      <image:title>第2期：断片から全体へ</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/16_%E6%96%AD%E7%89%87%E3%81%8B%E3%82%89%E5%85%A8%E4%BD%93%E3%81%B8.webp?m=bd7a4470c8</image:loc>
+      <image:title>空隙</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/17_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=ca56a25f9d</image:loc>
+      <image:title>第3期：読む建築展</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/18_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.svg?m=bee7977c10</image:loc>
+      <image:title>4脚の椅子</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/19_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=ebcf506da3</image:loc>
+      <image:title>椅子に座り、本を読みながら、模型を見る</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/20_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=072d55ce03</image:loc>
+      <image:title>4脚の椅子</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/21_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=ebe5df595e</image:loc>
+      <image:title>展示本「断片から全体を知覚する」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/22_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=eeb9b03048</image:loc>
+      <image:title>展示本「断片から全体を知覚する」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/23_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=bb41b2646e</image:loc>
+      <image:title>展示本「抽象化への探求」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/24_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=815889fd3b</image:loc>
+      <image:title>展示本「抽象化への探求」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/25_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=d6df5f44b8</image:loc>
+      <image:title>展示本「アノビルと横山町」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/26_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=c40c5fe5d6</image:loc>
+      <image:title>展示本「アノビルと横山町」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/27_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=c01dc3592c</image:loc>
+      <image:title>展示本「読む建築」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/28_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=a3750cd742</image:loc>
+      <image:title>展示本「読む建築」</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/29_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=69a90651cf</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/30_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=03d8b8ab4a</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/31_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=5d9afa2ac0</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/32_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=d0431e1f87</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/33_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=2b924339b7</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://anobldg.github.io/anobldg-archive/assets/exhibition/images/34_%E8%AA%AD%E3%82%80%E5%BB%BA%E7%AF%89%E5%B1%95.webp?m=3420f62a1c</image:loc>
+      <image:title>1：20 断面模型</image:title>
+    </image:image>
   </url>
 </urlset>
