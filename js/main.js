@@ -137,10 +137,9 @@ async function init() {
   collectElements();
   state.loaderStartTime = Date.now();
   logLoad("loader start", 0);
-  preloadInitialBackgrounds();
   state.loaderImageReadyPromise = preloadLoaderImage(getLoaderBackgroundPath()).then((result) => {
-    if (result.ok) showLoaderText();
-    return result;
+    if (!result.ok) console.warn("[loader road image unavailable before display]", result);
+    return showLoaderText().then(() => result);
   });
   state.loaderReadyPromise = new Promise((resolve) => {
     state.resolveLoaderReady = resolve;
@@ -154,6 +153,7 @@ async function init() {
   document.documentElement.dataset.lang = state.lang;
   bindEvents();
   state.loaderTextVisiblePromise = state.loaderImageReadyPromise;
+  await state.loaderTextVisiblePromise;
 
   try {
     const response = await fetch(withDataVersion(DATA_URL));
@@ -167,10 +167,9 @@ async function init() {
 
   renderAll({ immediate: true });
   const firstAnoReady = preloadMedia(getCurrentItem("anoBuilding"));
-  const initialAnoBackgroundReady = preloadBackground(getAnoBackgroundPath(getCurrentItem("anoBuilding")));
+  const anoBackgroundsReady = preloadInitialBackgrounds();
   state.anoPreloadPromise = preloadAnoBuildingMedia();
   state.textPreloadPromise = preloadAllTexts();
-  preloadExhibitionInBackground();
   Promise.all([firstAnoReady])
     .catch(() => null)
     .then(() => state.resolveLoaderMinimum?.());
@@ -179,9 +178,9 @@ async function init() {
   const initialPreload = Promise.allSettled([
     firstAnoReady,
     state.anoPreloadPromise,
-    initialAnoBackgroundReady,
+    anoBackgroundsReady,
     fontsReady,
-    state.loaderTextVisiblePromise
+    state.textPreloadPromise
   ]).then((result) => {
     logLoad("initial preload settled");
     return result;
@@ -240,7 +239,7 @@ function bindEvents() {
 
   const requestLoaderEntry = () => {
     state.loaderSkipped = true;
-    Promise.all([state.loaderTextVisiblePromise, state.loaderReadyPromise]).then(() => requestEnterSite("click"));
+    Promise.all([state.loaderTextVisiblePromise, state.loaderRoadMinimumReady, state.loaderReadyPromise]).then(() => requestEnterSite("click"));
   };
   els.loadingScreen?.addEventListener("click", requestLoaderEntry);
 
@@ -991,9 +990,7 @@ function stripQuery(src = "") {
 }
 
 function preloadInitialBackgrounds() {
-  preloadBackground(BACKGROUND_IMAGES.archive);
-  preloadBackground(BACKGROUND_IMAGES.first);
-  BACKGROUND_IMAGE_LIST.slice(2).forEach((path) => preloadBackground(path));
+  return Promise.allSettled(BACKGROUND_IMAGE_LIST.map((path) => preloadBackground(path)));
 }
 
 function getLoaderBackgroundPath() {
@@ -1304,11 +1301,13 @@ function prepareLoaderTextFast() {
 }
 
 function showLoaderText() {
+  if (state.loaderTextVisible) return waitForPaint();
   state.loaderTextVisible = true;
   state.loaderVisibleStartTime = Date.now();
   els.loadingScreen?.classList.add("is-text-visible");
   delay(LOADER_ROAD_MIN_VISIBLE_MS).then(() => state.resolveLoaderRoadMinimum?.());
   logLoad("loader text visible", state.loaderVisibleStartTime - state.loaderStartTime);
+  return waitForPaint();
 }
 
 function requestEnterSite(reason) {
