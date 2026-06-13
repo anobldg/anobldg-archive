@@ -41,7 +41,7 @@ const ARCHIVE_CONTENT = {
     credit: ""
   },
   en: {
-    title: "Ano Building Archive Book",
+    title: "Ano Bldg Archive Book",
     price: "¥5,000",
     priceNote: "Limited to 20 copies　Tax / shipping included",
     button: "purchase",
