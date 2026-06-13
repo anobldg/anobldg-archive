@@ -753,6 +753,7 @@ async function renderExhibitionDetails(options = {}) {
   const item = getCurrentItem("exhibition");
   const total = state.data.exhibition.length;
   const current = state.indexes.exhibition + 1;
+  els.app.dataset.exhibitionNumber = String(current);
 
   els.exhibitionTitle.textContent = item ? getTitle(item) : "";
   state.currentTitleKey = item ? getTitleKey(item) : "";
@@ -987,7 +988,7 @@ function getAnoBackgroundPath(item) {
 
 function getExhibitionBackgroundPath(item) {
   const number = getItemNumber(item, state.data.exhibition);
-  if (number >= 1 && number <= 5) return BACKGROUND_WHITE;
+  if (number >= 1 && number <= 5) return BACKGROUND_IMAGES.archive;
   if (number >= 6 && number <= 9) return BACKGROUND_IMAGES.first;
   if (number === 10) return BACKGROUND_WHITE;
   if (number >= 11 && number <= 12) return BACKGROUND_IMAGES.first;
