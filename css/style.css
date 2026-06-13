@@ -1158,6 +1158,22 @@ html[data-lang="en"] .exhibition-caption .caption-count {
   .exhibition-info a {
     color: var(--text-color);
   }
+
+  .app[data-page="exhibition"][data-exhibition-number="1"] .exhibition-copy,
+  .app[data-page="exhibition"][data-exhibition-number="2"] .exhibition-copy,
+  .app[data-page="exhibition"][data-exhibition-number="3"] .exhibition-copy,
+  .app[data-page="exhibition"][data-exhibition-number="4"] .exhibition-copy,
+  .app[data-page="exhibition"][data-exhibition-number="5"] .exhibition-copy {
+    order: 2;
+  }
+
+  .app[data-page="exhibition"][data-exhibition-number="1"] .archive-panel,
+  .app[data-page="exhibition"][data-exhibition-number="2"] .archive-panel,
+  .app[data-page="exhibition"][data-exhibition-number="3"] .archive-panel,
+  .app[data-page="exhibition"][data-exhibition-number="4"] .archive-panel,
+  .app[data-page="exhibition"][data-exhibition-number="5"] .archive-panel {
+    order: 3;
+  }
 }
 
 /* Phase 4.3 font assignment layer. Spacing/layout rules above stay authoritative. */
