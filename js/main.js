@@ -50,6 +50,29 @@ const ARCHIVE_CONTENT = {
   }
 };
 
+const SEO_META = {
+  ja: {
+    anoBuilding: {
+      title: "アノビルのこと / Ano bldg",
+      description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブサイト。日本橋横山町でのリサーチ、図面、模型、テキスト、展示写真を収録しています。"
+    },
+    exhibition: {
+      title: "展示記録｜アノビルのこと / Ano bldg Archive",
+      description: "建築展「アノビルのこと」の展示写真、テキスト、図面、模型、アーカイブブックの記録をまとめたページです。"
+    }
+  },
+  en: {
+    anoBuilding: {
+      title: "Ano bldg Archive",
+      description: "Ano bldg Archive is an archival website documenting the architecture exhibition “Ano bldg,” including research, drawings, models, texts, and exhibition photographs from Yokoyama-cho."
+    },
+    exhibition: {
+      title: "Exhibition Archive | Ano bldg",
+      description: "An exhibition archive documenting “Ano bldg” through photographs, texts, drawings, models, and the archive book."
+    }
+  }
+};
+
 const state = {
   page: "anoBuilding",
   lang: "ja",
@@ -151,6 +174,7 @@ async function init() {
     state.resolveLoaderMinimum = resolve;
   });
   document.documentElement.dataset.lang = state.lang;
+  updateSeoMeta();
   bindEvents();
   state.loaderTextVisiblePromise = state.loaderImageReadyPromise;
   await state.loaderTextVisiblePromise;
@@ -362,6 +386,7 @@ function setPage(page) {
   }
   renderAll();
   updateCurrentPageBackground();
+  updateSeoMeta();
 }
 
 function setLanguage(lang) {
@@ -374,6 +399,20 @@ function setLanguage(lang) {
     button.classList.toggle("is-active", button.dataset.lang === lang);
   });
   renderAll();
+  updateSeoMeta();
+}
+
+function updateSeoMeta() {
+  const meta = SEO_META[state.lang]?.[state.page] || SEO_META.ja.anoBuilding;
+  document.title = meta.title;
+
+  let description = document.querySelector('meta[name="description"]');
+  if (!description) {
+    description = document.createElement("meta");
+    description.setAttribute("name", "description");
+    document.head.appendChild(description);
+  }
+  description.setAttribute("content", meta.description);
 }
 
 function changeImage(gallery, direction, options = {}) {
