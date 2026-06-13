@@ -53,22 +53,22 @@ const ARCHIVE_CONTENT = {
 const SEO_META = {
   ja: {
     anoBuilding: {
-      title: "アノビルのこと / Ano bldg",
+      title: "アノビルのこと / Ano Bldg",
       description: "建築展「アノビルのこと」の展示記録をまとめたアーカイブサイト。日本橋横山町でのリサーチ、図面、模型、テキスト、展示写真を収録しています。"
     },
     exhibition: {
-      title: "展示記録｜アノビルのこと / Ano bldg Archive",
+      title: "展示記録｜アノビルのこと / Ano Bldg Archive",
       description: "建築展「アノビルのこと」の展示写真、テキスト、図面、模型、アーカイブブックの記録をまとめたページです。"
     }
   },
   en: {
     anoBuilding: {
-      title: "Ano bldg Archive",
-      description: "Ano bldg Archive is an archival website documenting the architecture exhibition “Ano bldg,” including research, drawings, models, texts, and exhibition photographs from Yokoyama-cho."
+      title: "Ano Bldg Archive",
+      description: "Ano Bldg Archive is an archival website documenting the architecture exhibition “Ano Bldg,” including research, drawings, models, texts, and exhibition photographs from Yokoyama-cho."
     },
     exhibition: {
-      title: "Exhibition Archive | Ano bldg",
-      description: "An exhibition archive documenting “Ano bldg” through photographs, texts, drawings, models, and the archive book."
+      title: "Exhibition Archive | Ano Bldg",
+      description: "An exhibition archive documenting “Ano Bldg” through photographs, texts, drawings, models, and the archive book."
     }
   }
 };
@@ -930,12 +930,12 @@ function getMediaAlt(item, gallery) {
   if (gallery === "exhibition") {
     return state.lang === "ja"
       ? `建築展「アノビルのこと」の展示記録：${title}`
-      : `Exhibition archive image from “Ano bldg”: ${title}`;
+      : `Exhibition archive image from “Ano Bldg”: ${title}`;
   }
 
   return state.lang === "ja"
     ? `建築展「アノビルのこと」のアーカイブ画像：${title}`
-    : `Archive image from the architecture exhibition “Ano bldg”: ${title}`;
+    : `Archive image from the architecture exhibition “Ano Bldg”: ${title}`;
 }
 
 function getGalleryAriaLabel(item, gallery) {
@@ -950,7 +950,7 @@ function getGalleryAriaLabel(item, gallery) {
 
   return state.lang === "ja"
     ? `アノビルのことの画像を切り替える：${title}`
-    : `Change Ano bldg archive image: ${title}`;
+    : `Change Ano Bldg archive image: ${title}`;
 }
 
 function applyMediaAccessibility(media, item, gallery) {
