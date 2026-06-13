@@ -2273,7 +2273,7 @@ html[data-lang="ja"] .ano-heading .quiet-link:focus-visible::after,
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00FFFF;
+  color: #48d1cc;
   font-family: initial;
   font-size: 10.67px;
   font-weight: 400;
@@ -2451,6 +2451,13 @@ html[data-lang="ja"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-t
 .app[data-lang="ja"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="archive"],
 .app[data-lang="ja"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"] {
   letter-spacing: 0.42em;
+}
+
+html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="archive"] ~ .caption-subtitle,
+html[data-lang="en"] .app[data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"] ~ .ano-caption-subtitle,
+.app[data-lang="en"][data-page="anoBuilding"] .ano-caption .caption-title[data-ano-title="archive"] ~ .caption-subtitle,
+.app[data-lang="en"][data-page="anoBuilding"] .ano-caption-title[data-ano-title="archive"] ~ .ano-caption-subtitle {
+  color: #48d1cc;
 }
 
 @media (max-width: 767px) {
