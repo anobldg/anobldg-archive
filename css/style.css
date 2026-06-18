@@ -483,7 +483,6 @@ video.stage-media.is-leaving {
 }
 
 .copy-scroll,
-.exhibition-copy,
 .exhibition-info,
 .archive-panel {
   scrollbar-width: none;
@@ -545,7 +544,6 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 }
 
 .copy-scroll::-webkit-scrollbar,
-.exhibition-copy::-webkit-scrollbar,
 .exhibition-info::-webkit-scrollbar,
 .archive-panel::-webkit-scrollbar {
   width: 0;
@@ -553,14 +551,12 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 }
 
 .copy-scroll::-webkit-scrollbar-track,
-.exhibition-copy::-webkit-scrollbar-track,
 .exhibition-info::-webkit-scrollbar-track,
 .archive-panel::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .copy-scroll::-webkit-scrollbar-thumb,
-.exhibition-copy::-webkit-scrollbar-thumb,
 .exhibition-info::-webkit-scrollbar-thumb,
 .archive-panel::-webkit-scrollbar-thumb {
   background-color: transparent;
@@ -687,8 +683,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
     left: var(--pc-page-left);
     width: var(--pc-left-width);
     height: var(--pc-copy-height);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     color: var(--text-color);
     font-size: var(--text-size-desktop);
     font-weight: 500;
@@ -702,9 +697,9 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 
   .copy-scroll {
     width: 100%;
-    height: auto;
-    min-height: 100%;
-    overflow: visible;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 0;
     white-space: normal;
   }
@@ -2048,12 +2043,26 @@ html[data-lang="en"] .ano-caption .caption-subtitle,
     height: calc(24px * 13);
   }
 
+  html[data-lang="ja"] .app[data-page="exhibition"] .view-exhibition .copy-scroll.copy-body {
+    height: calc(var(--leading-17-5pt) * 13);
+    max-height: calc(var(--leading-17-5pt) * 13);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  html[data-lang="en"] .app[data-page="exhibition"] .view-exhibition .copy-scroll.copy-body {
+    height: calc(24px * 12);
+    max-height: calc(24px * 12);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   html[data-lang="ja"] .app[data-page="exhibition"][data-exhibition-number="1"] .view-exhibition .exhibition-copy {
-    height: calc(var(--leading-17-5pt) * 17);
+    height: calc(var(--leading-17-5pt) * 13);
   }
 
   html[data-lang="en"] .app[data-page="exhibition"][data-exhibition-number="1"] .view-exhibition .exhibition-copy {
-    height: calc(24px * 14);
+    height: calc(24px * 12);
   }
 
   .left-lower-area {
@@ -2124,8 +2133,7 @@ html[data-lang="en"] .ano-caption .caption-subtitle,
   }
 
   .exhibition-copy .copy-scroll {
-    height: auto;
-    min-height: 100%;
+    height: 100%;
   }
 
   .exhibition-media {
