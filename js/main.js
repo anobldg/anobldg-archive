@@ -812,10 +812,9 @@ function getAnoCaptionTitleKey(title) {
 }
 
 function resetExhibitionTextScroll() {
-  const scrollContainer = els.exhibitionText?.closest(".exhibition-copy");
   requestAnimationFrame(() => {
-    if (scrollContainer) {
-      scrollContainer.scrollTop = 0;
+    if (els.exhibitionText) {
+      els.exhibitionText.scrollTop = 0;
     }
     scheduleTextScrollGridAlignment();
   });
@@ -833,13 +832,11 @@ function getComputedLineHeightPx(element) {
 function alignTextScrollGrid() {
   if (state.page !== "exhibition") return;
 
-  document.querySelectorAll(".view-exhibition .exhibition-copy").forEach((scrollContainer) => {
-    const text = scrollContainer.querySelector(".copy-scroll.copy-body");
-    if (!text) return;
+  document.querySelectorAll(".view-exhibition .copy-scroll.copy-body").forEach((scrollContainer) => {
     bindTextScrollSnap(scrollContainer);
-    text.style.setProperty("--scroll-end-padding", "0px");
+    scrollContainer.style.setProperty("--scroll-end-padding", "0px");
 
-    const lineHeight = getComputedLineHeightPx(text);
+    const lineHeight = getComputedLineHeightPx(scrollContainer);
     if (!lineHeight) return;
 
     const maxScroll = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
@@ -847,16 +844,13 @@ function alignTextScrollGrid() {
 
     const remainder = maxScroll % lineHeight;
     const padding = remainder < 0.5 || lineHeight - remainder < 0.5 ? 0 : lineHeight - remainder;
-    text.style.setProperty("--scroll-end-padding", `${padding.toFixed(2)}px`);
+    scrollContainer.style.setProperty("--scroll-end-padding", `${padding.toFixed(2)}px`);
     snapTextScrollToLineGrid(scrollContainer);
   });
 }
 
 function snapTextScrollToLineGrid(scrollContainer) {
-  const text = scrollContainer.querySelector(".copy-scroll.copy-body");
-  if (!text) return;
-
-  const lineHeight = getComputedLineHeightPx(text);
+  const lineHeight = getComputedLineHeightPx(scrollContainer);
   if (!lineHeight) return;
 
   const maxScroll = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
