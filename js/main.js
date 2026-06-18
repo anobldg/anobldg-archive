@@ -154,6 +154,8 @@ const COPY = {
 
 const els = {};
 let textScrollGridRaf = 0;
+const textScrollSnapTimers = new WeakMap();
+const textScrollSnapBound = new WeakSet();
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -810,7 +812,7 @@ function getAnoCaptionTitleKey(title) {
 }
 
 function resetExhibitionTextScroll() {
-  const scrollContainer = els.exhibitionText?.closest(".copy-scroll");
+  const scrollContainer = els.exhibitionText?.closest(".exhibition-copy");
   requestAnimationFrame(() => {
     if (scrollContainer) {
       scrollContainer.scrollTop = 0;
@@ -831,10 +833,13 @@ function getComputedLineHeightPx(element) {
 function alignTextScrollGrid() {
   if (state.page !== "exhibition") return;
 
-  document.querySelectorAll(".view-exhibition .exhibition-copy .copy-scroll.copy-body").forEach((scrollContainer) => {
-    scrollContainer.style.setProperty("--scroll-end-padding", "0px");
+  document.querySelectorAll(".view-exhibition .exhibition-copy").forEach((scrollContainer) => {
+    const text = scrollContainer.querySelector(".copy-scroll.copy-body");
+    if (!text) return;
+    bindTextScrollSnap(scrollContainer);
+    text.style.setProperty("--scroll-end-padding", "0px");
 
-    const lineHeight = getComputedLineHeightPx(scrollContainer);
+    const lineHeight = getComputedLineHeightPx(text);
     if (!lineHeight) return;
 
     const maxScroll = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
@@ -842,7 +847,36 @@ function alignTextScrollGrid() {
 
     const remainder = maxScroll % lineHeight;
     const padding = remainder < 0.5 || lineHeight - remainder < 0.5 ? 0 : lineHeight - remainder;
-    scrollContainer.style.setProperty("--scroll-end-padding", `${padding.toFixed(2)}px`);
+    text.style.setProperty("--scroll-end-padding", `${padding.toFixed(2)}px`);
+    snapTextScrollToLineGrid(scrollContainer);
+  });
+}
+
+function snapTextScrollToLineGrid(scrollContainer) {
+  const text = scrollContainer.querySelector(".copy-scroll.copy-body");
+  if (!text) return;
+
+  const lineHeight = getComputedLineHeightPx(text);
+  if (!lineHeight) return;
+
+  const maxScroll = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
+  const snapped = Math.round(scrollContainer.scrollTop / lineHeight) * lineHeight;
+  scrollContainer.scrollTop = Math.max(0, Math.min(snapped, maxScroll));
+}
+
+function bindTextScrollSnap(scrollContainer) {
+  if (textScrollSnapBound.has(scrollContainer)) return;
+  textScrollSnapBound.add(scrollContainer);
+
+  scrollContainer.addEventListener("scroll", () => {
+    const previousTimer = textScrollSnapTimers.get(scrollContainer);
+    if (previousTimer) window.clearTimeout(previousTimer);
+
+    const nextTimer = window.setTimeout(() => {
+      snapTextScrollToLineGrid(scrollContainer);
+      textScrollSnapTimers.delete(scrollContainer);
+    }, 120);
+    textScrollSnapTimers.set(scrollContainer, nextTimer);
   });
 }
 
