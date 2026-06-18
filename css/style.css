@@ -704,6 +704,11 @@ html[data-lang="en"] .exhibition-caption .caption-count {
     white-space: normal;
   }
 
+  .exhibition-copy .copy-scroll {
+    box-sizing: border-box;
+    padding-bottom: var(--scroll-end-padding, 0px);
+  }
+
   .exhibition-media {
     position: absolute;
     top: var(--pc-page-top);
@@ -2030,12 +2035,20 @@ html[data-lang="en"] .ano-caption .caption-subtitle,
     height: calc(var(--pc-copy-height) + var(--phase443-copy-extra-height));
   }
 
+  html[data-lang="ja"] .app[data-page="exhibition"] .view-exhibition .exhibition-copy {
+    height: calc(var(--leading-17-5pt) * 15);
+  }
+
+  html[data-lang="en"] .app[data-page="exhibition"] .view-exhibition .exhibition-copy {
+    height: calc(24px * 13);
+  }
+
   html[data-lang="ja"] .app[data-page="exhibition"][data-exhibition-number="1"] .view-exhibition .exhibition-copy {
-    height: calc(var(--pc-copy-height) + var(--phase443-copy-extra-height) + 10px);
+    height: calc(var(--leading-17-5pt) * 17);
   }
 
   html[data-lang="en"] .app[data-page="exhibition"][data-exhibition-number="1"] .view-exhibition .exhibition-copy {
-    height: calc(var(--pc-copy-height) + var(--phase443-copy-extra-height) - 8px);
+    height: calc(24px * 14);
   }
 
   .left-lower-area {
