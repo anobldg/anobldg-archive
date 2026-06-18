@@ -153,6 +153,7 @@ const COPY = {
 };
 
 const els = {};
+let textScrollGridRaf = 0;
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -284,6 +285,8 @@ function bindEvents() {
     if (event.key === "ArrowRight") changeImage(state.page, 1);
     if (event.key === "ArrowLeft") changeImage(state.page, -1);
   });
+
+  window.addEventListener("resize", scheduleTextScrollGridAlignment);
 }
 
 function bindStageGesture(gallery, stage) {
@@ -812,7 +815,50 @@ function resetExhibitionTextScroll() {
     if (scrollContainer) {
       scrollContainer.scrollTop = 0;
     }
+    scheduleTextScrollGridAlignment();
   });
+}
+
+function getComputedLineHeightPx(element) {
+  const styles = window.getComputedStyle(element);
+  const lineHeight = Number.parseFloat(styles.lineHeight);
+  if (Number.isFinite(lineHeight) && lineHeight > 0) return lineHeight;
+
+  const fontSize = Number.parseFloat(styles.fontSize);
+  return Number.isFinite(fontSize) && fontSize > 0 ? fontSize * 1.2 : 0;
+}
+
+function alignTextScrollGrid() {
+  if (state.page !== "exhibition") return;
+
+  document.querySelectorAll(".view-exhibition .exhibition-copy .copy-scroll.copy-body").forEach((scrollContainer) => {
+    scrollContainer.style.setProperty("--scroll-end-padding", "0px");
+
+    const lineHeight = getComputedLineHeightPx(scrollContainer);
+    if (!lineHeight) return;
+
+    const maxScroll = Math.max(0, scrollContainer.scrollHeight - scrollContainer.clientHeight);
+    if (!maxScroll) return;
+
+    const remainder = maxScroll % lineHeight;
+    const padding = remainder < 0.5 || lineHeight - remainder < 0.5 ? 0 : lineHeight - remainder;
+    scrollContainer.style.setProperty("--scroll-end-padding", `${padding.toFixed(2)}px`);
+  });
+}
+
+function scheduleTextScrollGridAlignment() {
+  if (textScrollGridRaf) window.cancelAnimationFrame(textScrollGridRaf);
+
+  textScrollGridRaf = window.requestAnimationFrame(() => {
+    textScrollGridRaf = 0;
+    alignTextScrollGrid();
+  });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      window.requestAnimationFrame(alignTextScrollGrid);
+    });
+  }
 }
 
 async function renderExhibitionDetails(options = {}) {
@@ -855,6 +901,8 @@ async function renderExhibitionDetails(options = {}) {
   els.exhibitionText.textContent = nextTextContent;
   if (textWillChange) {
     resetExhibitionTextScroll();
+  } else {
+    scheduleTextScrollGridAlignment();
   }
 }
 
@@ -916,26 +964,38 @@ function getTitle(item) {
   return item[key] || fallbackName(item.src).title;
 }
 
-function getMediaTitle(item) {
+function getPreferredItemTitle(item) {
   if (!item) return "";
   const preferredKey = state.lang === "ja" ? "titleJa" : "titleEn";
   const fallbackKey = state.lang === "ja" ? "titleEn" : "titleJa";
   return item[preferredKey] || item[fallbackKey] || "";
 }
 
-function getMediaAlt(item, gallery) {
-  const title = getMediaTitle(item);
+function getMediaGroup(item, gallery) {
+  return gallery || item?.gallery || state.page;
+}
+
+function buildMediaAlt(item, gallery) {
+  const title = getPreferredItemTitle(item);
   if (!title) return "";
 
-  if (gallery === "exhibition") {
+  if (getMediaGroup(item, gallery) === "exhibition") {
     return state.lang === "ja"
-      ? `建築展「アノビルのこと」の展示記録：${title}`
-      : `Exhibition archive image from “Ano Bldg”: ${title}`;
+      ? `建築展「アノビルのこと」展示記録画像：${title}`
+      : `Exhibition archive image from Ano Bldg: ${title}`;
   }
 
   return state.lang === "ja"
-    ? `建築展「アノビルのこと」のアーカイブ画像：${title}`
-    : `Archive image from the architecture exhibition “Ano Bldg”: ${title}`;
+    ? `アノビルのこと アーカイブ画像：${title}`
+    : `Ano Bldg archive image: ${title}`;
+}
+
+function getMediaTitle(item) {
+  return getPreferredItemTitle(item);
+}
+
+function getMediaAlt(item, gallery) {
+  return buildMediaAlt(item, gallery);
 }
 
 function getGalleryAriaLabel(item, gallery) {
