@@ -483,6 +483,7 @@ video.stage-media.is-leaving {
 }
 
 .copy-scroll,
+.exhibition-copy,
 .exhibition-info,
 .archive-panel {
   scrollbar-width: none;
@@ -544,6 +545,7 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 }
 
 .copy-scroll::-webkit-scrollbar,
+.exhibition-copy::-webkit-scrollbar,
 .exhibition-info::-webkit-scrollbar,
 .archive-panel::-webkit-scrollbar {
   width: 0;
@@ -551,12 +553,14 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 }
 
 .copy-scroll::-webkit-scrollbar-track,
+.exhibition-copy::-webkit-scrollbar-track,
 .exhibition-info::-webkit-scrollbar-track,
 .archive-panel::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .copy-scroll::-webkit-scrollbar-thumb,
+.exhibition-copy::-webkit-scrollbar-thumb,
 .exhibition-info::-webkit-scrollbar-thumb,
 .archive-panel::-webkit-scrollbar-thumb {
   background-color: transparent;
@@ -683,7 +687,8 @@ html[data-lang="en"] .exhibition-caption .caption-count {
     left: var(--pc-page-left);
     width: var(--pc-left-width);
     height: var(--pc-copy-height);
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     color: var(--text-color);
     font-size: var(--text-size-desktop);
     font-weight: 500;
@@ -697,9 +702,9 @@ html[data-lang="en"] .exhibition-caption .caption-count {
 
   .copy-scroll {
     width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
     padding-right: 0;
     white-space: normal;
   }
@@ -2119,7 +2124,8 @@ html[data-lang="en"] .ano-caption .caption-subtitle,
   }
 
   .exhibition-copy .copy-scroll {
-    height: 100%;
+    height: auto;
+    min-height: 100%;
   }
 
   .exhibition-media {
